@@ -1,0 +1,11 @@
+body {
+  background-color: #379;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+#main-grid {
+  position: absolute;
+  background-color: white;
+}
