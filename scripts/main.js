@@ -4,7 +4,7 @@ import Store from './store.js';
 import Game from './game.js';
 
 function createEvents() {
-  window.addEventListener('resize', layout);
+  window.addEventListener('resize', () => layout(gamePlay));
 
 }
 
@@ -12,7 +12,7 @@ function render() {
   createComponents();
   createEvents()
 
-  layout();
+  
 }
 
 function loadDefaults() {
@@ -31,6 +31,7 @@ function init() {
 window.addEventListener('load', () => {
   render();
   init();
+  layout(gamePlay);
 });
 
 const gameStore = new Store();

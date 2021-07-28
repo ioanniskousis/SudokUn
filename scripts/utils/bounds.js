@@ -21,6 +21,13 @@ export default class Bounds {
     this.height = box.height;
   }
 
+  setRect(left, top, width, height) {
+    this.left = parseInt(left, 10);
+    this.top = parseInt(top, 10);
+    this.width = parseInt(width, 10);;
+    this.height = parseInt(height, 10);;
+  }
+
   contains(x, y) {
     if (x < this.left) return false;
     if (y < this.top) return false;
