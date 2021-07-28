@@ -1,4 +1,4 @@
-import { createComponents } from './create.js';
+import { createComponents } from './components/create.js';
 import { layout } from './layout.js';
 import Store from './store.js';
 import Game from './game.js';
