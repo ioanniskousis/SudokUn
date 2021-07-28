@@ -1,8 +1,8 @@
 import { createComponents } from './components/create.js';
-import { resize } from './components/resize.js';
+import { layout } from './components/layout.js';
 
 function createEvents() {
-  window.addEventListener('resize', resize);
+  window.addEventListener('resize', layout);
 
 }
 
@@ -10,7 +10,7 @@ function render() {
   createComponents();
   createEvents()
 
-  resize();
+  layout();
 }
 
 

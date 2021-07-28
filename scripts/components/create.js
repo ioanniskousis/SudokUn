@@ -12,6 +12,22 @@ function createCandidate(cellIndex, candidateIndex) {
   return candidate;
 }
 
+function createCandidatesContainer(blockIndex, row, col) {
+  const blockRow = parseInt(blockIndex / 3, 10);
+  const blockCol = blockIndex % 3;
+  const container = crel('div');
+  container.className = 'cell-candidates-container';
+  const cellIndex = parseInt((((blockRow * 3) + row) * 9) + ((blockCol * 3) + col), 10);
+  container.id = `cell-candidates-container-${cellIndex}`;
+  for (let i = 0; i < 3; i++) {
+    for (let k = 0; k < 3; k++) {
+      doc(container, createCandidate(cellIndex, (i * 3) + k))
+    }
+  }
+
+  return container;
+}
+
 function createCell(blockIndex, row, col) {
   const blockRow = parseInt(blockIndex / 3, 10);
   const blockCol = blockIndex % 3;
@@ -20,11 +36,11 @@ function createCell(blockIndex, row, col) {
   const cellIndex = parseInt((((blockRow * 3) + row) * 9) + ((blockCol * 3) + col), 10);
   cell.id = `cell-${cellIndex}`;
   cell.innerHTML = cellIndex;
-  for (let i = 0; i < 3; i++) {
-    for (let k = 0; k < 3; k++) {
-      doc(cell, createCandidate(cellIndex, (i * 3) + k))
-    }
-  }
+  // for (let i = 0; i < 3; i++) {
+  //   for (let k = 0; k < 3; k++) {
+  //     doc(cell, createCandidate(cellIndex, (i * 3) + k))
+  //   }
+  // }
 
   return cell;
 }
@@ -36,6 +52,7 @@ function createBlock(index) {
 
   for (let i = 0; i < 3; i++) {
     for (let k = 0; k < 3; k++) {
+      doc(block, createCandidatesContainer(index, i, k));
       doc(block, createCell(index, i, k));
     }
   }
@@ -52,6 +69,22 @@ function createGrid() {
   }
 
   return grid;
+}
+
+function createSearchPanel() {
+  
+}
+
+function createExcludePanel() {
+  
+}
+
+function createCandidatesPanel() {
+  
+}
+
+function createInputPanel() {
+
 }
 
 function createPlayGround() {

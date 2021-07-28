@@ -29,12 +29,27 @@ body {
   /* background-color: white; */
 }
 
-.grid-cell {
+.cell-candidates-container {
   position: absolute;
   background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.grid-cell {
+  position: absolute;
+  /* background-color: white; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  cursor: pointer;
+}
+
+.grid-cell-given {
+  color: #379;
+  cursor: default;
 }
 
 .cell-candidate {

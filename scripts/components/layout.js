@@ -1,7 +1,7 @@
 import { gel } from '../utils/shortHands.js';
 import Bounds from '../utils/bounds.js';
 
-function resizeCellCandidates(cellIndex, cellSize) {
+function layoutCellCandidates(cellIndex, cellSize) {
   const candidateSize = (cellSize - 2) / 3.0;
   const locations = [0.0, candidateSize , candidateSize * 2.0];
   for (let i = 0; i < 3; i++) {
@@ -20,7 +20,7 @@ function resizeCellCandidates(cellIndex, cellSize) {
   }
 }
 
-function resizeBlockCells(blockIndex, blockSize) {
+function layoutBlockCells(blockIndex, blockSize) {
   const cellSize = parseInt((blockSize - 2.0) / 3.0, 10);
   const locations = [0.0, cellSize + 1.0, (cellSize + 1.0) * 2.0];
   const blockRow = parseInt(blockIndex / 3, 10);
@@ -29,6 +29,7 @@ function resizeBlockCells(blockIndex, blockSize) {
     for (let k = 0; k < 3; k++) {
       const cellIndex = parseInt((((blockRow * 3) + i) * 9) + ((blockCol * 3) + k), 10);
       const cell = gel(`cell-${cellIndex}`);
+      const candidatesContainer = gel(`cell-candidates-container-${cellIndex}`);
       const bounds = new Bounds (
         locations[k],
         locations[i],
@@ -36,14 +37,15 @@ function resizeBlockCells(blockIndex, blockSize) {
         cellSize
       );
       bounds.bound(cell);
+      bounds.bound(candidatesContainer);
       cell.style.fontSize = `${cellSize * 0.6}px`
 
-      resizeCellCandidates(cellIndex, cellSize);
+      layoutCellCandidates(cellIndex, cellSize);
     }
   }
 }
 
-function resizeBlocks(parentSize) {
+function layoutBlocks(parentSize) {
   const blockSize = (parentSize - 6.0) / 3.0;
   const locations = [0.0, blockSize + 3.0, (blockSize + 3.0) * 2.0];
   for (let i = 0; i < 3; i++) {
@@ -57,13 +59,13 @@ function resizeBlocks(parentSize) {
         blockSize
       );
       bounds.bound(block);
-      resizeBlockCells(blockIndex, blockSize)
+      layoutBlockCells(blockIndex, blockSize)
 
     }
   }
 }
 
-function resizeGrid(parentWidth, parentHeight, isLandscape) {
+function layoutGrid(parentWidth, parentHeight, isLandscape) {
   let bounds = null;
   if (isLandscape) {
     const paddingSize = (parentWidth / 11.0);
@@ -83,10 +85,10 @@ function resizeGrid(parentWidth, parentHeight, isLandscape) {
   }
   bounds.bound(gel('main-grid'));
 
-  resizeBlocks(bounds.width);
+  layoutBlocks(bounds.width);
 }
 
-function resizePlayGround(wWidth, wHeight, isLandscape) {
+function layoutPlayGround(wWidth, wHeight, isLandscape) {
   let bounds = null;
   if (isLandscape) {
     bounds = new Bounds (
@@ -114,17 +116,17 @@ function resizePlayGround(wWidth, wHeight, isLandscape) {
   }
   bounds.bound(gel('play-ground'));
 
-  resizeGrid(bounds.width, bounds.height, isLandscape);
+  layoutGrid(bounds.width, bounds.height, isLandscape);
 }
 
-function resize() {
+function layout() {
   const wWidth = window.innerWidth;
   const wHeight = window.innerHeight;
   const isLandscape = wWidth > wHeight;
-  resizePlayGround(wWidth, wHeight, isLandscape);
+  layoutPlayGround(wWidth, wHeight, isLandscape);
 
 }
 
 export {
-  resize,
+  layout,
 }
