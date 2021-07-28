@@ -1,12 +1,12 @@
 import {
   crel,
   doc
-} from '../utils/shortHands.js';
+} from './utils/shortHands.js';
 
 function createCandidate(cellIndex, candidateIndex) {
   const candidate = crel('div');
   candidate.className = 'cell-candidate';
-  candidate.id = `candidate-${cellIndex}-${candidateIndex}`;
+  candidate.id = `candidate-${cellIndex}-${candidateIndex + 1}`;
   candidate.innerHTML = candidateIndex + 1;
 
   return candidate;
@@ -35,12 +35,7 @@ function createCell(blockIndex, row, col) {
   cell.className = 'grid-cell';
   const cellIndex = parseInt((((blockRow * 3) + row) * 9) + ((blockCol * 3) + col), 10);
   cell.id = `cell-${cellIndex}`;
-  cell.innerHTML = cellIndex;
-  // for (let i = 0; i < 3; i++) {
-  //   for (let k = 0; k < 3; k++) {
-  //     doc(cell, createCandidate(cellIndex, (i * 3) + k))
-  //   }
-  // }
+  // cell.innerHTML = cellIndex;
 
   return cell;
 }

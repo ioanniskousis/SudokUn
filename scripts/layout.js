@@ -1,12 +1,12 @@
-import { gel } from '../utils/shortHands.js';
-import Bounds from '../utils/bounds.js';
+import { gel } from './utils/shortHands.js';
+import Bounds from './utils/bounds.js';
 
 function layoutCellCandidates(cellIndex, cellSize) {
   const candidateSize = (cellSize - 2) / 3.0;
   const locations = [0.0, candidateSize , candidateSize * 2.0];
   for (let i = 0; i < 3; i++) {
     for (let k = 0; k < 3; k++) {
-      const candidateIndex = (i * 3) + k;
+      const candidateIndex = (i * 3) + k + 1;
       const candidate = gel(`candidate-${cellIndex}-${candidateIndex}`);
       const bounds = new Bounds (
         locations[k] + 2,

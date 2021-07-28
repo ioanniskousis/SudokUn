@@ -59,4 +59,5 @@ body {
   align-items: center;
   border: 1px solid #aaa;
   border-radius: 50%;
+  visibility: hidden;
 }
