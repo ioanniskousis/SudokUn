@@ -1,6 +1,8 @@
 import {
   crel,
-  doc
+  gel,
+  doc,
+  sat,
 } from './utils/shortHands.js';
 
 function createCandidate(cellIndex, candidateIndex) {
@@ -19,6 +21,7 @@ function createCandidatesContainer(blockIndex, row, col) {
   container.className = 'cell-candidates-container';
   const cellIndex = parseInt((((blockRow * 3) + row) * 9) + ((blockCol * 3) + col), 10);
   container.id = `cell-candidates-container-${cellIndex}`;
+  sat(container, 'index', cellIndex);
   for (let i = 0; i < 3; i++) {
     for (let k = 0; k < 3; k++) {
       doc(container, createCandidate(cellIndex, (i * 3) + k))
@@ -35,7 +38,7 @@ function createCell(blockIndex, row, col) {
   cell.className = 'grid-cell';
   const cellIndex = parseInt((((blockRow * 3) + row) * 9) + ((blockCol * 3) + col), 10);
   cell.id = `cell-${cellIndex}`;
-  // cell.innerHTML = cellIndex;
+  sat(cell, 'index', cellIndex);
 
   return cell;
 }
@@ -92,7 +95,7 @@ function createPlayGround() {
 }
 
 function createComponents() {
-  doc(document.body, createPlayGround());
+  doc(gel('main'), createPlayGround());
 }
 
 export {

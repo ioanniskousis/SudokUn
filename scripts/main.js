@@ -1,7 +1,7 @@
 import { createComponents } from './create.js';
 import { layout } from './layout.js';
 import Store from './store.js';
-import { updateView } from './game.js';
+import Game from './game.js';
 
 function createEvents() {
   window.addEventListener('resize', layout);
@@ -19,8 +19,13 @@ function loadDefaults() {
 
 }
 
+function handleLoadResponse() {
+  gamePlay.updateView(gameStore);
+}
+
 function init() {
-  gameStore.loadPuzzle(updateView, null);
+  gamePlay = new Game();
+  gameStore.loadPuzzle(handleLoadResponse, null);
 }
 
 window.addEventListener('load', () => {
@@ -29,3 +34,4 @@ window.addEventListener('load', () => {
 });
 
 const gameStore = new Store();
+let gamePlay = null;

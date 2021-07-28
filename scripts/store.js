@@ -44,8 +44,8 @@ class Store {
       this.puzzle = data.puzzle;
       this.givens = data.givens;
       if (!credentials) this.game = data.puzzle;
-      
-      handler(this);
+
+      handler();
     })
     .catch((error) => alert('error: ' + error.message));
   }

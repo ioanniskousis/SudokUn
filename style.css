@@ -13,6 +13,12 @@ body {
   user-select: none;
 }
 
+main {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
 #play-ground {
   position: absolute;
   background-color: rgba(255, 255, 255, 0.2);
@@ -50,6 +56,10 @@ body {
 .grid-cell-given {
   color: #379;
   cursor: default;
+}
+
+.focusedCell {
+  background-color: orange;
 }
 
 .cell-candidate {

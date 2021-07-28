@@ -12,4 +12,21 @@ export default class Bounds {
     element.style.width = `${this.width}px`;
     element.style.height = `${this.height}px`;
   }
+
+  getRect(element) {
+    const box = element.getBoundingClientRect();
+    this.left = box.left;
+    this.top = box.top;
+    this.width = box.width;
+    this.height = box.height;
+  }
+
+  contains(x, y) {
+    if (x < this.left) return false;
+    if (y < this.top) return false;
+    if (x > this.left + this.width) return false;
+    if (y > this.top + this.height) return false;
+
+    return true;
+  }
 }
