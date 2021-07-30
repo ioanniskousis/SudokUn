@@ -1,9 +1,9 @@
 export default class Bounds {
   constructor(left, top, width, height) {
-    this.left = parseInt(left, 10);
-    this.top = parseInt(top, 10);
-    this.width = parseInt(width, 10);;
-    this.height = parseInt(height, 10);;
+    this.left = parseInt(left, 10) || 0;
+    this.top = parseInt(top, 10) || 0;
+    this.width = parseInt(width, 10) || 0;
+    this.height = parseInt(height, 10) || 0;
   }
 
   bound(element) {

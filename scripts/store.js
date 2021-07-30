@@ -10,7 +10,7 @@ class Store {
     this.selectedLevel = getData('selectedLevel') || 0;
 
     this.levelIndex = new Array(5);
-    this.levelIndex[0] = getData('levelIndex0') || 1;
+    this.levelIndex[0] = getData('levelIndex0') || 300;
     this.levelIndex[1] = getData('levelIndex1') || 1;
     this.levelIndex[2] = getData('levelIndex2') || 1;
     this.levelIndex[3] = getData('levelIndex3') || 1;
@@ -36,11 +36,21 @@ class Store {
   async loadPuzzle(handler, credentials) {
     const options = {
       method: 'GET',
-      cache: "no-cache",
     }
-    await fetch(`https://www.sudokun.com/getPuzzle.php?level=${this.selectedLevel}&counter=${this.selectedIndex}`, options)
-    .then((data) => data.json())
+
+    const baseUrl = 'https://www.sudokun.com/getPuzzle.php';
+    const srch = `level=${this.selectedLevel}&counter=${this.selectedIndex}`;
+    const getPuzzleUrl = `${baseUrl}?${srch}`;
+
+    await fetch(getPuzzleUrl, options)
     .then((data) => {
+      // console.log(data.json());
+      // return data.json();
+      return data.json();
+    })
+    .then((data) => {
+      // alert(JSON.stringify(data));
+      // alert(JSON.stringify(data));
       this.puzzle = data.puzzle;
       this.givens = data.givens;
       if (!credentials) this.game = data.puzzle;
@@ -48,6 +58,8 @@ class Store {
       handler();
     })
     .catch((error) => alert('error: ' + error.message));
+
+
   }
 }
 

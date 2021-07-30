@@ -89,46 +89,60 @@ function layoutGrid(parentWidth, parentHeight, isLandscape) {
 }
 
 function layoutPanels(parentWidth, parentHeight, isLandscape) {
-  if (isLandscape) {
-    const gridSize = parseInt(parentWidth * 9 / 11);
-    const padding = parentWidth / 11;
-    const bounds = new Bounds(
-      padding,
-      0,
-      gridSize,
-      padding
-    );
-    bounds.bound(gel('inputPanel'));
+  const gridSize = isLandscape ? parseInt(parentWidth * 9 / 11) : parentWidth;
+  const blockSize = (gridSize - 6.0) / 3.0;
+  
+  const inputPanel = gel('inputPanel');
+  const bounds = new Bounds();
+  bounds.getRect(inputPanel);
+  // const ratio = (blockSize * 0.9) / bounds.width;
 
-    bounds.top = padding + gridSize;
-    bounds.bound(gel('bottomPanel'));
+  // bounds.left *= ratio;
+  // bounds.top *= ratio;
+  bounds.width = blockSize * 1.1;
+  bounds.height = blockSize * 1.1;
+  bounds.bound(inputPanel);
 
-    bounds.setRect(0, padding, padding, gridSize)
-    bounds.bound(gel('searchPanel'));
+  // if (isLandscape) {
+  //   const gridSize = parseInt(parentWidth * 9 / 11);
+  //   const padding = parentWidth / 11;
+  //   const bounds = new Bounds(
+  //     padding,
+  //     0,
+  //     gridSize,
+  //     padding
+  //   );
+  //   bounds.bound(gel('inputPanel'));
 
-    bounds.left = padding + gridSize;
-    bounds.bound(gel('excludesPanel'));
-  } else {
-    const gridSize = parentWidth;
-    const padding = parentHeight / 13;
-    const bounds = new Bounds(
-      0,
-      0,
-      gridSize,
-      padding
-    );
-    bounds.bound(gel('searchPanel'));
+  //   bounds.top = padding + gridSize;
+  //   bounds.bound(gel('bottomPanel'));
 
-    bounds.top = padding;
-    bounds.bound(gel('inputPanel'));
+  //   bounds.setRect(0, padding, padding, gridSize)
+  //   bounds.bound(gel('searchPanel'));
 
-    bounds.top = padding + padding + gridSize;
-    bounds.bound(gel('bottomPanel'));
+  //   bounds.left = padding + gridSize;
+  //   bounds.bound(gel('excludesPanel'));
+  // } else {
+  //   const gridSize = parentWidth;
+  //   const padding = parentHeight / 13;
+  //   const bounds = new Bounds(
+  //     0,
+  //     0,
+  //     gridSize,
+  //     padding
+  //   );
+  //   bounds.bound(gel('searchPanel'));
 
-    bounds.top = padding + padding + padding + gridSize;
-    bounds.bound(gel('excludesPanel'));
+  //   bounds.top = padding;
+  //   bounds.bound(gel('inputPanel'));
+
+  //   bounds.top = padding + padding + gridSize;
+  //   bounds.bound(gel('bottomPanel'));
+
+  //   bounds.top = padding + padding + padding + gridSize;
+  //   bounds.bound(gel('excludesPanel'));
     
-  }
+  // }
 }
 
 function layoutPlayGround(wWidth, wHeight, isLandscape) {
@@ -171,6 +185,9 @@ function layout(gamePlay) {
 
   if (gamePlay.focusedCellIndex > -1) {
     gamePlay.focusCell(-1);
+  }
+  if (gamePlay.inputPanelVisible) {
+    gamePlay.hideInputPanel();
   }
 }
 

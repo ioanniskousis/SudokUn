@@ -6,7 +6,8 @@ import {
 function createInputPanel() {
   const panel = crel('div');
   panel.id = 'inputPanel';
-  panel.className = 'buttons-panel';
+  panel.className = 'numbers-panel';
+  panel.draggable = 'true';
 
   return panel;
 }

@@ -11,8 +11,6 @@ function createEvents() {
 function render() {
   createComponents();
   createEvents()
-
-  
 }
 
 function loadDefaults() {

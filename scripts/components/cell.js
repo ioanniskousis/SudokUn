@@ -11,6 +11,8 @@ function createCell(blockIndex, row, col) {
   const cellIndex = parseInt((((blockRow * 3) + row) * 9) + ((blockCol * 3) + col), 10);
   cell.id = `cell-${cellIndex}`;
   sat(cell, 'index', cellIndex);
+  sat(cell, 'row', (blockRow * 3) + row);
+  sat(cell, 'col', (blockCol * 3) + col);
 
   return cell;
 }

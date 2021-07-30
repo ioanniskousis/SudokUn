@@ -19,6 +19,7 @@ class Game {
     }
     
     this.focusedCellIndex = -1;
+    this.inputPanelVisible = false;
 
     gel('main').onclick = (e) => this.mainClick(e);
     window.addEventListener("keydown", (e) => this.wKeyDown(e)); 
@@ -42,6 +43,7 @@ class Game {
         sat(cell, 'given', '0');
         cell.onclick = (e) => this.cellClick(e);
       }
+      // cell.innerHTML = gat(cell, 'row') + ' - ' + gat(cell, 'col');
     });
   }
 
@@ -56,6 +58,51 @@ class Game {
     this.focusedCellIndex = -1;
   }
 
+  showInputPanel(cell) {
+    const cellBounds = new Bounds();
+    cellBounds.getRect(cell);
+    const cellRow = parseInt(gat(cell, 'row'), 10);
+    const cellCol = gat(cell, 'col'); // parseInt(gat(cell, 'col'), 10);
+// alert(gat(cell, 'col'));
+
+    const inputPanel = gel('inputPanel');
+    const bounds = new Bounds();
+    bounds.getRect(inputPanel);
+
+    if (cellCol < 5) {
+      bounds.left = cellBounds.left + (cellBounds.width * 3) + 10;
+    } else {
+      bounds.left = cellBounds.left - (cellBounds.width * 3) - 10 - bounds.width;
+    }
+    if (bounds.left + bounds.width + 10> window.innerWidth) {
+      bounds.left = window.innerWidth - bounds.width - 10;
+    }
+    if (bounds.left < 10) {
+      bounds.left = 10;
+    }
+
+    if (cellRow < 5) {
+      bounds.top = cellBounds.top + (cellBounds.height * 3) + 10;
+    } else {
+      bounds.top = cellBounds.top - (cellBounds.height * 3) - 10 - bounds.width;
+    }
+    if (bounds.top + bounds.height + 10 > window.innerHeight) {
+      bounds.top = window.innerHeight - bounds.height - 10;
+    }
+    if (bounds.top < 10) {
+      bounds.top = 10;
+    }
+    bounds.bound(inputPanel);
+
+    inputPanel.style.opacity = '1';
+    this.inputPanelVisible = true;
+  }
+
+  hideInputPanel() {
+    gel('inputPanel').style.opacity = '0';
+    this.inputPanelVisible = false;
+  }
+
   focusCell(index) {
     this.clearFocus();
     if (index > -1) {
@@ -65,15 +112,25 @@ class Game {
   }
 
   cellClick(e) {
+    e.preventDefault;
+    // alert('cellClick');
     const cell = e.target;
     this.focusCell(parseInt(gat(cell, 'index'), 10));
+    this.showInputPanel(cell);
   }
 
   mainClick(e) {
-    const bounds = new Bounds();
-    bounds.getRect(gel('main-grid'));
-    if (!bounds.contains(e.pageX, e.pageY)) {
-      this.focusCell(-1);
+    e.preventDefault;
+    if (this.focusedCellIndex > -1) {
+      // alert('mainClick');
+      const bounds = new Bounds();
+      bounds.getRect(gel('main-grid'));
+      const inputbounds = new Bounds();
+      inputbounds.getRect(gel('inputPanel'));
+      if (!bounds.contains(e.pageX, e.pageY) && !inputbounds.contains(e.pageX, e.pageY)) {
+        this.focusCell(-1);
+        this.hideInputPanel();
+      }
     }
   }
 
