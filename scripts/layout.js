@@ -15,7 +15,7 @@ function layoutCellCandidates(cellIndex, cellSize) {
         candidateSize - 4
       );
       bounds.bound(candidate);
-      candidate.style.fontSize = `${candidateSize * 0.6}px`
+      candidate.style.fontSize = `${parseInt(candidateSize * 0.6)}px`
     }
   }
 }
@@ -38,7 +38,7 @@ function layoutBlockCells(blockIndex, blockSize) {
       );
       bounds.bound(cell);
       bounds.bound(candidatesContainer);
-      cell.style.fontSize = `${cellSize * 0.6}px`
+      cell.style.fontSize = `${parseInt(cellSize * 0.6)}px`
 
       layoutCellCandidates(cellIndex, cellSize);
     }
@@ -95,54 +95,51 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   const inputPanel = gel('inputPanel');
   const bounds = new Bounds();
   bounds.getRect(inputPanel);
-  // const ratio = (blockSize * 0.9) / bounds.width;
 
-  // bounds.left *= ratio;
-  // bounds.top *= ratio;
-  bounds.width = blockSize * 1.1;
-  bounds.height = blockSize * 1.1;
+  bounds.width = blockSize * 1.2;
+  bounds.height = blockSize * 1.2;
   bounds.bound(inputPanel);
 
-  // if (isLandscape) {
-  //   const gridSize = parseInt(parentWidth * 9 / 11);
-  //   const padding = parentWidth / 11;
-  //   const bounds = new Bounds(
-  //     padding,
-  //     0,
-  //     gridSize,
-  //     padding
-  //   );
-  //   bounds.bound(gel('inputPanel'));
+  if (isLandscape) {
+    const gridSize = parseInt(parentWidth * 9 / 11);
+    const padding = parentWidth / 11;
+    const bounds = new Bounds(
+      0,
+      padding,
+      padding,
+      gridSize
+    );
+    bounds.bound(gel('inputController'));
 
-  //   bounds.top = padding + gridSize;
-  //   bounds.bound(gel('bottomPanel'));
+    // bounds.top = padding + gridSize;
+    // bounds.bound(gel('bottomPanel'));
 
-  //   bounds.setRect(0, padding, padding, gridSize)
-  //   bounds.bound(gel('searchPanel'));
+    // bounds.setRect(0, padding, padding, gridSize)
+    // bounds.bound(gel('searchPanel'));
 
-  //   bounds.left = padding + gridSize;
-  //   bounds.bound(gel('excludesPanel'));
-  // } else {
-  //   const gridSize = parentWidth;
-  //   const padding = parentHeight / 13;
-  //   const bounds = new Bounds(
-  //     0,
-  //     0,
-  //     gridSize,
-  //     padding
-  //   );
-  //   bounds.bound(gel('searchPanel'));
+    // bounds.left = padding + gridSize;
+    // bounds.bound(gel('excludesPanel'));
+  } else {
+    const gridSize = parentWidth;
+    const padding = parentHeight / 13;
+    const bounds = new Bounds(
+      0,
+      padding,
+      gridSize,
+      padding
+    );
+    bounds.bound(gel('inputController'));
 
-  //   bounds.top = padding;
-  //   bounds.bound(gel('inputPanel'));
+    // bounds.top = padding;
+    // bounds.bound(gel('inputPanel'));
 
-  //   bounds.top = padding + padding + gridSize;
-  //   bounds.bound(gel('bottomPanel'));
+    // bounds.top = padding + padding + gridSize;
+    // bounds.bound(gel('bottomPanel'));
 
-  //   bounds.top = padding + padding + padding + gridSize;
-  //   bounds.bound(gel('excludesPanel'));
+    // bounds.top = padding + padding + padding + gridSize;
+    // bounds.bound(gel('excludesPanel'));
     
-  // }
+  }
 }
 
 function layoutPlayGround(wWidth, wHeight, isLandscape) {

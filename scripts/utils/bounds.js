@@ -13,6 +13,14 @@ export default class Bounds {
     element.style.height = `${this.height}px`;
   }
 
+  right() {
+    return this.left + this.width;
+  }
+
+  bottom() {
+    return this.top + this.height;
+  }
+
   getRect(element) {
     const box = element.getBoundingClientRect();
     this.left = box.left;

@@ -4,6 +4,7 @@ import {
 } from '../utils/shortHands.js';
 import createPlayGround from './playGround.js';
 import createInputPanel from './inputPanel.js';
+import createInputController from './inputController.js';
 import Bounds from '../utils/bounds.js';
 
 function createComponents() {
