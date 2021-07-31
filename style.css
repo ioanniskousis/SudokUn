@@ -88,8 +88,12 @@ div {
 
 .buttons-panel {
   position: absolute;
-  /* background-color: rgba(255, 255, 255, 0.2); */
-  border: 1px solid black;
+  /* background-color: rgba(255, 255, 255, 0.7); */
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  /* flex-wrap: wrap; */
 }
 
 .numbers-panel {
@@ -101,4 +105,15 @@ div {
   border-radius: 3px;
   transition: top 0.3s ease-in-out, left 0.3s ease-in-out, opacity 0.5s ease-in-out;
   opacity: 0;
+}
+
+.control-button {
+  background-color: rgba(47, 111, 143, 0.5);
+  /* background-color: white; */
+  border-radius: 50%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 50%;
+  opacity: 0.5;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }

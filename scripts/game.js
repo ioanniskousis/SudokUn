@@ -66,7 +66,28 @@ class Game {
     this.focusedCellIndex = -1;
   }
 
+  setInputMode(mode) {
+    this.AllowInputPanel = !(mode === null);
+    if (mode === 'SEARCH')  {
+      this.focusCell(-1);
+      this.showInputPanel(null);
+    } else if ((this.focusedCellIndex > -1) && (this.AllowInputPanel)) {
+      this.showInputPanel(gel(`cell-${this.focusedCellIndex}`));
+    } else {
+      this.hideInputPanel();
+    }
+  }
+
   showInputPanel(cell) {
+    const inputPanel = gel('inputPanel');
+
+    if (cell === null) {
+      inputPanel.style.opacity = '1';
+      this.inputPanelVisible = true;
+      gel('inputPanel').style.visibility = 'visible';
+      return;
+    }
+  
     const blockIndex = parseInt(gat(cell, 'block'), 10);
 
     const cellBounds = new Bounds();
@@ -78,7 +99,6 @@ class Game {
     const targetBlockBounds = new Bounds();
     targetBlockBounds.getRect(targetBlock);
 
-    const inputPanel = gel('inputPanel');
     const bounds = new Bounds();
     bounds.getRect(inputPanel);
 
@@ -131,20 +151,27 @@ class Game {
   }
 
   cellClick(e) {
-    e.preventDefault;
     const cell = e.target;
     this.focusCell(parseInt(gat(cell, 'index'), 10));
     this.showInputPanel(cell);
   }
 
   mainClick(e) {
-    e.preventDefault;
     if (this.focusedCellIndex > -1) {
       const bounds = new Bounds();
       bounds.getRect(gel('main-grid'));
       const inputbounds = new Bounds();
       inputbounds.getRect(gel('inputPanel'));
-      if (!bounds.contains(e.pageX, e.pageY) && !inputbounds.contains(e.pageX, e.pageY)) {
+      const inputControllerbounds = new Bounds();
+      inputControllerbounds.getRect(gel('inputController'));
+      const tipsControllerbounds = new Bounds();
+      tipsControllerbounds.getRect(gel('tipsController'));
+      if (
+        !bounds.contains(e.pageX, e.pageY) &&
+        !inputbounds.contains(e.pageX, e.pageY) &&
+        !inputControllerbounds.contains(e.pageX, e.pageY) &&
+        !tipsControllerbounds.contains(e.pageX, e.pageY)
+        ) {
         this.focusCell(-1);
         this.hideInputPanel();
       }

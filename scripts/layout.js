@@ -100,45 +100,64 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   bounds.height = blockSize * 1.2;
   bounds.bound(inputPanel);
 
+  const inputController = gel('inputController');
+  const inputControllerButtons = inputController.children;
+
+  const tipsController = gel('tipsController');
+  const tipsControllerButtons = tipsController.children;
+
   if (isLandscape) {
+    inputController.style.flexDirection = 'column';
+    tipsController.style.flexDirection = 'column';
+
     const gridSize = parseInt(parentWidth * 9 / 11);
     const padding = parentWidth / 11;
-    const bounds = new Bounds(
-      0,
-      padding,
-      padding,
-      gridSize
-    );
-    bounds.bound(gel('inputController'));
 
-    // bounds.top = padding + gridSize;
-    // bounds.bound(gel('bottomPanel'));
+    bounds.setRect (0, padding, padding, (gridSize - 6.0) / 3.0);
+    bounds.bound(inputController);
 
-    // bounds.setRect(0, padding, padding, gridSize)
-    // bounds.bound(gel('searchPanel'));
+    bounds.setRect (padding + gridSize, padding, padding, (gridSize - 6.0) / 3.0);
+    bounds.bound(tipsController);
 
-    // bounds.left = padding + gridSize;
-    // bounds.bound(gel('excludesPanel'));
+    for (let i = 0; i < inputControllerButtons.length; i++) {
+      const button = inputControllerButtons[i];
+      button.style.width = `${bounds.width * 0.8}px`;
+      button.style.height = `${bounds.width * 0.8}px`;
+      button.style.margin = `${bounds.width * 0.1}px`;
+    }
+
+    for (let i = 0; i < tipsControllerButtons.length; i++) {
+      const button = tipsControllerButtons[i];
+      button.style.width = `${bounds.width * 0.8}px`;
+      button.style.height = `${bounds.width * 0.8}px`;
+      button.style.margin = `${bounds.width * 0.1}px`;
+    }
   } else {
+    inputController.style.flexDirection = 'row';
+    tipsController.style.flexDirection = 'row';
+
     const gridSize = parentWidth;
     const padding = parentHeight / 13;
-    const bounds = new Bounds(
-      0,
-      padding,
-      gridSize,
-      padding
-    );
-    bounds.bound(gel('inputController'));
 
-    // bounds.top = padding;
-    // bounds.bound(gel('inputPanel'));
+    bounds.setRect(0, padding, (gridSize - 6.0) / 3.0, padding);
+    bounds.bound(inputController);
 
-    // bounds.top = padding + padding + gridSize;
-    // bounds.bound(gel('bottomPanel'));
+    bounds.setRect(((gridSize + 3.0) * 6.0 / 9.0), padding, (gridSize - 6.0) / 3.0, padding);
+    bounds.bound(tipsController);
 
-    // bounds.top = padding + padding + padding + gridSize;
-    // bounds.bound(gel('excludesPanel'));
-    
+    for (let i = 0; i < inputControllerButtons.length; i++) {
+      const button = inputControllerButtons[i];
+      button.style.width = `${bounds.height * 0.8}px`;
+      button.style.height = `${bounds.height * 0.8}px`;
+      button.style.margin = `${bounds.height * 0.1}px`;
+    }
+
+    for (let i = 0; i < tipsControllerButtons.length; i++) {
+      const button = tipsControllerButtons[i];
+      button.style.width = `${bounds.height * 0.8}px`;
+      button.style.height = `${bounds.height * 0.8}px`;
+      button.style.margin = `${bounds.height * 0.1}px`;
+    }
   }
 }
 
