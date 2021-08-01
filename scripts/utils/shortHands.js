@@ -37,6 +37,19 @@ function sat(element, attribute, value) {
   element.setAttribute(attribute, value);
 }
 
+function swapCh(element) {
+  const checked = gat(element, 'checked');
+  element.setAttribute('checked', checked === '1' ? '0' : '1');
+}
+
+function isCh(element) {
+  return gat(element, 'checked') === '1';
+}
+
+function setCh(element, check) {
+  sat(element, 'checked', check ? '1' : '0');
+}
+
 export {
   gel,
   gelc,
@@ -46,4 +59,7 @@ export {
   trans,
   gat,
   sat,
+  swapCh,
+  isCh,
+  setCh,
 };

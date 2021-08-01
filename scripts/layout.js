@@ -91,14 +91,41 @@ function layoutGrid(parentWidth, parentHeight, isLandscape) {
 function layoutPanels(parentWidth, parentHeight, isLandscape) {
   const gridSize = isLandscape ? parseInt(parentWidth * 9 / 11) : parentWidth;
   const blockSize = (gridSize - 6.0) / 3.0;
-  
-  const inputPanel = gel('inputPanel');
-  const bounds = new Bounds();
-  bounds.getRect(inputPanel);
+  const cellSize = isLandscape ? parentWidth / 11 : parentHeight / 13;
 
-  bounds.width = blockSize * 1.2;
-  bounds.height = blockSize * 1.2;
-  bounds.bound(inputPanel);
+  const numbersSelector = gel('numbersSelector');
+  const numberButtons = numbersSelector.children;
+  for (let i = 0; i < numberButtons.length; i++) {
+    const button = numberButtons[i];
+    button.style.width = `${cellSize * 0.6}px`;
+    button.style.height = `${cellSize * 0.6}px`;
+    button.style.margin = `${cellSize * 0.05}px`;
+    button.style.fontSize = `${cellSize * 0.4}px`;
+  }
+  for (let i = 0; i < numberButtons.length; i++) {
+    const button = numberButtons[i];
+    button.style.width = `${cellSize * 0.6}px`;
+    button.style.height = `${cellSize * 0.6}px`;
+    button.style.margin = `${cellSize * 0.05}px`;
+    button.style.fontSize = `${cellSize * 0.4}px`;
+  }
+  const candidatesSelector = gel('candidatesSelector');
+  const candidateButtons = candidatesSelector.children;
+  for (let i = 0; i < candidateButtons.length; i++) {
+    const button = candidateButtons[i];
+    button.style.width = `${cellSize * 0.6}px`;
+    button.style.height = `${cellSize * 0.6}px`;
+    button.style.margin = `${cellSize * 0.05}px`;
+    button.style.fontSize = `${cellSize * 0.4}px`;
+  }
+
+  // const inputPanel = gel('inputPanel');
+  const bounds = new Bounds();
+  // bounds.getRect(inputPanel);
+
+  // bounds.width = blockSize * 1.2;
+  // bounds.height = blockSize * 1.2;
+  // bounds.bound(inputPanel);
 
   const inputController = gel('inputController');
   const inputControllerButtons = inputController.children;
@@ -106,57 +133,70 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   const tipsController = gel('tipsController');
   const tipsControllerButtons = tipsController.children;
 
+  const insertModeContainer = gel('insertModeContainer');
+  const insertModeButton = gel('insertModeButton');
+  insertModeButton.style.width = `${cellSize * 0.6}px`;
+  insertModeButton.style.height = `${cellSize * 0.6}px`;
+
   if (isLandscape) {
     inputController.style.flexDirection = 'column';
     tipsController.style.flexDirection = 'column';
 
-    const gridSize = parseInt(parentWidth * 9 / 11);
-    const padding = parentWidth / 11;
-
-    bounds.setRect (0, padding, padding, (gridSize - 6.0) / 3.0);
+    bounds.setRect (cellSize, 0, gridSize - 2, cellSize);
+    bounds.bound(numbersSelector);
+    bounds.bound(candidatesSelector);
+    
+    bounds.setRect (0, cellSize, cellSize, (gridSize - 6.0) / 3.0);
     bounds.bound(inputController);
 
-    bounds.setRect (padding + gridSize, padding, padding, (gridSize - 6.0) / 3.0);
+    bounds.setRect (cellSize + gridSize, cellSize, cellSize, (gridSize - 6.0) / 3.0);
     bounds.bound(tipsController);
+
+    bounds.setRect (cellSize, 0, cellSize, cellSize);
+    bounds.bound(insertModeContainer);
 
     for (let i = 0; i < inputControllerButtons.length; i++) {
       const button = inputControllerButtons[i];
-      button.style.width = `${bounds.width * 0.8}px`;
-      button.style.height = `${bounds.width * 0.8}px`;
-      button.style.margin = `${bounds.width * 0.1}px`;
+      button.style.width = `${cellSize * 0.8}px`;
+      button.style.height = `${cellSize * 0.8}px`;
+      button.style.margin = `${cellSize * 0.1}px`;
     }
 
     for (let i = 0; i < tipsControllerButtons.length; i++) {
       const button = tipsControllerButtons[i];
-      button.style.width = `${bounds.width * 0.8}px`;
-      button.style.height = `${bounds.width * 0.8}px`;
-      button.style.margin = `${bounds.width * 0.1}px`;
+      button.style.width = `${cellSize * 0.8}px`;
+      button.style.height = `${cellSize * 0.8}px`;
+      button.style.margin = `${cellSize * 0.1}px`;
     }
   } else {
     inputController.style.flexDirection = 'row';
     tipsController.style.flexDirection = 'row';
 
-    const gridSize = parentWidth;
-    const padding = parentHeight / 13;
+    bounds.setRect (0, cellSize, gridSize, cellSize);
+    bounds.bound(numbersSelector);
+    bounds.bound(candidatesSelector);
 
-    bounds.setRect(0, padding, (gridSize - 6.0) / 3.0, padding);
+    bounds.setRect(0, 0, (gridSize - 6.0) / 3.0, cellSize);
     bounds.bound(inputController);
 
-    bounds.setRect(((gridSize + 3.0) * 6.0 / 9.0), padding, (gridSize - 6.0) / 3.0, padding);
+    bounds.setRect(((gridSize + 3.0) * 6.0 / 9.0), 0, (gridSize - 6.0) / 3.0, cellSize);
     bounds.bound(tipsController);
+
+    bounds.setRect (0, cellSize, cellSize, cellSize);
+    bounds.bound(insertModeContainer);
 
     for (let i = 0; i < inputControllerButtons.length; i++) {
       const button = inputControllerButtons[i];
-      button.style.width = `${bounds.height * 0.8}px`;
-      button.style.height = `${bounds.height * 0.8}px`;
-      button.style.margin = `${bounds.height * 0.1}px`;
+      button.style.width = `${cellSize * 0.8}px`;
+      button.style.height = `${cellSize * 0.8}px`;
+      button.style.margin = `${cellSize * 0.1}px`;
     }
 
     for (let i = 0; i < tipsControllerButtons.length; i++) {
       const button = tipsControllerButtons[i];
-      button.style.width = `${bounds.height * 0.8}px`;
-      button.style.height = `${bounds.height * 0.8}px`;
-      button.style.margin = `${bounds.height * 0.1}px`;
+      button.style.width = `${cellSize * 0.8}px`;
+      button.style.height = `${cellSize * 0.8}px`;
+      button.style.margin = `${cellSize * 0.1}px`;
     }
   }
 }
@@ -202,8 +242,11 @@ function layout(gamePlay) {
   if (gamePlay.focusedCellIndex > -1) {
     gamePlay.focusCell(-1);
   }
-  if (gamePlay.inputPanelVisible) {
-    gamePlay.hideInputPanel();
+  // if (gamePlay.inputPanelVisible) {
+  //   gamePlay.hideInputPanel();
+  // }
+  if (gamePlay.inputMode === 'SEARCH') {
+    gel('searchButton').click();
   }
 }
 

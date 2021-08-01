@@ -2,8 +2,11 @@ import {
   gel,
   gat,
   sat,
+  setCh,
+  isCh,
 } from './utils/shortHands.js';
 import Bounds from './utils/bounds.js';
+import { setupCandidatesInput } from './components/candidatesSelector.js';
 
 class Game {
   constructor() {
@@ -19,12 +22,11 @@ class Game {
     }
     
     this.focusedCellIndex = -1;
-    this.inputPanelVisible = false;
 
     gel('main').onclick = (e) => this.mainClick(e);
-    window.addEventListener("keydown", (e) => this.wKeyDown(e));
+    window.addEventListener('keydown', (e) => this.wKeyDown(e));
 
-    this.AllowInputPanel = false;
+    this.inputMode = null;
   }
 
   updateView(store) {
@@ -46,13 +48,52 @@ class Game {
         sat(cell, 'given', '0');
         cell.onclick = (e) => this.cellClick(e);
       }
-      // cell.innerHTML = gat(cell, 'row') + ' - ' + gat(cell, 'col');
     });
   }
 
-  checkCell(cell, val) {
+  checkCell(val) {
+    if (this.focusedCellIndex === -1) {
+      alert('select a cell');
+      return;
+    }
+    const cell = gel(`cell-${this.focusedCellIndex}`);
     sat(cell, 'value', val);
-    cell.innerHTML = val;
+    cell.innerHTML = val || '';
+    if (val) {
+      this.hideCandidates();
+    } else {
+      this.showCandidates();
+    }
+  }
+
+  cellIsEmpty(index) {
+    return gat(gel(`cell-${index}`), 'value') === '0';
+  }
+
+  hideCandidates() {
+    for (let i = 1; i < 10; i++) {
+      const candidate = gel(`candidate-${this.focusedCellIndex}-${i}`);
+      candidate.style.visibility = 'hidden';
+    }
+  }
+
+  showCandidates() {
+    for (let i = 1; i < 10; i++) {
+      const candidate = gel(`candidate-${this.focusedCellIndex}-${i}`);
+      candidate.style.visibility = isCh(candidate) ? 'visible' : 'hidden';
+    }
+  }
+
+  checkCandidate(candidateNumber, check) {
+    if (this.focusedCellIndex === -1) {
+      alert('select a cell');
+      return false;
+    }
+    const candidate = gel(`candidate-${this.focusedCellIndex}-${candidateNumber}`);
+    const visible = this.cellIsEmpty(this.focusedCellIndex) ? 'visible' : 'hidden';
+    candidate.style.visibility = check ? visible : 'hidden';
+    setCh(candidate, check);
+    return true;
   }
 
   isGiven(cell) {
@@ -64,81 +105,13 @@ class Game {
       container.className = 'cell-candidates-container'
     );
     this.focusedCellIndex = -1;
+    setupCandidatesInput(-1);
   }
 
   setInputMode(mode) {
-    this.AllowInputPanel = !(mode === null);
+    this.inputMode = mode;
     if (mode === 'SEARCH')  {
       this.focusCell(-1);
-      this.showInputPanel(null);
-    } else if ((this.focusedCellIndex > -1) && (this.AllowInputPanel)) {
-      this.showInputPanel(gel(`cell-${this.focusedCellIndex}`));
-    } else {
-      this.hideInputPanel();
-    }
-  }
-
-  showInputPanel(cell) {
-    const inputPanel = gel('inputPanel');
-
-    if (cell === null) {
-      inputPanel.style.opacity = '1';
-      this.inputPanelVisible = true;
-      gel('inputPanel').style.visibility = 'visible';
-      return;
-    }
-  
-    const blockIndex = parseInt(gat(cell, 'block'), 10);
-
-    const cellBounds = new Bounds();
-    cellBounds.getRect(cell);
-    const cellRow = parseInt(gat(cell, 'row'), 10);
-    const cellCol = parseInt(gat(cell, 'col'), 10);
-    const targetBlockIndex = cellCol < 5 ? blockIndex + 1 : blockIndex - 1;
-    const targetBlock = gel(`block-${targetBlockIndex}`);
-    const targetBlockBounds = new Bounds();
-    targetBlockBounds.getRect(targetBlock);
-
-    const bounds = new Bounds();
-    bounds.getRect(inputPanel);
-
-    if (cellCol < 5) {
-      bounds.left = targetBlockBounds.left + 10;
-    } else {
-      bounds.left = targetBlockBounds.right() -  bounds.width - 10;
-    }
-    if (bounds.right() + 10 > window.innerWidth) {
-      bounds.left = window.innerWidth - bounds.width - 10;
-    }
-    if (bounds.left < 10) {
-      bounds.left = 10;
-    }
-
-    if (cellRow < 5) {
-      bounds.top = cellBounds.bottom() + 10;
-    } else {
-      bounds.top = cellBounds.top - 10 - bounds.height;
-    }
-    if (bounds.top + bounds.height + 10 > window.innerHeight) {
-      bounds.top = window.innerHeight - bounds.height - 10;
-    }
-    if (bounds.top < 10) {
-      bounds.top = 10;
-    }
-    bounds.bound(inputPanel);
-
-    if (this.AllowInputPanel) {
-      inputPanel.style.opacity = '1';
-      this.inputPanelVisible = true;
-      gel('inputPanel').style.visibility = 'visible';
-    }
-  }
-
-  hideInputPanel() {
-    if (this.inputPanelVisible) {
-      gel('inputPanel').style.opacity = '0';
-      gel('inputPanel').style.visibility = 'hidden';
-      this.inputPanelVisible = false;
     }
   }
 
@@ -147,33 +120,29 @@ class Game {
     if (index > -1) {
       this.candidateContainers[index].className = 'cell-candidates-container focusedCell';
       this.focusedCellIndex = index;
+      setupCandidatesInput(index);
     }
   }
 
   cellClick(e) {
     const cell = e.target;
     this.focusCell(parseInt(gat(cell, 'index'), 10));
-    this.showInputPanel(cell);
   }
 
   mainClick(e) {
     if (this.focusedCellIndex > -1) {
       const bounds = new Bounds();
       bounds.getRect(gel('main-grid'));
-      const inputbounds = new Bounds();
-      inputbounds.getRect(gel('inputPanel'));
-      const inputControllerbounds = new Bounds();
-      inputControllerbounds.getRect(gel('inputController'));
-      const tipsControllerbounds = new Bounds();
-      tipsControllerbounds.getRect(gel('tipsController'));
+      const insertPanelbounds = new Bounds();
+      insertPanelbounds.getRect(gel('numbersSelector'));
+      const candidatesSelectorbounds = new Bounds();
+      candidatesSelectorbounds.getRect(gel('candidatesSelector'));
       if (
         !bounds.contains(e.pageX, e.pageY) &&
-        !inputbounds.contains(e.pageX, e.pageY) &&
-        !inputControllerbounds.contains(e.pageX, e.pageY) &&
-        !tipsControllerbounds.contains(e.pageX, e.pageY)
+        !insertPanelbounds.contains(e.pageX, e.pageY) &&
+        !candidatesSelectorbounds.contains(e.pageX, e.pageY)
         ) {
         this.focusCell(-1);
-        this.hideInputPanel();
       }
     }
   }
@@ -181,7 +150,6 @@ class Game {
   escape() {
     if (this.focusedCellIndex > -1) {
       this.focusCell(-1);
-      this.hideInputPanel();
     }
   }
 
@@ -253,23 +221,23 @@ class Game {
 
     // if ((keyCode == 46) || (keyCode == 32) || (keyCode == 48) || (keyCode == 96)) {
     //   event.preventDefault();
-    //   if (_gAttEl(selectedCell, "prevValue") == "") {
+    //   if (_gAttEl(selectedCell, 'prevValue') == '') {
     //     return;
     //   }
-    //   selectedCell.value = "";
+    //   selectedCell.value = '';
     //   cellBlur(selectedCell);
     //   return ;
     // }
+    if ((keyCode === 8) || (keyCode === 46)) this.checkCell(0);
 
     if (this.focusedCellIndex > -1) {
       let inputNumber = -1;
-      if ((keyCode > 48) && (keyCode < 58)) inputNumber = keyCode - 49;
-      if ((keyCode > 96) && (keyCode < 106)) inputNumber = keyCode - 97;
+      if ((keyCode > 47) && (keyCode < 58)) inputNumber = keyCode - 48;
+      if ((keyCode > 95) && (keyCode < 106)) inputNumber = keyCode - 96;
 
       if (inputNumber > -1) {
-        var chars = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-        const cell = gel(`cell-${this.focusedCellIndex}`);
-        this.checkCell(cell, chars[inputNumber]);
+        var chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        this.checkCell(parseInt(chars[inputNumber], 10));
         return;     
       }
     }
