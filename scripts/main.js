@@ -4,22 +4,10 @@ import {
 } from './utils/shortHands.js';
 
 import createPlayGround from './components/playGround.js';
-import { layout } from './layout.js';
-import Store from './store.js';
 import Game from './game.js';
+import Store from './store.js';
 
-import { createModeButtonEvents } from './components/modeButtonContainer.js';
-import { createNumberButtonsEvents } from './components/numbersSelector.js';
-import { createCandidateButtonsEvents } from './components/candidatesSelector.js';
-
-function createEvents() {
-  window.addEventListener('resize', () => layout(gamePlay));
-
-  createModeButtonEvents();
-  createNumberButtonsEvents(gamePlay);
-  createCandidateButtonsEvents(gamePlay);
-
-}
+import createEvents from './events.js';
 
 function handleLoadResponse() {
   gamePlay.updateView(gameStore);
@@ -33,8 +21,7 @@ function initGame() {
 window.addEventListener('load', () => {
   doc(gel('main'), createPlayGround());
   initGame();
-  createEvents();
-  layout(gamePlay);
+  createEvents(gamePlay);
 });
 
 const gameStore = new Store();

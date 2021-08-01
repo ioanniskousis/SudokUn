@@ -90,7 +90,6 @@ function layoutGrid(parentWidth, parentHeight, isLandscape) {
 
 function layoutPanels(parentWidth, parentHeight, isLandscape) {
   const gridSize = isLandscape ? parseInt(parentWidth * 9 / 11) : parentWidth;
-  const blockSize = (gridSize - 6.0) / 3.0;
   const cellSize = isLandscape ? parentWidth / 11 : parentHeight / 13;
 
   const numbersSelector = gel('numbersSelector');
@@ -102,13 +101,7 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     button.style.margin = `${cellSize * 0.05}px`;
     button.style.fontSize = `${cellSize * 0.4}px`;
   }
-  for (let i = 0; i < numberButtons.length; i++) {
-    const button = numberButtons[i];
-    button.style.width = `${cellSize * 0.6}px`;
-    button.style.height = `${cellSize * 0.6}px`;
-    button.style.margin = `${cellSize * 0.05}px`;
-    button.style.fontSize = `${cellSize * 0.4}px`;
-  }
+
   const candidatesSelector = gel('candidatesSelector');
   const candidateButtons = candidatesSelector.children;
   for (let i = 0; i < candidateButtons.length; i++) {
@@ -119,24 +112,29 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     button.style.fontSize = `${cellSize * 0.4}px`;
   }
 
-  // const inputPanel = gel('inputPanel');
-  const bounds = new Bounds();
-  // bounds.getRect(inputPanel);
-
-  // bounds.width = blockSize * 1.2;
-  // bounds.height = blockSize * 1.2;
-  // bounds.bound(inputPanel);
-
-  const inputController = gel('inputController');
-  const inputControllerButtons = inputController.children;
-
-  const tipsController = gel('tipsController');
-  const tipsControllerButtons = tipsController.children;
+  const inputControllerButtons = gel('inputController').children;
+  const tipsControllerButtons = gel('tipsController').children;
 
   const insertModeContainer = gel('insertModeContainer');
   const insertModeButton = gel('insertModeButton');
   insertModeButton.style.width = `${cellSize * 0.6}px`;
   insertModeButton.style.height = `${cellSize * 0.6}px`;
+
+  for (let i = 0; i < inputControllerButtons.length; i++) {
+    const button = inputControllerButtons[i];
+    button.style.width = `${cellSize * 0.8}px`;
+    button.style.height = `${cellSize * 0.8}px`;
+    button.style.margin = `${cellSize * 0.1}px`;
+  }
+
+  for (let i = 0; i < tipsControllerButtons.length; i++) {
+    const button = tipsControllerButtons[i];
+    button.style.width = `${cellSize * 0.8}px`;
+    button.style.height = `${cellSize * 0.8}px`;
+    button.style.margin = `${cellSize * 0.1}px`;
+  }
+
+  const bounds = new Bounds();
 
   if (isLandscape) {
     inputController.style.flexDirection = 'column';
@@ -154,20 +152,6 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
 
     bounds.setRect (cellSize, 0, cellSize, cellSize);
     bounds.bound(insertModeContainer);
-
-    for (let i = 0; i < inputControllerButtons.length; i++) {
-      const button = inputControllerButtons[i];
-      button.style.width = `${cellSize * 0.8}px`;
-      button.style.height = `${cellSize * 0.8}px`;
-      button.style.margin = `${cellSize * 0.1}px`;
-    }
-
-    for (let i = 0; i < tipsControllerButtons.length; i++) {
-      const button = tipsControllerButtons[i];
-      button.style.width = `${cellSize * 0.8}px`;
-      button.style.height = `${cellSize * 0.8}px`;
-      button.style.margin = `${cellSize * 0.1}px`;
-    }
   } else {
     inputController.style.flexDirection = 'row';
     tipsController.style.flexDirection = 'row';
@@ -184,20 +168,6 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
 
     bounds.setRect (0, cellSize, cellSize, cellSize);
     bounds.bound(insertModeContainer);
-
-    for (let i = 0; i < inputControllerButtons.length; i++) {
-      const button = inputControllerButtons[i];
-      button.style.width = `${cellSize * 0.8}px`;
-      button.style.height = `${cellSize * 0.8}px`;
-      button.style.margin = `${cellSize * 0.1}px`;
-    }
-
-    for (let i = 0; i < tipsControllerButtons.length; i++) {
-      const button = tipsControllerButtons[i];
-      button.style.width = `${cellSize * 0.8}px`;
-      button.style.height = `${cellSize * 0.8}px`;
-      button.style.margin = `${cellSize * 0.1}px`;
-    }
   }
 }
 
@@ -233,23 +203,24 @@ function layoutPlayGround(wWidth, wHeight, isLandscape) {
   layoutPanels(bounds.width, bounds.height, isLandscape)
 }
 
-function layout(gamePlay) {
+function layout() {
   const wWidth = window.innerWidth;
   const wHeight = window.innerHeight;
   const isLandscape = wWidth > wHeight;
   layoutPlayGround(wWidth, wHeight, isLandscape);
+}
 
-  if (gamePlay.focusedCellIndex > -1) {
-    gamePlay.focusCell(-1);
-  }
-  // if (gamePlay.inputPanelVisible) {
-  //   gamePlay.hideInputPanel();
-  // }
-  if (gamePlay.inputMode === 'SEARCH') {
-    gel('searchButton').click();
-  }
+function clickOnGame(e) {
+  const bounds = new Bounds();
+  bounds.getRect(gel('main-grid'));
+  const cellSize = (bounds.width - 6.0) / 9.0;
+  bounds.top -= cellSize;
+  bounds.height += cellSize;
+
+  return bounds.contains(e.pageX, e.pageY);
 }
 
 export {
   layout,
+  clickOnGame,
 }

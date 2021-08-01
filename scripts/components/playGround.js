@@ -20,7 +20,6 @@ function createPlayGround() {
 
   doc(playGround, createInputController());
   doc(playGround, createTipsController());
-  // doc(playGround, createTipsController());
 
   doc(playGround, createModeButtonContainer());
 

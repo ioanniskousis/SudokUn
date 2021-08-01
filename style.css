@@ -165,4 +165,5 @@ div {
 .number-button:active {
   background-color: rgba(47, 111, 143, 1);
   color: white;
+  opacity: 1;
 }
