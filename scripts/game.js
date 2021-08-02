@@ -6,6 +6,7 @@ import {
   isCh,
 } from './utils/shortHands.js';
 import { setupCandidatesInput } from './components/candidatesSelector.js';
+import { showAlertNoSelections, hideAlertNoSelections } from './viewController.js';
 
 class Game {
   constructor() {
@@ -23,7 +24,7 @@ class Game {
     this.focusedCellIndex = -1;
   }
 
-  updateView(store) {
+  setupPuzzle(store) {
     const puzzleNumbers = store.puzzle.split('');
     const gameNumbers = store.game.split('');
   
@@ -45,7 +46,7 @@ class Game {
 
   checkCell(val) {
     if (this.focusedCellIndex === -1) {
-      this.showAlertNoSelections();
+      showAlertNoSelections();
       return;
     }
     const cell = gel(`cell-${this.focusedCellIndex}`);
@@ -78,7 +79,7 @@ class Game {
 
   checkCandidate(candidateNumber, check) {
     if (this.focusedCellIndex === -1) {
-      this.showAlertNoSelections();
+      showAlertNoSelections();
       return false;
     }
     const candidate = gel(`candidate-${this.focusedCellIndex}-${candidateNumber}`);
@@ -101,7 +102,7 @@ class Game {
   }
 
   focusCell(index) {
-    this.hideAlertNoSelections();
+    hideAlertNoSelections();
     this.clearFocus();
     if (index > -1) {
       this.candidateContainers[index].className = 'cell-candidates-container focusedCell';
@@ -121,14 +122,6 @@ class Game {
     if (this.focusedCellIndex > -1) {
       this.focusCell(-1);
     }
-  }
-
-  showAlertNoSelections() {
-    gel('alertNoSelection').style.visibility = 'visible';
-  }
-
-  hideAlertNoSelections() {
-    gel('alertNoSelection').style.visibility = 'hidden';
   }
 }
 

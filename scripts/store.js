@@ -23,6 +23,13 @@ class Store {
     this.exclude = getData('exclude') || '?';
     this.candidatesSet = getData('candidatesSet') || '?';
 
+    this.levelCaptions = [
+      'Easy',
+      'Medium',
+      'Hard',
+      'Evil',
+      'Beatific',
+    ];
   }
 
   store(key, value) {

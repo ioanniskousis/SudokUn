@@ -6,13 +6,11 @@ import { layout, clickOnGame, clickOnSelectors } from './layout.js';
 import { createModeButtonEvents } from './components/modeButtonContainer.js';
 import { createNumberButtonsEvents } from './components/numbersSelector.js';
 import { createCandidateButtonsEvents } from './components/candidatesSelector.js';
+import { showAlertNoSelections, hideAlertNoSelections } from './viewController.js';
 
 function mainClick(e, game) {
   if ((game.focusedCellIndex > -1) && (!clickOnGame(e))) {
     game.focusCell(-1);
-  }
-  if (!clickOnSelectors(e)) {
-    // game.hideAlertNoSelections();
   }
 }
 
@@ -24,7 +22,7 @@ function createCellsClick(game) {
 }
 
 function wKeyDown(event, game) {
-  game.hideAlertNoSelections();
+  hideAlertNoSelections();
 
   const keyCode = event.keyCode;
   // alert(keyCode);
@@ -108,7 +106,7 @@ function wKeyDown(event, game) {
       var chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
       game.checkCell(parseInt(chars[inputNumber], 10));
     } else {
-      game.showAlertNoSelections();
+      showAlertNoSelections();
     }
     return;
   }
@@ -120,7 +118,7 @@ function createEvents(game) {
   window.addEventListener('resize', () => layout());
   window.addEventListener('keydown', (e) => wKeyDown(e, game));
   gel('main').onclick = (e) => mainClick(e, game);
-  gel('alertNoSelection').onclick = (e) => game.hideAlertNoSelections();
+  gel('alertNoSelection').onclick = (e) => hideAlertNoSelections();
   
   createModeButtonEvents();
   createNumberButtonsEvents(game);

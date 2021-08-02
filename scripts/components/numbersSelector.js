@@ -18,11 +18,11 @@ function createNumbersSelector() {
   return panel;
 }
 
-export function createNumberButtonsEvents(gamePlay) {
+export function createNumberButtonsEvents(game) {
   for (let i = 0; i < 10; i++) {
     const button = gel(`number-button-${i}`);
     button.onclick = (e) => {
-      gamePlay.checkCell(parseInt(gat(button, 'value')));
+      game.checkCell(parseInt(gat(button, 'value')));
     }
   }
 }

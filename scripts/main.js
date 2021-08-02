@@ -8,21 +8,24 @@ import Game from './game.js';
 import Store from './store.js';
 
 import createEvents from './events.js';
+import { showPuzzleLevel } from './viewController.js';
 
 function handleLoadResponse() {
-  gamePlay.updateView(gameStore);
+  game.setupPuzzle(store);
+  showPuzzleLevel(store);
 }
 
 function initGame() {
-  gamePlay = new Game();
-  gameStore.loadPuzzle(handleLoadResponse, null);
+  store = new Store();
+  game = new Game();
+  store.loadPuzzle(handleLoadResponse, null);
 }
 
 window.addEventListener('load', () => {
   doc(gel('main'), createPlayGround());
   initGame();
-  createEvents(gamePlay);
+  createEvents(game);
 });
 
-const gameStore = new Store();
-let gamePlay = null;
+let store = null;
+let game = null;

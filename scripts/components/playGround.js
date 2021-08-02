@@ -3,7 +3,7 @@ import {
   doc,
 } from '../utils/shortHands.js';
 import createGrid from './grid.js';
-import createInputController from './inputController.js';
+import createFileController from './fileController.js';
 import createTipsController from './tipsController.js';
 import createSearchController from './searchController.js';
 import createNumbersSelector from './numbersSelector.js';
@@ -19,7 +19,7 @@ function createPlayGround() {
   doc(playGround, createNumbersSelector());
   doc(playGround, createCandidatesSelector());
 
-  doc(playGround, createInputController());
+  doc(playGround, createFileController());
   doc(playGround, createTipsController());
 
   doc(playGround, createModeButtonContainer());

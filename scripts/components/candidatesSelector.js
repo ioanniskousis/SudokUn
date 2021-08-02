@@ -35,11 +35,11 @@ export function setupCandidatesInput(cellIndex) {
   }
 }
 
-export function createCandidateButtonsEvents(gamePlay) {
+export function createCandidateButtonsEvents(game) {
   for (let i = 1; i < 10; i++) {
     const button = gel(`candidate-button-${i}`);
     button.onclick = (e) => {
-      if (gamePlay.checkCandidate(parseInt(gat(button, 'value')), !isCh(button))) {
+      if (game.checkCandidate(parseInt(gat(button, 'value')), !isCh(button))) {
         swapCh(button);
         button.className = isCh(button) ? 'candidate-button' : 'candidate-button halfOpac';
       }

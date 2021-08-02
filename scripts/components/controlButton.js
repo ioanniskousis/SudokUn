@@ -14,4 +14,15 @@ function createControlButton(buttonId, image) {
   return button;
 }
 
-export default createControlButton;
+function createFileInfo(id) {
+  const div = crel('div');
+  div.id = id;
+  div.className = 'file-info';
+
+  return div;
+}
+
+export {
+  createControlButton,
+  createFileInfo,
+}

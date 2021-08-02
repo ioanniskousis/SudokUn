@@ -3,7 +3,7 @@ import {
   crel,
   doc,
 } from '../utils/shortHands.js';
-import createControlButton from './controlButton.js';
+import { createControlButton } from './controlButton.js';
 
 function createTipsController() {
   const panel = crel('div');
