@@ -92,6 +92,8 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   const gridSize = isLandscape ? parseInt(parentWidth * 9 / 11) : parentWidth;
   const cellSize = isLandscape ? parentWidth / 11 : parentHeight / 13;
 
+  const alertNoSelection = gel('alertNoSelection');
+
   const numbersSelector = gel('numbersSelector');
   const numberButtons = numbersSelector.children;
   for (let i = 0; i < numberButtons.length; i++) {
@@ -143,7 +145,9 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     bounds.setRect (cellSize, 0, gridSize - 2, cellSize);
     bounds.bound(numbersSelector);
     bounds.bound(candidatesSelector);
-    
+    bounds.bound(alertNoSelection);
+    alertNoSelection.style.fontSize = cellSize * 0.8;
+
     bounds.setRect (0, cellSize, cellSize, (gridSize - 6.0) / 3.0);
     bounds.bound(inputController);
 
@@ -159,6 +163,8 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     bounds.setRect (0, cellSize, gridSize, cellSize);
     bounds.bound(numbersSelector);
     bounds.bound(candidatesSelector);
+    bounds.bound(alertNoSelection);
+    alertNoSelection.style.fontSize = cellSize * 0.8;
 
     bounds.setRect(0, 0, (gridSize - 6.0) / 3.0, cellSize);
     bounds.bound(inputController);
@@ -220,7 +226,15 @@ function clickOnGame(e) {
   return bounds.contains(e.pageX, e.pageY);
 }
 
+function clickOnSelectors(e) {
+  const bounds = new Bounds();
+  bounds.getRect(gel('numbersSelector'));
+
+  return bounds.contains(e.pageX, e.pageY);
+}
+
 export {
   layout,
   clickOnGame,
+  clickOnSelectors,
 }

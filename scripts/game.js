@@ -33,21 +33,19 @@ class Game {
         cell.innerHTML = puzzleNumbers[i];
         cell.className = 'grid-cell grid-cell-given';
         sat(cell, 'given', '1');
-        cell.onclick = '';
       } else {
         if (gameNumbers[i] > 0) {
           cell.innerHTML = gameNumbers[i];
           cell.className = 'grid-cell';
         }
         sat(cell, 'given', '0');
-        cell.onclick = (e) => this.cellClick(e);
       }
     });
   }
 
   checkCell(val) {
     if (this.focusedCellIndex === -1) {
-      alert('select a cell');
+      this.showAlertNoSelections();
       return;
     }
     const cell = gel(`cell-${this.focusedCellIndex}`);
@@ -80,7 +78,7 @@ class Game {
 
   checkCandidate(candidateNumber, check) {
     if (this.focusedCellIndex === -1) {
-      alert('select a cell');
+      this.showAlertNoSelections();
       return false;
     }
     const candidate = gel(`candidate-${this.focusedCellIndex}-${candidateNumber}`);
@@ -103,6 +101,7 @@ class Game {
   }
 
   focusCell(index) {
+    this.hideAlertNoSelections();
     this.clearFocus();
     if (index > -1) {
       this.candidateContainers[index].className = 'cell-candidates-container focusedCell';
@@ -113,6 +112,8 @@ class Game {
 
   cellClick(e) {
     const cell = e.target;
+    if (gat(cell, 'given') === '1') return;
+
     this.focusCell(parseInt(gat(cell, 'index'), 10));
   }
 
@@ -122,6 +123,13 @@ class Game {
     }
   }
 
+  showAlertNoSelections() {
+    gel('alertNoSelection').style.visibility = 'visible';
+  }
+
+  hideAlertNoSelections() {
+    gel('alertNoSelection').style.visibility = 'hidden';
+  }
 }
 
 export default Game;

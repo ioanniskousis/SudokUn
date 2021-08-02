@@ -9,6 +9,7 @@ import createSearchController from './searchController.js';
 import createNumbersSelector from './numbersSelector.js';
 import createCandidatesSelector from './candidatesSelector.js';
 import createModeButtonContainer from './modeButtonContainer.js';
+import createAlertNoSelection from './alertNoSelection.js';
 
 function createPlayGround() {
   const playGround = crel('div');
@@ -23,6 +24,8 @@ function createPlayGround() {
 
   doc(playGround, createModeButtonContainer());
 
+  doc(playGround, createAlertNoSelection());
+  
   return playGround;
 }
 

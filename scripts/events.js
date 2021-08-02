@@ -2,7 +2,7 @@ import {
   gel,
 } from './utils/shortHands.js';
 
-import { layout, clickOnGame } from './layout.js';
+import { layout, clickOnGame, clickOnSelectors } from './layout.js';
 import { createModeButtonEvents } from './components/modeButtonContainer.js';
 import { createNumberButtonsEvents } from './components/numbersSelector.js';
 import { createCandidateButtonsEvents } from './components/candidatesSelector.js';
@@ -11,9 +11,21 @@ function mainClick(e, game) {
   if ((game.focusedCellIndex > -1) && (!clickOnGame(e))) {
     game.focusCell(-1);
   }
+  if (!clickOnSelectors(e)) {
+    // game.hideAlertNoSelections();
+  }
+}
+
+function createCellsClick(game) {
+  for (let i = 0; i < 81; i++) {
+    const cell = gel(`cell-${i}`);
+    cell.onclick = (e) => game.cellClick(e);
+  }
 }
 
 function wKeyDown(event, game) {
+  game.hideAlertNoSelections();
+
   const keyCode = event.keyCode;
   // alert(keyCode);
   if (keyCode === 27) {
@@ -31,10 +43,7 @@ function wKeyDown(event, game) {
   if ((keyCode >= 37) && (keyCode <= 40)) {
     event.preventDefault();
   }
-  if (game.focusedCellIndex === -1) {
-    return;
-  }
-  if ((keyCode >= 37) && (keyCode <= 40)) {
+  if ((keyCode >= 37) && (keyCode <= 40) && (game.focusedCellIndex > -1)) {
     event.preventDefault();
     let selectedCellIndex = game.focusedCellIndex;
     if (keyCode == 37) {
@@ -90,17 +99,20 @@ function wKeyDown(event, game) {
   // }
   if ((keyCode === 8) || (keyCode === 46)) game.checkCell(0);
 
-  if (game.focusedCellIndex > -1) {
-    let inputNumber = -1;
-    if ((keyCode > 47) && (keyCode < 58)) inputNumber = keyCode - 48;
-    if ((keyCode > 95) && (keyCode < 106)) inputNumber = keyCode - 96;
+  let inputNumber = -1;
+  if ((keyCode > 47) && (keyCode < 58)) inputNumber = keyCode - 48;
+  if ((keyCode > 95) && (keyCode < 106)) inputNumber = keyCode - 96;
 
-    if (inputNumber > -1) {
+  if (inputNumber > -1) {
+    if (game.focusedCellIndex > -1) {
       var chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
       game.checkCell(parseInt(chars[inputNumber], 10));
-      return;     
+    } else {
+      game.showAlertNoSelections();
     }
+    return;
   }
+
 
 }
 
@@ -108,10 +120,13 @@ function createEvents(game) {
   window.addEventListener('resize', () => layout());
   window.addEventListener('keydown', (e) => wKeyDown(e, game));
   gel('main').onclick = (e) => mainClick(e, game);
-
+  gel('alertNoSelection').onclick = (e) => game.hideAlertNoSelections();
+  
   createModeButtonEvents();
   createNumberButtonsEvents(game);
   createCandidateButtonsEvents(game);
+  createCellsClick(game);
+
   layout();
 }
 

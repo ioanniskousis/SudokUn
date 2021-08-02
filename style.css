@@ -24,6 +24,11 @@ div {
   box-sizing: border-box;
 }
 
+.visible-flex {
+  display: flex;
+  visibility: visible;
+}
+
 .hidden {
   display: none;
   visibility: hidden;
@@ -166,4 +171,14 @@ div {
   background-color: rgba(47, 111, 143, 1);
   color: white;
   opacity: 1;
+}
+
+.alertNoSelection {
+  position: absolute;
+  background-color: red;
+  color: white;
+  display: flex;
+  visibility: hidden;
+  justify-content: center;
+  align-items: center;
 }
