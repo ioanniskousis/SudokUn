@@ -13,7 +13,8 @@ function hideAlertNoSelections() {
 function showPuzzInfo(store) {
   const pLevel = store.levelCaptions[store.selectedLevel];
   const pIndex = store.selectedIndex;
-  gel('puzzlelevelLabel').innerHTML = `${pLevel} ${pIndex}`;
+  gel('puzzleLevelLabel').innerHTML = pLevel;
+  gel('puzzleIndexLabel').innerHTML = pIndex;
 }
 
 function showFileSelector() {

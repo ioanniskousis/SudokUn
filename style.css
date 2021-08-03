@@ -168,14 +168,21 @@ input[type=number] {
   background-position: 90% 90%;
   background-repeat: no-repeat;
   background-size: 40%;
-  background-image: url('images/edit-blue.png');
+  background-image: url('./images/edit-blue.png');
   transition: top 0.5s ease-in-out, left 0.5s ease-in-out, background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
 
 .candidate-button:active {
   background-color: rgba(47, 111, 143, 1);
   color: white;
-  background-image: url('images/edit-white.png');
+  background-image: url('./images/edit-white.png');
+}
+
+.control-button:hover,
+.number-button:hover {
+  background-color: rgba(47, 111, 143, 0.8);
+  color: white;
+  opacity: 0.8;
 }
 
 .control-button:active,
@@ -183,6 +190,10 @@ input[type=number] {
   background-color: rgba(47, 111, 143, 1);
   color: white;
   opacity: 1;
+}
+
+.mode-checked {
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .alertNoSelection {
@@ -204,7 +215,7 @@ input[type=number] {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* border-radius: 50%; */
+  border-radius: 50%;
   text-align: center;
 }
 
@@ -314,4 +325,28 @@ input[type=number] {
 .playButton:active {
   background-color: rgba(47, 111, 143, 0.5);
   color: #379;
+}
+
+.edit-white {
+  background-image: url('./images/edit-white.png');
+}
+
+.edit-blue {
+  background-image: url('./images/edit-blue.png');
+}
+
+.grid-white {
+  background-image: url('./images/grid-white.png');
+}
+
+.search-white {
+  background-image: url('./images/search-white.png');
+}
+
+.bulb-white {
+  background-image: url('./images/bulb-white.png');
+}
+
+.search-white {
+  background-image: url('./images/search-white.png');
 }

@@ -124,7 +124,7 @@ function layoutGrid(parentWidth, parentHeight, isLandscape) {
 
 function layoutPanels(parentWidth, parentHeight, isLandscape) {
   const gridSize = isLandscape ? parseInt(parentWidth * 9 / 11) : parentWidth;
-  const cellSize = isLandscape ? parentWidth / 11 : parentHeight / 13;
+  const cellSize = isLandscape ? parseInt(parentWidth / 11, 10) : parseInt(parentHeight / 13, 10);
 
   const alertNoSelection = gel('alertNoSelection');
 
@@ -132,20 +132,20 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   const numberButtons = numbersSelector.children;
   for (let i = 0; i < numberButtons.length; i++) {
     const button = numberButtons[i];
-    button.style.width = `${cellSize * 0.6}px`;
-    button.style.height = `${cellSize * 0.6}px`;
-    button.style.margin = `${cellSize * 0.05}px`;
-    button.style.fontSize = `${cellSize * 0.4}px`;
+    button.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
+    button.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
+    button.style.margin = `${parseInt(cellSize * 0.05, 10)}px`;
+    button.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
   }
 
   const candidatesSelector = gel('candidatesSelector');
   const candidateButtons = candidatesSelector.children;
   for (let i = 0; i < candidateButtons.length; i++) {
     const button = candidateButtons[i];
-    button.style.width = `${cellSize * 0.6}px`;
-    button.style.height = `${cellSize * 0.6}px`;
-    button.style.margin = `${cellSize * 0.05}px`;
-    button.style.fontSize = `${cellSize * 0.4}px`;
+    button.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
+    button.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
+    button.style.margin = `${parseInt(cellSize * 0.05, 10)}px`;
+    button.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
   }
 
   const fileController = gel('fileController');
@@ -155,22 +155,22 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
 
   const insertModeContainer = gel('insertModeContainer');
   const insertModeButton = gel('insertModeButton');
-  insertModeButton.style.width = `${cellSize * 0.6}px`;
-  insertModeButton.style.height = `${cellSize * 0.6}px`;
+  insertModeButton.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
+  insertModeButton.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
 
   for (let i = 0; i < fileControllerButtons.length; i++) {
     const element = fileControllerButtons[i];
-    element.style.width = `${cellSize * 0.8}px`;
-    element.style.height = `${cellSize * 0.8}px`;
-    element.style.margin = `${cellSize * 0.1}px`;
-    element.style.fontSize = `${cellSize * 0.2}px`;
+    element.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
+    element.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
+    element.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+    element.style.fontSize = `${parseInt(cellSize * 0.2, 10)}px`;
   }
 
   for (let i = 0; i < tipsControllerButtons.length; i++) {
     const button = tipsControllerButtons[i];
-    button.style.width = `${cellSize * 0.8}px`;
-    button.style.height = `${cellSize * 0.8}px`;
-    button.style.margin = `${cellSize * 0.1}px`;
+    button.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
+    button.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
+    button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
   }
 
   const bounds = new Bounds();
@@ -183,12 +183,12 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     bounds.bound(numbersSelector);
     bounds.bound(candidatesSelector);
     bounds.bound(alertNoSelection);
-    alertNoSelection.style.fontSize = `${cellSize * 0.4}px`;
+    alertNoSelection.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
 
-    bounds.setRect (0, cellSize, cellSize, (gridSize - 6.0) / 3.0);
+    bounds.setRect (0, cellSize, cellSize, parseInt((gridSize - 6.0) / 3.0, 10));
     bounds.bound(fileController);
 
-    bounds.setRect (cellSize + gridSize, cellSize, cellSize, (gridSize - 6.0) / 3.0);
+    bounds.setRect (cellSize + gridSize, cellSize, cellSize, parseInt((gridSize - 6.0) / 3.0, 10));
     bounds.bound(tipsController);
 
     bounds.setRect (cellSize, 0, cellSize, cellSize);
@@ -201,12 +201,12 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     bounds.bound(numbersSelector);
     bounds.bound(candidatesSelector);
     bounds.bound(alertNoSelection);
-    alertNoSelection.style.fontSize = `${cellSize * 0.4}px`;
+    alertNoSelection.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
 
-    bounds.setRect(0, 0, (gridSize - 6.0) / 3.0, cellSize);
+    bounds.setRect(0, 0, parseInt((gridSize - 6.0) / 3.0, 10), cellSize);
     bounds.bound(fileController);
 
-    bounds.setRect(((gridSize + 3.0) * 7.0 / 9.0), 0, (gridSize - 6.0) * 2.0 / 9.0, cellSize);
+    bounds.setRect(parseInt(((gridSize + 3.0) * 7.0 / 9.0), 10), 0, parseInt((gridSize - 6.0) * 2.0 / 9.0, 10), cellSize);
     bounds.bound(tipsController);
 
     bounds.setRect (0, cellSize, cellSize, cellSize);

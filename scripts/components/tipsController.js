@@ -10,8 +10,8 @@ function createTipsController() {
   panel.id = 'tipsController';
   panel.className = 'buttons-panel';
 
-  doc(panel, createControlButton('advancedButton', 'bulb-white.png'));
-  doc(panel, createControlButton('searchButton', 'search-white.png'));
+  doc(panel, createControlButton('advancedButton', 'bulb-white'));
+  doc(panel, createControlButton('searchButton', 'search-white'));
 
   return panel;
 }

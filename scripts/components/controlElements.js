@@ -3,11 +3,10 @@ import {
   sat,
 } from '../utils/shortHands.js';
 
-function createControlButton(buttonId, image) {
+function createControlButton(buttonId, imageClass) {
   const button = crel('button');
-  button.className = 'control-button';
+  button.className = `control-button ${imageClass}`;
   button.id = buttonId;
-  button.style.backgroundImage = `url('../../images/${image}')`;
   button.style.border = 'none';
   sat(button, 'checked', '0');
 

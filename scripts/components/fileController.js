@@ -10,12 +10,12 @@ function createFileController() {
   panel.id = 'fileController';
   panel.className = 'buttons-panel';
 
-  doc(panel, createControlButton('fileSelectorButton', 'grid-white.png'));
-  doc(panel, createFileInfo('puzzlelevelLabel'));
-  // doc(panel, createFileInfo('puzzleIndexLabel'));
+  doc(panel, createControlButton('fileSelectorButton', 'grid-white'));
+  doc(panel, createFileInfo('puzzleLevelLabel'));
+  doc(panel, createFileInfo('puzzleIndexLabel'));
 
-  // doc(panel, createControlButton('candidatesSelectButton', 'edit-white.png'));
-  // doc(panel, createControlButton('candidatesExcludeButton', 'delete-white.png'));
+  // doc(panel, createControlButton('candidatesSelectButton', 'edit-white'));
+  // doc(panel, createControlButton('candidatesExcludeButton', 'delete-white'));
 
   return panel;
 }
