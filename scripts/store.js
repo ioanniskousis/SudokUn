@@ -7,6 +7,7 @@ class Store {
     this.defaultLang = getData('defaultLang') || 1;
     this.puzzle = getData('puzzle') || '?';
     this.givens = getData('givens') || 0;
+    this.hardness = getData('hardness') || 0;
     this.game = getData('game') || '?';
     this.selectedLevel = getData('selectedLevel') || 0;
 
@@ -34,7 +35,23 @@ class Store {
     ];
   }
 
-  store(key, value) {
+  storeGame() {
+    this.storeValue('puzzle', this.puzzle);
+    this.storeValue('game', this.game);
+    this.storeValue('selectedLevel', this.selectedLevel);
+    this.storeValue(`levelIndex${this.selectedLevel}`, this.levelIndex[this.selectedLevel]);
+    this.storeValue('selectedIndex', this.selectedIndex);
+
+    this.storeValue('givens', this.givens);
+    this.storeValue('hardness', this.hardness);
+
+    this.storeValue('undo', this.undo);
+    this.storeValue('undosIdx', this.undosIdx);
+    this.storeValue('exclude', this.exclude);
+    this.storeValue('candidatesSet', this.candidatesSet);
+  }
+
+  storeValue(key, value) {
     setData(key, value);
   }
 
@@ -58,7 +75,8 @@ class Store {
     .then((data) => {
       for (let i = 0; i < 5; i++) {
         this.levelLimits[i] = data.levelLimits[i]
-        gel(`levelLabel-${i}`).innerHTML = this.levelCaptions[i] + `<span class="small">${this.levelLimits[i]}</span>`;
+        gel(`levelLabel-${i}`).innerHTML = this.levelCaptions[i];
+        //  + `<span class="small">${this.levelLimits[i]}</span>`;
         gel(`indexInput-${i}`).max = this.levelLimits[i];
       }
     })
@@ -66,7 +84,7 @@ class Store {
 
   }
 
-  async loadPuzzle(handler, credentials) {
+  async loadPuzzle(handler, clearGame) {
     const headers = new Headers();
     headers.append('pragma', 'no-cache');
     headers.append('cache-control', 'no-cache');
@@ -81,19 +99,30 @@ class Store {
     const getPuzzleUrl = `${baseUrl}?${srch}`;
 
     await fetch(getPuzzleUrl, options)
+    .then((data) => data.json())
     .then((data) => {
-      // console.log(data);
-      // console.log(data.json());
-      // return data.json();
-      // alert(data);
-      return data.json();
-    })
-    .then((data) => {
+      // alert('clearGame: ' + clearGame);
+      // alert('this.game: ' + this.game);
       // alert(JSON.stringify(data));
-      // alert(data);
+
+      this.selectedLevel = data.level;
+      this.selectedIndex = data.counter;
+      this.givens = data.givens;
+      this.hardness = data.hadrness;
+      this.levelIndex[this.selectedLevel] = this.selectedIndex;
+
       this.puzzle = data.puzzle;
       this.givens = data.givens;
-      if (!credentials) this.game = data.puzzle;
+
+      if (clearGame || (this.game === '?')) {
+        this.game = data.puzzle;
+        this.undo = '?';
+        this.undosIdx = 0;
+        this.exclude = '?';
+        this.candidatesSet = '?';
+      }
+
+      this.storeGame();
 
       handler();
     })

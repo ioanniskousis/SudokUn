@@ -10,6 +10,7 @@ import createNumbersSelector from './numbersSelector.js';
 import createCandidatesSelector from './candidatesSelector.js';
 import createModeButtonContainer from './modeButtonContainer.js';
 import createAlertNoSelection from './alertNoSelection.js';
+import { createUndosController, createRestartController } from './undosController.js';
 
 function createPlayGround() {
   const playGround = crel('div');
@@ -21,7 +22,9 @@ function createPlayGround() {
 
   doc(playGround, createFileController());
   doc(playGround, createTipsController());
-
+  doc(playGround, createUndosController());
+  doc(playGround, createRestartController());
+  
   doc(playGround, createModeButtonContainer());
 
   doc(playGround, createAlertNoSelection());

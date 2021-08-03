@@ -13,19 +13,19 @@ import createEvents from './events.js';
 import { showPuzzInfo } from './viewController.js';
 
 function handleLoadResponse() {
-  game.setupPuzzle(store);
+  game.setupPuzzle();
   showPuzzInfo(store);
 }
 
-function loadPuzzle(credentials) {
-  store.loadPuzzle(handleLoadResponse, credentials);
+function loadPuzzle(clearGame) {
+  store.loadPuzzle(handleLoadResponse, clearGame);
 }
 
 function initGame() {
   store = new Store();
-  game = new Game();
+  game = new Game(store);
   store.loadLimits();
-  loadPuzzle(null);
+  loadPuzzle(false);
 }
 
 function render() {

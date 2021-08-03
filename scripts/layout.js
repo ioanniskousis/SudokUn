@@ -173,6 +173,24 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
   }
 
+  const undosController = gel('undosController');
+  const undosControllerButtons = undosController.children;
+  for (let i = 0; i < undosControllerButtons.length; i++) {
+    const button = undosControllerButtons[i];
+    button.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
+    button.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
+    button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+  }
+
+  const restartController = gel('restartController');
+  const restartControllerButtons = restartController.children;
+  for (let i = 0; i < restartControllerButtons.length; i++) {
+    const button = restartControllerButtons[i];
+    button.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
+    button.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
+    button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+  }
+
   const bounds = new Bounds();
 
   if (isLandscape) {
@@ -184,6 +202,12 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     bounds.bound(candidatesSelector);
     bounds.bound(alertNoSelection);
     alertNoSelection.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
+
+    bounds.setRect (cellSize, cellSize + gridSize, gridSize, cellSize);
+    bounds.bound(undosController);
+
+    bounds.setRect (gridSize, cellSize + gridSize, cellSize, cellSize);
+    bounds.bound(restartController);
 
     bounds.setRect (0, cellSize, cellSize, parseInt((gridSize - 6.0) / 3.0, 10));
     bounds.bound(fileController);
@@ -202,6 +226,12 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     bounds.bound(candidatesSelector);
     bounds.bound(alertNoSelection);
     alertNoSelection.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
+
+    bounds.setRect (0, cellSize + cellSize + gridSize, gridSize, cellSize);
+    bounds.bound(undosController);
+
+    bounds.setRect (gridSize, cellSize + cellSize + gridSize, cellSize, cellSize);
+    bounds.bound(restartController);
 
     bounds.setRect(0, 0, parseInt((gridSize - 6.0) / 3.0, 10), cellSize);
     bounds.bound(fileController);

@@ -10,7 +10,7 @@ function createSearchController() {
   panel.id = 'searchController';
   panel.className = 'buttons-panel';
 
-  doc(panel, createControlButton('searchButton', 'search-white.png'));
+  doc(panel, createControlButton('searchButton', 'search-white'));
 
   return panel;
 }

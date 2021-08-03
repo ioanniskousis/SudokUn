@@ -9,7 +9,7 @@ import { setupCandidatesInput } from './components/candidatesSelector.js';
 import { showAlertNoSelections, hideAlertNoSelections } from './viewController.js';
 
 class Game {
-  constructor() {
+  constructor(store) {
     this.cells = new Array(81);
     this.candidateContainers = new Array(81);
     this.candidates = new Array(81, 9);
@@ -22,11 +22,12 @@ class Game {
     }
     
     this.focusedCellIndex = -1;
+    this.store = store;
   }
 
-  setupPuzzle(store) {
-    const puzzleNumbers = store.puzzle.split('');
-    const gameNumbers = store.game.split('');
+  setupPuzzle() {
+    const puzzleNumbers = this.store.puzzle.split('');
+    const gameNumbers = this.store.game.split('');
   
     this.cells.forEach((cell, i) => {
       sat(cell, 'value', gameNumbers[i].toString());
@@ -59,8 +60,19 @@ class Game {
     } else {
       this.showCandidates();
     }
+    this.store.game = this.gameString();
+    this.store.storeGame();
   }
 
+  gameString() { 
+    var str = '';
+    this.cells.forEach((cell) => {
+      str = str.concat(gat(cell, 'value'));
+    });
+
+    return str;
+  }
+  
   cellIsEmpty(index) {
     return gat(gel(`cell-${index}`), 'value') === '0';
   }
@@ -124,6 +136,16 @@ class Game {
     if (this.focusedCellIndex > -1) {
       this.focusCell(-1);
     }
+  }
+}
+
+class Undo {
+  constructor(type, cellIndex, candidateIndex, prevValue, newValue) {
+    this.type = type;
+    this.cellIndex = cellIndex;
+    this.candidateIndex = candidateIndex;
+    this.prevValue = prevValue;
+    this.newValue = newValue;
   }
 }
 

@@ -89,7 +89,7 @@ export function createFileSelectorEvents(store, loadPuzzle) {
       const index = parseInt(gel(`indexInput-${i}`).value, 10);
       store.selectedLevel = i;
       store.selectedIndex = index;
-      loadPuzzle(null);
+      loadPuzzle(true);
       hideFileSelector();
     }
   }
