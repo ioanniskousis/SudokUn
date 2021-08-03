@@ -10,14 +10,28 @@ function hideAlertNoSelections() {
   gel('alertNoSelection').style.visibility = 'hidden';
 }
 
-function showPuzzleLevel(store) {
+function showPuzzInfo(store) {
   const pLevel = store.levelCaptions[store.selectedLevel];
   const pIndex = store.selectedIndex;
-  gel('puzzleLevelLabel').innerHTML = `${pLevel} ${pIndex}`;
+  gel('puzzlelevelLabel').innerHTML = `${pLevel} ${pIndex}`;
+}
+
+function showFileSelector() {
+  gel('fileSelectorContainer').style.visibility = 'visible';
+  gel('fileSelector').style.opacity = 1.0;
+}
+
+function hideFileSelector() {
+  gel('fileSelector').style.opacity = 0.0;
+  setTimeout(() => {
+    gel('fileSelectorContainer').style.visibility = 'hidden';
+  }, 300);
 }
 
 export {
   showAlertNoSelections,
   hideAlertNoSelections,
-  showPuzzleLevel,
+  showPuzzInfo,
+  showFileSelector,
+  hideFileSelector,
 }

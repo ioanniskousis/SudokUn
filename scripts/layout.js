@@ -1,6 +1,40 @@
 import { gel } from './utils/shortHands.js';
 import Bounds from './utils/bounds.js';
 
+function layoutFileSelector() {
+  const bounds = new Bounds();
+  bounds.getRect(gel('main-grid'));
+
+  const fileSelector = gel('fileSelector');
+  bounds.bound(fileSelector);
+
+  const levelSelectors = fileSelector.children;
+  for (let i = 0; i < levelSelectors.length; i++) {
+    const levelSelector = levelSelectors[i];
+    levelSelector.style.fontSize = `${bounds.height * 0.04}px`;
+
+    const shiftLeft = gel(`levelShiftLeft-${i}`);
+    shiftLeft.style.width = `${bounds.height * 0.06}px`;
+    shiftLeft.style.height = `${bounds.height * 0.06}px`;
+    
+    const shiftRight = gel(`levelShiftRight-${i}`);
+    shiftRight.style.width = `${bounds.height * 0.06}px`;
+    shiftRight.style.height = `${bounds.height * 0.06}px`;
+
+    const indexInput = gel(`indexInput-${i}`);
+    indexInput.style.width = `${bounds.height * 0.1}px`;
+    indexInput.style.margin = `0 ${bounds.height * 0.02}px`;
+    indexInput.style.fontSize = `${bounds.height * 0.03}px`;
+    indexInput.style.padding = `${bounds.height * 0.01}px`;
+
+    const playButton = gel(`playButton-${i}`);
+    playButton.style.fontSize = `${bounds.height * 0.03}px`;
+    playButton.style.padding = `${bounds.height * 0.02}px ${bounds.height * 0.05}px`;
+    playButton.style.marginLeft = `${bounds.height * 0.05}px`;
+  }
+
+}
+
 function layoutCellCandidates(cellIndex, cellSize) {
   const candidateSize = (cellSize - 2) / 3.0;
   const locations = [0.0, candidateSize , candidateSize * 2.0];
@@ -114,8 +148,10 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     button.style.fontSize = `${cellSize * 0.4}px`;
   }
 
-  const fileControllerButtons = gel('fileController').children;
-  const tipsControllerButtons = gel('tipsController').children;
+  const fileController = gel('fileController');
+  const tipsController = gel('tipsController');
+  const fileControllerButtons = fileController.children;
+  const tipsControllerButtons = tipsController.children;
 
   const insertModeContainer = gel('insertModeContainer');
   const insertModeButton = gel('insertModeButton');
@@ -214,7 +250,9 @@ function layout() {
   const wWidth = window.innerWidth;
   const wHeight = window.innerHeight;
   const isLandscape = wWidth > wHeight;
+
   layoutPlayGround(wWidth, wHeight, isLandscape);
+  layoutFileSelector();
 }
 
 function clickOnGame(e) {
@@ -223,6 +261,13 @@ function clickOnGame(e) {
   const cellSize = (bounds.width - 6.0) / 9.0;
   bounds.top -= cellSize;
   bounds.height += cellSize;
+
+  return bounds.contains(e.pageX, e.pageY);
+}
+
+function clickOnGrid(e) {
+  const bounds = new Bounds();
+  bounds.getRect(gel('main-grid'));
 
   return bounds.contains(e.pageX, e.pageY);
 }
@@ -238,4 +283,5 @@ export {
   layout,
   clickOnGame,
   clickOnSelectors,
+  clickOnGrid,
 }

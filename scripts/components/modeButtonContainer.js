@@ -5,7 +5,7 @@ import {
   swapCh,
   isCh,
 } from '../utils/shortHands.js';
-import { createControlButton } from './controlButton.js';
+import { createControlButton } from './controlElements.js';
 
 function createModeButtonContainer() {
   const panel = crel('div');

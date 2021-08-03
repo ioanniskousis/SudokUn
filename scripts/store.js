@@ -1,20 +1,22 @@
 import { setData, getData, removeData } from './utils/cookies.js';
+import { gel } from './utils/shortHands.js';
 
 class Store {
   constructor() {
     this.selectedCell = getData('selectedCell') || -1;
     this.defaultLang = getData('defaultLang') || 1;
-    this.puzzle = '?';
-    this.givens = 0;
+    this.puzzle = getData('puzzle') || '?';
+    this.givens = getData('givens') || 0;
     this.game = getData('game') || '?';
     this.selectedLevel = getData('selectedLevel') || 0;
 
     this.levelIndex = new Array(5);
-    this.levelIndex[0] = getData('levelIndex0') || 1;
-    this.levelIndex[1] = getData('levelIndex1') || 1;
-    this.levelIndex[2] = getData('levelIndex2') || 1;
-    this.levelIndex[3] = getData('levelIndex3') || 1;
-    this.levelIndex[4] = getData('levelIndex4') || 1;
+    for (let i = 0; i < 5; i++) {
+      this.levelIndex[i] = getData(`levelIndex${i}`) || 1;
+      gel(`indexInput-${i}`).value = this.levelIndex[i];
+    }
+
+    this.levelLimits = new Array(5);
 
     this.selectedIndex = this.levelIndex[this.selectedLevel];
 
@@ -40,16 +42,39 @@ class Store {
     removeData(key);
   }
   
-  async loadPuzzle(handler, credentials) {
+  async loadLimits() {
+    const headers = new Headers();
+    headers.append('pragma', 'no-cache');
+    headers.append('cache-control', 'no-cache');
+
     const options = {
       method: 'GET',
-      cache: 'no-cache',
-    }
+      headers: headers,
+    };
+    const getPuzzleUrl = 'https://www.sudokun.com/getLimits.php';
 
-    // cache: 'no-cache',
-    // headers: {
-    //   'Content-Type': 'application/json',
-    // }
+    await fetch(getPuzzleUrl, options)
+    .then((data) => data.json())
+    .then((data) => {
+      for (let i = 0; i < 5; i++) {
+        this.levelLimits[i] = data.levelLimits[i]
+        gel(`levelLabel-${i}`).innerHTML = this.levelCaptions[i] + `<span class="small">${this.levelLimits[i]}</span>`;
+        gel(`indexInput-${i}`).max = this.levelLimits[i];
+      }
+    })
+    .catch((error) => alert('loadLimits error: ' + error.message));
+
+  }
+
+  async loadPuzzle(handler, credentials) {
+    const headers = new Headers();
+    headers.append('pragma', 'no-cache');
+    headers.append('cache-control', 'no-cache');
+
+    const options = {
+      method: 'GET',
+      headers: headers,
+    }
     
     const baseUrl = 'https://www.sudokun.com/getPuzzle.php';
     const srch = `level=${this.selectedLevel}&counter=${this.selectedIndex}`;
@@ -72,7 +97,7 @@ class Store {
 
       handler();
     })
-    .catch((error) => alert('error: ' + error.message));
+    .catch((error) => alert('loadPuzzle error: ' + error.message));
 
 
   }

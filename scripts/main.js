@@ -4,27 +4,40 @@ import {
 } from './utils/shortHands.js';
 
 import createPlayGround from './components/playGround.js';
+import createFileSelectorContainer from './components/fileSelector.js';
+
 import Game from './game.js';
 import Store from './store.js';
 
 import createEvents from './events.js';
-import { showPuzzleLevel } from './viewController.js';
+import { showPuzzInfo } from './viewController.js';
 
 function handleLoadResponse() {
   game.setupPuzzle(store);
-  showPuzzleLevel(store);
+  showPuzzInfo(store);
+}
+
+function loadPuzzle(credentials) {
+  store.loadPuzzle(handleLoadResponse, credentials);
 }
 
 function initGame() {
   store = new Store();
   game = new Game();
-  store.loadPuzzle(handleLoadResponse, null);
+  store.loadLimits();
+  loadPuzzle(null);
+}
+
+function render() {
+  doc(gel('main'), createPlayGround());
+  doc(gel('main'), createFileSelectorContainer());
+
 }
 
 window.addEventListener('load', () => {
-  doc(gel('main'), createPlayGround());
+  render();
   initGame();
-  createEvents(game);
+  createEvents(game, store, loadPuzzle);
 });
 
 let store = null;

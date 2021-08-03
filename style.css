@@ -24,6 +24,21 @@ div {
   box-sizing: border-box;
 }
 
+.small {
+  font-size: xx-small;
+  color: brown;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .visible-flex {
   display: flex;
   visibility: visible;
@@ -129,7 +144,6 @@ div {
 
 .control-button {
   background-color: rgba(47, 111, 143, 0.5);
-  /* background-color: white; */
   border-radius: 50%;
   background-position: 50% 50%;
   background-repeat: no-repeat;
@@ -190,6 +204,114 @@ div {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   text-align: center;
+}
+
+#fileSelectorContainer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  visibility: hidden;
+}
+
+#fileSelector {
+  font-family: Arial, Helvetica, sans-serif;
+  position: absolute;
+  background-color: #379;
+  opacity: 0.0;
+  transition: opacity 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.levelSelector {
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 80%;
+  height: 10%;
+  margin-bottom: 1%;
+  padding: 0 2%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+.levelLabel {
+  width: 17%;
+  margin-right: 5%;
+  color: #379;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.levelCounts {
+  width: 10%;
+  text-align: right;
+  /* margin-right: 5%; */
+  flex: 1;
+  /* border: 1px solid #333; */
+}
+
+.shift-left {
+  background-color: rgba(255, 255, 255, 0.5);
+  /* background-color: white; */
+  border-radius: 50%;
+  background-image: url('./images/shift-left-blue.png');
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 50%;
+  opacity: 0.5;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.shift-left:active {
+  background-color: rgba(47, 111, 143, 1);
+  background-image: url('./images/shift-left-white.png');
+}
+
+.shift-right {
+  background-color: rgba(255, 255, 255, 0.5);
+  /* background-color: white; */
+  border-radius: 50%;
+  background-image: url('./images/shift-right-blue.png');
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 50%;
+  opacity: 0.5;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.shift-right:active {
+  background-color: rgba(47, 111, 143, 1);
+  background-image: url('./images/shift-right-white.png');
+}
+
+.indexInput {
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  color: #333;
+  text-align: center;
+  appearance: none;
+  border-radius: 2px;
+}
+
+.playButton {
+  border: none;
+  background-color: rgba(47, 111, 143, 1);
+  cursor: pointer;
+  border-radius: 2px;
+  color: white;
+  flex: 1;
+}
+
+.playButton:active {
+  background-color: rgba(47, 111, 143, 0.5);
+  color: #379;
 }

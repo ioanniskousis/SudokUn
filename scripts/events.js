@@ -7,6 +7,7 @@ import { createModeButtonEvents } from './components/modeButtonContainer.js';
 import { createNumberButtonsEvents } from './components/numbersSelector.js';
 import { createCandidateButtonsEvents } from './components/candidatesSelector.js';
 import { showAlertNoSelections, hideAlertNoSelections } from './viewController.js';
+import { createFileSelectorEvents } from './components/fileSelector.js';
 
 function mainClick(e, game) {
   if ((game.focusedCellIndex > -1) && (!clickOnGame(e))) {
@@ -22,24 +23,18 @@ function createCellsClick(game) {
 }
 
 function wKeyDown(event, game) {
+  const fileSelectorIsVisible = gel('fileSelectorContainer').style.visibility === 'visible';
+  if (fileSelectorIsVisible) return;
+
   hideAlertNoSelections();
 
   const keyCode = event.keyCode;
-  // alert(keyCode);
   if (keyCode === 27) {
-    event.preventDefault();
     game.escape();
     return;
   }
   if (keyCode == 9) {
-    event.preventDefault();
     return;
-  }
-  if ((keyCode == 32) || (keyCode == 33) || (keyCode == 34)) {
-    event.preventDefault();
-  }
-  if ((keyCode >= 37) && (keyCode <= 40)) {
-    event.preventDefault();
   }
   if ((keyCode >= 37) && (keyCode <= 40) && (game.focusedCellIndex > -1)) {
     event.preventDefault();
@@ -86,15 +81,6 @@ function wKeyDown(event, game) {
     return ;
   }
 
-  // if ((keyCode == 46) || (keyCode == 32) || (keyCode == 48) || (keyCode == 96)) {
-  //   event.preventDefault();
-  //   if (_gAttEl(selectedCell, 'prevValue') == '') {
-  //     return;
-  //   }
-  //   selectedCell.value = '';
-  //   cellBlur(selectedCell);
-  //   return ;
-  // }
   if ((keyCode === 8) || (keyCode === 46)) game.checkCell(0);
 
   let inputNumber = -1;
@@ -114,7 +100,7 @@ function wKeyDown(event, game) {
 
 }
 
-function createEvents(game) {
+function createEvents(game, store, loadPuzzle) {
   window.addEventListener('resize', () => layout());
   window.addEventListener('keydown', (e) => wKeyDown(e, game));
   gel('main').onclick = (e) => mainClick(e, game);
@@ -124,6 +110,7 @@ function createEvents(game) {
   createNumberButtonsEvents(game);
   createCandidateButtonsEvents(game);
   createCellsClick(game);
+  createFileSelectorEvents(store, loadPuzzle);
 
   layout();
 }

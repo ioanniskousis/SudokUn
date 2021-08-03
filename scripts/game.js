@@ -37,8 +37,10 @@ class Game {
       } else {
         if (gameNumbers[i] > 0) {
           cell.innerHTML = gameNumbers[i];
-          cell.className = 'grid-cell';
+        } else {
+          cell.innerHTML = '';
         }
+        cell.className = 'grid-cell';
         sat(cell, 'given', '0');
       }
     });
