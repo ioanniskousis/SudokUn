@@ -8,6 +8,7 @@ import { createNumberButtonsEvents } from './components/numbersSelector.js';
 import { createCandidateButtonsEvents } from './components/candidatesSelector.js';
 import { showAlertNoSelections, hideAlertNoSelections } from './viewController.js';
 import { createFileSelectorEvents } from './components/fileSelector.js';
+import { createUndosEvents } from './components/undosController.js';
 
 function mainClick(e, game) {
   if ((game.focusedCellIndex > -1) && (!clickOnGame(e))) {
@@ -111,6 +112,7 @@ function createEvents(game, store, loadPuzzle) {
   createCandidateButtonsEvents(game);
   createCellsClick(game);
   createFileSelectorEvents(store, loadPuzzle);
+  createUndosEvents(game);
 
   layout();
 }

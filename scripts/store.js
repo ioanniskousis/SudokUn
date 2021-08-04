@@ -1,14 +1,18 @@
 import { setData, getData, removeData } from './utils/cookies.js';
-import { gel } from './utils/shortHands.js';
+import {
+  gel,
+  isCh,
+  isEx,
+ } from './utils/shortHands.js';
 
 class Store {
   constructor() {
     this.selectedCell = getData('selectedCell') || -1;
     this.defaultLang = getData('defaultLang') || 1;
-    this.puzzle = getData('puzzle') || '?';
+    this.puzzle = getData('puzzle') || '';
     this.givens = getData('givens') || 0;
     this.hardness = getData('hardness') || 0;
-    this.game = getData('game') || '?';
+    this.game = getData('game') || '';
     this.selectedLevel = getData('selectedLevel') || 0;
 
     this.levelIndex = new Array(5);
@@ -21,10 +25,11 @@ class Store {
 
     this.selectedIndex = this.levelIndex[this.selectedLevel];
 
-    this.undo = getData('undo') || '?';
-    this.undosIdx = getData('undosIdx') || 0;
-    this.exclude = getData('exclude') || '?';
-    this.candidatesSet = getData('candidatesSet') || '?';
+    this.undosIndex = parseInt(getData('undosIndex'), 10) || -1;
+    this.parseUndos(getData('undo') || '')
+
+    this.exclude = getData('exclude') || '';
+    this.candidatesSet = getData('candidatesSet') || '';
 
     this.levelCaptions = [
       'Easy',
@@ -33,6 +38,60 @@ class Store {
       'Evil',
       'Beatific',
     ];
+
+    gel('debugBox').value = this.candidatesSet;
+  } 
+
+  parseUndos(undosString) {
+    this.undo = [];
+    const undos = undosString.split(',');
+    undos.forEach(undo => {
+      const credentials = undo.split(':');
+      if (credentials[0].length > 0) {
+        this.undo.push(
+          new Undo(
+            credentials[0],
+            credentials[1],
+            credentials[2],
+            credentials[3],
+            credentials[4]
+          )
+        )  
+      }
+    });
+    
+  }
+
+  addUndo(newUndo) {
+    if (this.undosIndex > -1) {
+      const currentUndo = this.undo[this.undosIndex];
+      if (
+        (currentUndo.type === newUndo.type) && 
+        (currentUndo.cellIndex === newUndo.cellIndex) &&
+        (currentUndo.candidate === newUndo.candidate) &&
+        ((currentUndo.newValue === newUndo.newValue))
+        ) {
+        return;
+      }
+    }
+
+    this.undo.splice(this.undosIndex + 1);
+    this.undo.push(newUndo);
+    this.undosIndex = this.undo.length - 1;
+  }
+
+  undosToString() {
+    let s = '';
+    this.undo.forEach((undo) => {
+      s = s.concat(
+        undo.type, ':',
+        undo.cellIndex, ':',
+        undo.candidate, ':',
+        undo.oldValue, ':',
+        undo.newValue, ','
+      )
+    }); 
+    return s;
   }
 
   storeGame() {
@@ -45,10 +104,22 @@ class Store {
     this.storeValue('givens', this.givens);
     this.storeValue('hardness', this.hardness);
 
-    this.storeValue('undo', this.undo);
-    this.storeValue('undosIdx', this.undosIdx);
+    this.storeValue('undo', this.undosToString());
+    this.storeValue('undosIndex', this.undosIndex);
     this.storeValue('exclude', this.exclude);
+
     this.storeValue('candidatesSet', this.candidatesSet);
+
+  }
+
+  restart() {
+    this.game =  this.puzzle;
+    this.undo = [];
+    this.undosIndex = -1;
+    this.exclude = [];
+    this.candidatesSet = '';
+
+    this.storeGame();
   }
 
   storeValue(key, value) {
@@ -101,10 +172,6 @@ class Store {
     await fetch(getPuzzleUrl, options)
     .then((data) => data.json())
     .then((data) => {
-      // alert('clearGame: ' + clearGame);
-      // alert('this.game: ' + this.game);
-      // alert(JSON.stringify(data));
-
       this.selectedLevel = data.level;
       this.selectedIndex = data.counter;
       this.givens = data.givens;
@@ -114,21 +181,37 @@ class Store {
       this.puzzle = data.puzzle;
       this.givens = data.givens;
 
-      if (clearGame || (this.game === '?')) {
+      if (clearGame || (this.game === '')) {
         this.game = data.puzzle;
-        this.undo = '?';
-        this.undosIdx = 0;
-        this.exclude = '?';
-        this.candidatesSet = '?';
+        this.undo = [];
+        this.undosIndex = -1;
+        this.exclude = '';
+        this.candidatesSet = '';
       }
-
-      this.storeGame();
 
       handler();
     })
     .catch((error) => alert('loadPuzzle error: ' + error.message));
 
 
+  }
+}
+
+export class Undo {
+  constructor(type, cellIndex, candidate, oldValue, newValue) {
+    this.type = type;
+    this.cellIndex = cellIndex;
+    this.candidate = candidate;
+    this.oldValue = oldValue;
+    this.newValue = newValue;
+  }
+}
+
+export class Candidate {
+  constructor(cellIndex, candidate, hidden) {
+    this.cellIndex = cellIndex;
+    this.candidate = candidate;
+    this.oldValue = hidden;
   }
 }
 

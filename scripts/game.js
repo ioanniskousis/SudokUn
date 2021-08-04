@@ -4,20 +4,24 @@ import {
   sat,
   setCh,
   isCh,
+  setEx,
+  isEx,
 } from './utils/shortHands.js';
 import { setupCandidatesInput } from './components/candidatesSelector.js';
 import { showAlertNoSelections, hideAlertNoSelections } from './viewController.js';
+import { Undo } from './store.js';
 
 class Game {
   constructor(store) {
     this.cells = new Array(81);
     this.candidateContainers = new Array(81);
-    this.candidates = new Array(81, 9);
+    this.cellCandidates = new Array(81);
     for (let i = 0; i < 81; i++) {
       this.cells[i] = gel(`cell-${i}`);
       this.candidateContainers[i] = gel(`cell-candidates-container-${i}`);
+      this.cellCandidates[i] = new Array(9);
       for (let c = 0; c < 9; c++) {
-        this.candidates[i, c] = gel(`candidate-${i}-${c + 1}`)
+        this.cellCandidates[i][c] = gel(`candidate-${i}-${c + 1}`);
       }
     }
     
@@ -25,7 +29,7 @@ class Game {
     this.store = store;
   }
 
-  setupPuzzle() {
+  drawPuzzle() {
     const puzzleNumbers = this.store.puzzle.split('');
     const gameNumbers = this.store.game.split('');
   
@@ -45,23 +49,111 @@ class Game {
         sat(cell, 'given', '0');
       }
     });
+
+    this.showUndoButtons();
+    this.drawCandidates();
   }
 
-  checkCell(val) {
+  drawCandidates() {
+    const actions = this.store.candidatesSet.split(',');
+    actions.forEach((action) => {
+      const credentials = action.split(':');
+      const cellIndex = credentials[0];
+      const candidate = credentials[1];
+      const excluded = credentials[2] === '1';
+      if (cellIndex.length > 0) {
+        this.updateCandidate(cellIndex, candidate, true)
+        setEx(this.cellCandidates[cellIndex][candidate - 1], excluded);
+      }
+    });
+  }
+
+  showUndoButtons() {
+    gel('undoButton').style.visibility = this.store.undosIndex > -1 ? 'visible' : 'hidden';
+    gel('redoButton').style.visibility = this.store.undosIndex < this.store.undo.length - 1 ? 'visible' : 'hidden';
+    gel('restartButton').style.visibility = this.store.undo.length > 0 ? 'visible' : 'hidden';
+  }
+
+  resetCandidates() {
+    for (let i = 0; i < 81; i++) {
+      for (let c = 0; c < 9; c++) {
+        const candidate = this.cellCandidates[i][c];
+        setCh(candidate, false);
+        setEx(candidate, false);
+        candidate.style.visibility = 'hidden';
+      }
+    }
+  }
+
+  parseCandidates(candidatesString) {
+    this.candidatesSet = [];
+    const candidates = candidatesString.split(',');
+    candidates.forEach(candidate => {
+      const credentials = candidate.split(':');
+      if (credentials[0].length > 0) {
+        this.candidatesSet.push(
+          new Candidate(
+            credentials[0],
+            credentials[1],
+            credentials[2],
+          )
+        )  
+      }
+    });
+  }
+
+  checkCell(newValue) {
     if (this.focusedCellIndex === -1) {
       showAlertNoSelections();
       return;
     }
-    const cell = gel(`cell-${this.focusedCellIndex}`);
-    sat(cell, 'value', val);
-    cell.innerHTML = val || '';
-    if (val) {
-      this.hideCandidates();
-    } else {
-      this.showCandidates();
-    }
+    const prevValue = gat(gel(`cell-${this.focusedCellIndex}`), 'value');
+    this.updateCell(this.focusedCellIndex, newValue)
+  
+    const newUndo = new Undo('n', this.focusedCellIndex, 0, prevValue, newValue);
+    this.store.addUndo(newUndo);
     this.store.game = this.gameString();
     this.store.storeGame();
+
+    this.showUndoButtons();
+  }
+
+  updateCell(cellIndex, newValue) {
+    const cell = gel(`cell-${cellIndex}`);
+    sat(cell, 'value', newValue);
+    cell.innerHTML = newValue || '';
+    if (newValue) {
+      this.hideCellCandidates(cellIndex);
+    } else {
+      this.showCellCandidates(cellIndex);
+    }
+  }
+
+  checkCandidate(candidateNumber, check) {
+    if (this.focusedCellIndex === -1) {
+      showAlertNoSelections();
+      return false;
+    }
+    this.updateCandidate(this.focusedCellIndex, candidateNumber, check);
+
+    const newUndo = new Undo('c', this.focusedCellIndex, candidateNumber, check ? '0' : '1', check ? '1' : '0');
+    this.store.addUndo(newUndo);
+    this.store.candidatesSet = this.candidatesToString();
+    this.store.storeGame();
+
+    this.showUndoButtons();
+
+    return true;
+  }
+
+  updateCandidate(cellIndex, candidateNumber, check) {
+    const candidate = this.cellCandidates[cellIndex][candidateNumber - 1];
+    const visible = this.cellIsEmpty(cellIndex) ? 'visible' : 'hidden';
+    candidate.style.visibility = check ? visible : 'hidden';
+    setCh(candidate, check);
+    setEx(candidate, false);
+
+    setupCandidatesInput(cellIndex);
   }
 
   gameString() { 
@@ -73,34 +165,41 @@ class Game {
     return str;
   }
   
+  candidatesToString() {
+    let s = '';
+    for (let i = 0; i < 81; i++) {
+      for (let c = 0; c < 9; c++) {
+        const candidate = this.cellCandidates[i][c];
+        if (isCh(candidate)) {
+          s = s.concat(
+            i.toString(), ':',
+            (c + 1).toString(), ':',
+            isEx(candidate) ? '1' : '0', ','
+          );
+        }
+        
+      }
+    }
+
+    return s.substring(0, s.length - 1);
+  }
+
   cellIsEmpty(index) {
     return gat(gel(`cell-${index}`), 'value') === '0';
   }
 
-  hideCandidates() {
+  hideCellCandidates(cellIndex) {
     for (let i = 1; i < 10; i++) {
-      const candidate = gel(`candidate-${this.focusedCellIndex}-${i}`);
+      const candidate = gel(`candidate-${cellIndex}-${i}`);
       candidate.style.visibility = 'hidden';
     }
   }
 
-  showCandidates() {
+  showCellCandidates(cellIndex) {
     for (let i = 1; i < 10; i++) {
-      const candidate = gel(`candidate-${this.focusedCellIndex}-${i}`);
+      const candidate = gel(`candidate-${cellIndex}-${i}`);
       candidate.style.visibility = isCh(candidate) ? 'visible' : 'hidden';
     }
-  }
-
-  checkCandidate(candidateNumber, check) {
-    if (this.focusedCellIndex === -1) {
-      showAlertNoSelections();
-      return false;
-    }
-    const candidate = gel(`candidate-${this.focusedCellIndex}-${candidateNumber}`);
-    const visible = this.cellIsEmpty(this.focusedCellIndex) ? 'visible' : 'hidden';
-    candidate.style.visibility = check ? visible : 'hidden';
-    setCh(candidate, check);
-    return true;
   }
 
   isGiven(cell) {
@@ -137,15 +236,59 @@ class Game {
       this.focusCell(-1);
     }
   }
-}
 
-class Undo {
-  constructor(type, cellIndex, candidateIndex, prevValue, newValue) {
-    this.type = type;
-    this.cellIndex = cellIndex;
-    this.candidateIndex = candidateIndex;
-    this.prevValue = prevValue;
-    this.newValue = newValue;
+  undo() {
+    const undo = this.store.undo[this.store.undosIndex];
+    
+    if (undo.type === 'n') {
+      this.updateCell(undo.cellIndex, parseInt(undo.oldValue, 10));
+      this.store.game = this.gameString();
+
+      const insertModeButton = gel('insertModeButton');
+      if (isCh(insertModeButton)) insertModeButton.click();
+    } else {
+      this.updateCandidate(undo.cellIndex, undo.candidate, undo.oldValue === '1')
+      this.store.candidatesSet = this.candidatesToString();
+
+      const insertModeButton = gel('insertModeButton');
+      if (!isCh(insertModeButton)) insertModeButton.click();
+    }
+
+    this.store.undosIndex -= 1;
+    this.store.storeGame();
+
+    this.focusCell(undo.cellIndex);
+    this.showUndoButtons();
+  }
+
+  redo() {
+    const undo = this.store.undo[this.store.undosIndex + 1];
+
+    if (undo.type === 'n') {
+      this.updateCell(undo.cellIndex, parseInt(undo.newValue, 10));
+      this.store.game = this.gameString();
+
+      const insertModeButton = gel('insertModeButton');
+      if (isCh(insertModeButton)) insertModeButton.click();
+    } else {
+      this.updateCandidate(undo.cellIndex, undo.candidate, undo.newValue === '1')
+      this.store.candidatesSet = this.candidatesToString();
+
+      const insertModeButton = gel('insertModeButton');
+      if (!isCh(insertModeButton)) insertModeButton.click();
+    }
+
+    this.store.undosIndex += 1;
+    this.store.storeGame();
+
+    this.focusCell(undo.cellIndex);
+    this.showUndoButtons();
+  }
+
+  restart() {
+    this.resetCandidates();
+    this.store.restart();
+    this.drawPuzzle();
   }
 }
 

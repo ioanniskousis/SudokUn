@@ -40,8 +40,8 @@ export function createCandidateButtonsEvents(game) {
     const button = gel(`candidate-button-${i}`);
     button.onclick = (e) => {
       if (game.checkCandidate(parseInt(gat(button, 'value')), !isCh(button))) {
-        swapCh(button);
-        button.className = isCh(button) ? 'candidate-button' : 'candidate-button halfOpac';
+        // swapCh(button);
+        // button.className = isCh(button) ? 'candidate-button' : 'candidate-button halfOpac';
       }
     }
   }

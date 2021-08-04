@@ -29,7 +29,17 @@ function createPlayGround() {
 
   doc(playGround, createAlertNoSelection());
   
+  doc(playGround, createDebugBox());
+
   return playGround;
+}
+
+function createDebugBox() {
+  const box = crel('textarea');
+  box.id = 'debugBox';
+  box.style.position = 'absolute';
+
+  return box;
 }
 
 export default createPlayGround;

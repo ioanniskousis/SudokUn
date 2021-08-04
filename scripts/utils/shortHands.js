@@ -50,6 +50,19 @@ function setCh(element, check) {
   sat(element, 'checked', check ? '1' : '0');
 }
 
+function swapEx(element) {
+  const excluded = gat(element, 'excluded');
+  element.setAttribute('excluded', excluded === '1' ? '0' : '1');
+}
+
+function isEx(element) {
+  return gat(element, 'excluded') === '1';
+}
+
+function setEx(element, excluded) {
+  sat(element, 'excluded', excluded ? '1' : '0');
+}
+
 export {
   gel,
   gelc,
@@ -62,4 +75,7 @@ export {
   swapCh,
   isCh,
   setCh,
+  swapEx,
+  isEx,
+  setEx,
 };

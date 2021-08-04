@@ -203,8 +203,12 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     bounds.bound(alertNoSelection);
     alertNoSelection.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
 
-    bounds.setRect (cellSize, cellSize + gridSize, gridSize, cellSize);
+    bounds.setRect (cellSize, cellSize + gridSize, cellSize * 2, cellSize);
     bounds.bound(undosController);
+
+    bounds.setRect (cellSize * 3, cellSize + gridSize, cellSize * 6, cellSize);
+    bounds.bound(gel('debugBox'));
+    gel('debugBox').style.fontSize = `${parseInt(cellSize * 0.2, 10)}px`;
 
     bounds.setRect (gridSize, cellSize + gridSize, cellSize, cellSize);
     bounds.bound(restartController);
@@ -227,10 +231,14 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     bounds.bound(alertNoSelection);
     alertNoSelection.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
 
-    bounds.setRect (0, cellSize + cellSize + gridSize, gridSize, cellSize);
+    bounds.setRect (0, cellSize + cellSize + gridSize, cellSize * 2, cellSize);
     bounds.bound(undosController);
 
-    bounds.setRect (gridSize, cellSize + cellSize + gridSize, cellSize, cellSize);
+    bounds.setRect (cellSize * 2, cellSize + cellSize  + gridSize, cellSize * 6, cellSize);
+    bounds.bound(gel('debugBox'));
+    gel('debugBox').style.fontSize = `${parseInt(cellSize * 0.2, 10)}px`;
+
+    bounds.setRect (gridSize - cellSize, cellSize + cellSize + gridSize, cellSize, cellSize);
     bounds.bound(restartController);
 
     bounds.setRect(0, 0, parseInt((gridSize - 6.0) / 3.0, 10), cellSize);
@@ -292,7 +300,11 @@ function clickOnGame(e) {
   bounds.top -= cellSize;
   bounds.height += cellSize;
 
-  return bounds.contains(e.pageX, e.pageY);
+  const onGame = bounds.contains(e.pageX, e.pageY);
+  bounds.getRect(gel('undosController'));
+  const onUndos = bounds.contains(e.pageX, e.pageY);
+
+  return onGame || onUndos;
 }
 
 function clickOnGrid(e) {

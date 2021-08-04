@@ -26,7 +26,15 @@ function createRestartController() {
   return panel;
 }
 
+function createUndosEvents(game) {
+  gel('undoButton').onclick = (e) => game.undo();
+  gel('redoButton').onclick = (e) => game.redo();
+  gel('restartButton').onclick = (e) => game.restart();
+  
+}
+
 export {
   createUndosController,
-  createRestartController
+  createRestartController,
+  createUndosEvents,
 };
