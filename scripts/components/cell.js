@@ -13,7 +13,7 @@ function createCell(blockIndex, row, col) {
   sat(cell, 'index', cellIndex);
   sat(cell, 'block', blockIndex);
   sat(cell, 'row', (blockRow * 3) + row);
-  sat(cell, 'col', (blockCol * 3) + col);
+  sat(cell, 'column', (blockCol * 3) + col);
 
   return cell;
 }

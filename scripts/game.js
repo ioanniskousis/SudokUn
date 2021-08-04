@@ -27,6 +27,30 @@ class Game {
     
     this.focusedCellIndex = -1;
     this.store = store;
+
+    this.rows = new Array(9);
+    this.columns = new Array(9);
+    this.blocks = new Array(9);
+    this.setupAreas();
+  }
+
+  setupAreas() {
+    for (let i = 0; i < 9; i++) {
+      this.rows[i] = [];
+      this.columns[i] = [];
+      this.blocks[i] = [];
+    }
+
+    this.cells.forEach((cell) => {
+      const row = parseInt(gat(cell, 'row'), 10);
+      const column = parseInt(gat(cell, 'column'), 10);
+      const block = parseInt(gat(cell, 'block'), 10);
+      
+      this.rows[row].push(cell);
+      this.columns[column].push(cell);
+      this.blocks[block].push(cell);
+      
+    });
   }
 
   drawPuzzle() {
@@ -87,11 +111,65 @@ class Game {
     }
   }
 
+  invalidEntry(newValue) {
+    if (newValue === 0) return null;
+
+    const cell = this.cells[this.focusedCellIndex];
+    const row = parseInt(gat(cell, 'row'), 10);
+    const column = parseInt(gat(cell, 'column'), 10);
+    const block = parseInt(gat(cell, 'block'), 10);
+
+    const rowCells = this.rows[row];
+    for (let i = 0; i < rowCells.length; i++) {
+      const rowCell = rowCells[i];
+      const rowCellIndex = parseInt(gat(rowCell, 'index'), 10);
+      if (rowCellIndex != this.focusedCellIndex) {
+        const rowCellValue = parseInt(gat(rowCell, 'value'), 10);
+        if (rowCellValue === newValue) {
+          return 'Invalid Row';
+        }
+      }
+    }
+
+    const columnCells = this.columns[column];
+    for (let i = 0; i < columnCells.length; i++) {
+      const columnCell = columnCells[i];
+      const columnCellIndex = parseInt(gat(columnCell, 'index'), 10);
+      if (columnCellIndex != this.focusedCellIndex) {
+        const columnCellValue = parseInt(gat(columnCell, 'value'), 10);
+        if (columnCellValue === newValue) {
+          return 'Invalid Column';
+        }
+      }
+    }
+
+    const blockCells = this.blocks[block];
+    for (let i = 0; i < blockCells.length; i++) {
+      const blockCell = blockCells[i];
+      const blockCellIndex = parseInt(gat(blockCell, 'index'), 10);
+      if (blockCellIndex != this.focusedCellIndex) {
+        const blockCellValue = parseInt(gat(blockCell, 'value'), 10);
+        if (blockCellValue === newValue) {
+          return 'Invalid block';
+        }
+      }
+    }
+
+    return null;
+  }
+
   checkCell(newValue) {
     if (this.focusedCellIndex === -1) {
       showAlertNoSelections();
       return;
     }
+
+    const constrain = this.invalidEntry(newValue);
+    if (constrain) {
+      alert(constrain);
+      return;
+    }
+
     const prevValue = gat(gel(`cell-${this.focusedCellIndex}`), 'value');
     this.updateCell(this.focusedCellIndex, newValue);
   
@@ -119,6 +197,13 @@ class Game {
       showAlertNoSelections();
       return false;
     }
+
+    const constrain = this.invalidEntry(parseInt(candidateNumber, 10));
+    if (constrain) {
+      alert(constrain);
+      return false;
+    }
+
     this.updateCandidate(this.focusedCellIndex, candidateNumber, check);
 
     const newUndo = new Undo('c', this.focusedCellIndex, candidateNumber, check ? '0' : '1', check ? '1' : '0');
