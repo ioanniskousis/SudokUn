@@ -85,30 +85,13 @@ class Game {
     }
   }
 
-  parseCandidates(candidatesString) {
-    this.candidatesSet = [];
-    const candidates = candidatesString.split(',');
-    candidates.forEach(candidate => {
-      const credentials = candidate.split(':');
-      if (credentials[0].length > 0) {
-        this.candidatesSet.push(
-          new Candidate(
-            credentials[0],
-            credentials[1],
-            credentials[2],
-          )
-        )  
-      }
-    });
-  }
-
   checkCell(newValue) {
     if (this.focusedCellIndex === -1) {
       showAlertNoSelections();
       return;
     }
     const prevValue = gat(gel(`cell-${this.focusedCellIndex}`), 'value');
-    this.updateCell(this.focusedCellIndex, newValue)
+    this.updateCell(this.focusedCellIndex, newValue);
   
     const newUndo = new Undo('n', this.focusedCellIndex, 0, prevValue, newValue);
     this.store.addUndo(newUndo);
@@ -229,12 +212,6 @@ class Game {
     if (gat(cell, 'given') === '1') return;
 
     this.focusCell(parseInt(gat(cell, 'index'), 10));
-  }
-
-  escape() {
-    if (this.focusedCellIndex > -1) {
-      this.focusCell(-1);
-    }
   }
 
   undo() {

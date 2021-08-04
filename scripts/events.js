@@ -31,7 +31,7 @@ function wKeyDown(event, game) {
 
   const keyCode = event.keyCode;
   if (keyCode === 27) {
-    game.escape();
+    game.focusCell(-1);
     return;
   }
   if (keyCode == 9) {
