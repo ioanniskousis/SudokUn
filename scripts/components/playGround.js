@@ -38,7 +38,8 @@ function createDebugBox() {
   const box = crel('textarea');
   box.id = 'debugBox';
   box.style.position = 'absolute';
-
+  box.style.visibility = 'hidden';
+  
   return box;
 }
 

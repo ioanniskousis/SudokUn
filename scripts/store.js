@@ -189,6 +189,7 @@ class Store {
         this.candidatesSet = '';
       }
 
+      this.storeGame();
       handler();
     })
     .catch((error) => alert('loadPuzzle error: ' + error.message));

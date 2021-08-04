@@ -55,6 +55,8 @@ class Game {
   }
 
   drawCandidates() {
+    this.resetCandidates();
+  
     const actions = this.store.candidatesSet.split(',');
     actions.forEach((action) => {
       const credentials = action.split(':');
