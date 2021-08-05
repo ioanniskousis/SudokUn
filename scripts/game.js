@@ -8,7 +8,12 @@ import {
   isEx,
 } from './utils/shortHands.js';
 import { setupCandidatesInput } from './components/candidatesSelector.js';
-import { showAlertNoSelections, hideAlertNoSelections } from './viewController.js';
+import {
+  showAlertNoSelection,
+  hideAlertNoSelection,
+  showInvalidSelection,
+  hideInvalidSelection,
+} from './viewController.js';
 import { Undo } from './store.js';
 
 class Game {
@@ -113,6 +118,7 @@ class Game {
 
   invalidEntry(newValue) {
     if (newValue === 0) return null;
+    if (this.store.allowMistakes) return null;
 
     const cell = this.cells[this.focusedCellIndex];
     const row = parseInt(gat(cell, 'row'), 10);
@@ -126,7 +132,7 @@ class Game {
       if (rowCellIndex != this.focusedCellIndex) {
         const rowCellValue = parseInt(gat(rowCell, 'value'), 10);
         if (rowCellValue === newValue) {
-          return 'Invalid Row';
+          return `Invalid selection for the Row. Number ${newValue} exists in cell at position R${row + 1}C${i + 1}`;
         }
       }
     }
@@ -138,7 +144,7 @@ class Game {
       if (columnCellIndex != this.focusedCellIndex) {
         const columnCellValue = parseInt(gat(columnCell, 'value'), 10);
         if (columnCellValue === newValue) {
-          return 'Invalid Column';
+          return `Invalid selection for the Column. Number ${newValue} exists in cell at position R${i + 1}C${column + 1}`;
         }
       }
     }
@@ -146,11 +152,13 @@ class Game {
     const blockCells = this.blocks[block];
     for (let i = 0; i < blockCells.length; i++) {
       const blockCell = blockCells[i];
+      const blockCellRow = parseInt(gat(blockCell, 'row'), 10) + 1;
+      const blockCellColumn = parseInt(gat(blockCell, 'column'), 10) + 1;
       const blockCellIndex = parseInt(gat(blockCell, 'index'), 10);
       if (blockCellIndex != this.focusedCellIndex) {
         const blockCellValue = parseInt(gat(blockCell, 'value'), 10);
         if (blockCellValue === newValue) {
-          return 'Invalid block';
+          return `Invalid selection for the Block. Number ${newValue} exists in cell at position R${blockCellRow}C${blockCellColumn}`;
         }
       }
     }
@@ -160,13 +168,13 @@ class Game {
 
   checkCell(newValue) {
     if (this.focusedCellIndex === -1) {
-      showAlertNoSelections();
+      showAlertNoSelection();
       return;
     }
 
     const constrain = this.invalidEntry(newValue);
     if (constrain) {
-      alert(constrain);
+      showInvalidSelection(constrain);
       return;
     }
 
@@ -194,13 +202,13 @@ class Game {
 
   checkCandidate(candidateNumber, check) {
     if (this.focusedCellIndex === -1) {
-      showAlertNoSelections();
+      showAlertNoSelection();
       return false;
     }
 
     const constrain = this.invalidEntry(parseInt(candidateNumber, 10));
     if (constrain) {
-      alert(constrain);
+      showInvalidSelection(constrain);
       return false;
     }
 
@@ -285,7 +293,8 @@ class Game {
   }
 
   focusCell(index) {
-    hideAlertNoSelections();
+    hideAlertNoSelection();
+    hideInvalidSelection();
     this.clearFocus();
     if (index > -1) {
       this.candidateContainers[index].className = 'cell-candidates-container focusedCell';

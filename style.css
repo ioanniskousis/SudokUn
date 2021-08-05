@@ -196,7 +196,7 @@ input[type=number] {
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-.alertNoSelection {
+#alertNoSelection {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   position: absolute;
@@ -208,6 +208,71 @@ input[type=number] {
   align-items: center;
 }
 
+#alertInvalid {
+  font-family: Arial, Helvetica, sans-serif;
+  position: absolute;
+  background-color: red;
+  /* display: flex; */
+  visibility: hidden;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+#alertInvalidMessage {
+  color: white;
+  display: block;
+  position: absolute;
+  width: 65%;
+  font-weight: bold;
+}
+
+#alertInvalidCheckContainer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  /* background-color: rgba(255, 255, 255, 0.5); */
+}
+
+#alertInvalidCheckLabel {
+  color: white;
+  margin-right: 10px;
+  display: block;
+  height: 100%;
+  cursor: pointer;
+  /* background-color: rgba(255, 255, 255, 0.5); */
+}
+
+.custom-checkbox {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  background-image: url('./images/check-gray.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+
+  margin: 4px;
+  cursor: pointer;
+
+  display: block;
+}
+
+.custom-checkbox:checked {
+  background-image: url('./images/check-blue.png');
+}
+
+.my-checkbox:active {
+  background-image: url('./images/check-blue.png');
+}
+
+.my-checkbox:checked:active {
+  background-image: url('./images/check-gray.png');
+}
+  
 .file-info {
   font-family: Arial, Helvetica, sans-serif;
   background-color: #379;

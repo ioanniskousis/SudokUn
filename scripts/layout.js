@@ -122,12 +122,7 @@ function layoutGrid(parentWidth, parentHeight, isLandscape) {
   layoutBlocks(bounds.width);
 }
 
-function layoutPanels(parentWidth, parentHeight, isLandscape) {
-  const gridSize = isLandscape ? parseInt(parentWidth * 9 / 11) : parentWidth;
-  const cellSize = isLandscape ? parseInt(parentWidth / 11, 10) : parseInt(parentHeight / 13, 10);
-
-  const alertNoSelection = gel('alertNoSelection');
-
+function layoutNumbersSelector(gridSize, cellSize, isLandscape) {
   const numbersSelector = gel('numbersSelector');
   const numberButtons = numbersSelector.children;
   for (let i = 0; i < numberButtons.length; i++) {
@@ -138,6 +133,17 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     button.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
   }
 
+  const bounds = new Bounds();
+  if (isLandscape) {
+    bounds.setRect (cellSize, 0, gridSize - 2, cellSize);
+  } else {
+    bounds.setRect (0, cellSize, gridSize, cellSize);
+  }
+  bounds.bound(numbersSelector);
+}
+
+function layoutCandidatesSelector(gridSize, cellSize, isLandscape) {
+
   const candidatesSelector = gel('candidatesSelector');
   const candidateButtons = candidatesSelector.children;
   for (let i = 0; i < candidateButtons.length; i++) {
@@ -147,6 +153,49 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     button.style.margin = `${parseInt(cellSize * 0.05, 10)}px`;
     button.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
   }
+
+  const bounds = new Bounds();
+  if (isLandscape) {
+    bounds.setRect (cellSize, 0, gridSize - 2, cellSize);
+  } else {
+    bounds.setRect (0, cellSize, gridSize, cellSize);
+  }
+  bounds.bound(candidatesSelector);
+}
+
+function layoutAlerts(gridSize, cellSize, isLandscape) {
+  const sz = parseInt(cellSize * 0.2, 10);
+
+  const alertNoSelection = gel('alertNoSelection');
+  alertNoSelection.style.fontSize = `${sz * 2}px`;
+
+  const alertInvalid = gel('alertInvalid');
+  gel('alertInvalidMessage').style.padding = `${sz}px 0 0 ${sz}px`;
+  gel('alertInvalidMessage').style.fontSize = `${sz * 1.3}px`;
+  gel('alertInvalidCheckContainer').style.padding = `0 ${sz / 2}px ${sz / 2}px 0`;
+  gel('alertInvalidCheckLabel').style.fontSize = `${sz * 1.1}px`;
+  gel('alertInvalidCheckBox').style.width = `${sz * 2}px`;
+  gel('alertInvalidCheckBox').style.height = `${sz *2}px`;
+
+  const bounds = new Bounds();
+  if (isLandscape) {
+    bounds.setRect (cellSize, 0, gridSize - 2, cellSize);
+  } else {
+    bounds.setRect (0, cellSize, gridSize, cellSize);
+  }
+  bounds.bound(alertNoSelection);
+  bounds.bound(alertInvalid);
+}
+
+function layoutPanels(parentWidth, parentHeight, isLandscape) {
+  const gridSize = isLandscape ? parseInt(parentWidth * 9 / 11) : parentWidth;
+  const cellSize = isLandscape ? parseInt(parentWidth / 11, 10) : parseInt(parentHeight / 13, 10);
+
+  layoutAlerts(gridSize, cellSize, isLandscape);
+
+  layoutNumbersSelector(gridSize, cellSize,isLandscape);
+  layoutCandidatesSelector(gridSize, cellSize, isLandscape);
+
 
   const fileController = gel('fileController');
   const tipsController = gel('tipsController');
@@ -197,11 +246,6 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     fileController.style.flexDirection = 'column';
     tipsController.style.flexDirection = 'column';
 
-    bounds.setRect (cellSize, 0, gridSize - 2, cellSize);
-    bounds.bound(numbersSelector);
-    bounds.bound(candidatesSelector);
-    bounds.bound(alertNoSelection);
-    alertNoSelection.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
 
     bounds.setRect (cellSize, cellSize + gridSize, cellSize * 2, cellSize);
     bounds.bound(undosController);
@@ -225,11 +269,6 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
     fileController.style.flexDirection = 'row';
     tipsController.style.flexDirection = 'row';
 
-    bounds.setRect (0, cellSize, gridSize, cellSize);
-    bounds.bound(numbersSelector);
-    bounds.bound(candidatesSelector);
-    bounds.bound(alertNoSelection);
-    alertNoSelection.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
 
     bounds.setRect (0, cellSize + cellSize + gridSize, cellSize * 2, cellSize);
     bounds.bound(undosController);
@@ -321,9 +360,17 @@ function clickOnSelectors(e) {
   return bounds.contains(e.pageX, e.pageY);
 }
 
+function clickOnAllowMistakes(e) {
+  const bounds = new Bounds();
+  bounds.getRect(gel('alertInvalidCheckContainer'));
+
+  return bounds.contains(e.pageX, e.pageY);
+}
+
 export {
   layout,
   clickOnGame,
   clickOnSelectors,
   clickOnGrid,
+  clickOnAllowMistakes,
 }

@@ -2,11 +2,20 @@ import {
   gel,
 } from './utils/shortHands.js';
 
-import { layout, clickOnGame, clickOnSelectors } from './layout.js';
+import {
+  layout,
+  clickOnGame,
+  clickOnAllowMistakes,
+  clickOnSelectors
+} from './layout.js';
 import { createModeButtonEvents } from './components/modeButtonContainer.js';
 import { createNumberButtonsEvents } from './components/numbersSelector.js';
 import { createCandidateButtonsEvents } from './components/candidatesSelector.js';
-import { showAlertNoSelections, hideAlertNoSelections } from './viewController.js';
+import {
+  showAlertNoSelection,
+  hideAlertNoSelection,
+  hideInvalidSelection,
+} from './viewController.js';
 import { createFileSelectorEvents } from './components/fileSelector.js';
 import { createUndosEvents } from './components/undosController.js';
 
@@ -27,7 +36,8 @@ function wKeyDown(event, game) {
   const fileSelectorIsVisible = gel('fileSelectorContainer').style.visibility === 'visible';
   if (fileSelectorIsVisible) return;
 
-  hideAlertNoSelections();
+  hideAlertNoSelection();
+  hideInvalidSelection();
 
   const keyCode = event.keyCode;
   if (keyCode === 27) {
@@ -93,7 +103,7 @@ function wKeyDown(event, game) {
       var chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
       game.checkCell(parseInt(chars[inputNumber], 10));
     } else {
-      showAlertNoSelections();
+      showAlertNoSelection();
     }
     return;
   }
@@ -105,8 +115,15 @@ function createEvents(game, store, loadPuzzle) {
   window.addEventListener('resize', () => layout());
   window.addEventListener('keydown', (e) => wKeyDown(e, game));
   gel('main').onclick = (e) => mainClick(e, game);
-  gel('alertNoSelection').onclick = (e) => hideAlertNoSelections();
-  
+  gel('alertNoSelection').onclick = (e) => hideAlertNoSelection();
+  gel('alertInvalid').onclick = (e) => {
+    if (!clickOnAllowMistakes(e)) hideInvalidSelection();
+  };
+  gel('alertInvalidCheckBox').onclick = (e) => {
+    store.allowMistakes = e.target.checked;
+    store.storeValue('allowMistakes', e.target.checked ? '1' : '0');
+  };
+
   createModeButtonEvents();
   createNumberButtonsEvents(game);
   createCandidateButtonsEvents(game);

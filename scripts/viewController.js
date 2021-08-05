@@ -2,12 +2,21 @@ import {
   gel,
 } from './utils/shortHands.js';
 
-function showAlertNoSelections() {
+function showAlertNoSelection() {
   gel('alertNoSelection').style.visibility = 'visible';
 }
 
-function hideAlertNoSelections() {
+function hideAlertNoSelection() {
   gel('alertNoSelection').style.visibility = 'hidden';
+}
+
+function showInvalidSelection(message) {
+  gel('alertInvalidMessage').innerHTML = message;
+  gel('alertInvalid').style.visibility = 'visible';
+}
+
+function hideInvalidSelection() {
+  gel('alertInvalid').style.visibility = 'hidden';
 }
 
 function showPuzzInfo(store) {
@@ -30,9 +39,11 @@ function hideFileSelector() {
 }
 
 export {
-  showAlertNoSelections,
-  hideAlertNoSelections,
+  showAlertNoSelection,
+  hideAlertNoSelection,
   showPuzzInfo,
   showFileSelector,
   hideFileSelector,
+  showInvalidSelection,
+  hideInvalidSelection,
 }

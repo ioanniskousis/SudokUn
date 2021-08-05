@@ -9,7 +9,7 @@ import createSearchController from './searchController.js';
 import createNumbersSelector from './numbersSelector.js';
 import createCandidatesSelector from './candidatesSelector.js';
 import createModeButtonContainer from './modeButtonContainer.js';
-import createAlertNoSelection from './alertNoSelection.js';
+import { createAlertNoSelection, createAlertInvalid } from './alerts.js';
 import { createUndosController, createRestartController } from './undosController.js';
 
 function createPlayGround() {
@@ -28,6 +28,7 @@ function createPlayGround() {
   doc(playGround, createModeButtonContainer());
 
   doc(playGround, createAlertNoSelection());
+  doc(playGround, createAlertInvalid());
   
   doc(playGround, createDebugBox());
 
