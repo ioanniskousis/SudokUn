@@ -148,6 +148,7 @@ input[type=number] {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: 50%;
+  border: none;
   opacity: 0.5;
   transition: top 0.2s ease-in-out, left 0.2s ease-in-out, background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
@@ -330,19 +331,17 @@ input[type=number] {
 .levelCounts {
   width: 10%;
   text-align: right;
-  /* margin-right: 5%; */
   flex: 1;
-  /* border: 1px solid #333; */
 }
 
 .shift-left {
   background-color: rgba(255, 255, 255, 0.5);
-  /* background-color: white; */
   border-radius: 50%;
   background-image: url('./images/shift-left-blue.png');
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: 50%;
+  border: none;
   opacity: 0.5;
   transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
@@ -354,12 +353,12 @@ input[type=number] {
 
 .shift-right {
   background-color: rgba(255, 255, 255, 0.5);
-  /* background-color: white; */
   border-radius: 50%;
   background-image: url('./images/shift-right-blue.png');
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: 50%;
+  border: none;
   opacity: 0.5;
   transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
@@ -375,6 +374,7 @@ input[type=number] {
   color: #333;
   text-align: center;
   appearance: none;
+  border: none;
   border-radius: 2px;
 }
 
@@ -385,6 +385,7 @@ input[type=number] {
   border-radius: 2px;
   color: white;
   flex: 1;
+  border: none;
 }
 
 .playButton:active {
@@ -418,6 +419,10 @@ input[type=number] {
 
 .search-white {
   background-image: url('./images/search-white.png');
+}
+
+.settings-white {
+  background-image: url('./images/settings-white.png');
 }
 
 .undo {

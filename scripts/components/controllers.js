@@ -37,6 +37,16 @@ function createTipsController() {
   return panel;
 }
 
+function createSettingsController() {
+  const panel = crel('div');
+  panel.id = 'settingsController';
+  panel.className = 'buttons-panel';
+
+  doc(panel, createControlButton('settingsButton', 'settings-white'));
+
+  return panel;
+}
+
 function createFileController() {
   const panel = crel('div');
   panel.id = 'fileController';
@@ -61,6 +71,7 @@ function createControllers(playGround) {
   doc(playGround, createTipsController());
   doc(playGround, createUndosController());
   doc(playGround, createRestartController());
+  doc(playGround, createSettingsController());
 }
 
 export {

@@ -231,8 +231,30 @@ function layoutTipsController(gridSize, cellSize, isLandscape) {
     bounds.bound(tipsController);
   } else {
     tipsController.style.flexDirection = 'row';
-    bounds.setRect(parseInt(((gridSize + 3.0) * 7.0 / 9.0), 10), 0, parseInt((gridSize - 6.0) * 2.0 / 9.0, 10), cellSize);
+    bounds.setRect(parseInt(((gridSize + 3.0) * 6.0 / 9.0), 10), 0, parseInt((gridSize - 6.0) * 2.0 / 9.0, 10), cellSize);
     bounds.bound(tipsController);
+  }
+}
+
+function layoutSettingsController(gridSize, cellSize, isLandscape) {
+  const settingsController = gel('settingsController');
+  const settingsControllerButtons = settingsController.children;
+
+  for (let i = 0; i < settingsControllerButtons.length; i++) {
+    const button = settingsControllerButtons[i];
+    button.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
+    button.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
+    button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+  }
+
+  const bounds = new Bounds();
+
+  if (isLandscape) {
+    bounds.setRect (cellSize + gridSize, gridSize, cellSize, cellSize);
+    bounds.bound(settingsController);
+  } else {
+    bounds.setRect(parseInt(((gridSize + 3.0) * 8.0 / 9.0), 10), 0, cellSize, cellSize);
+    bounds.bound(settingsController);
   }
 }
 
@@ -317,6 +339,7 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   layoutCandidatesSelector(gridSize, cellSize, isLandscape);
   layoutFileController(gridSize, cellSize, isLandscape);
   layoutTipsController(gridSize, cellSize, isLandscape);
+  layoutSettingsController(gridSize, cellSize, isLandscape);
   layoutInsertModeContainer(cellSize, isLandscape);
   layoutUndosController(gridSize, cellSize, isLandscape);
   layoutRestartController(gridSize, cellSize, isLandscape);
