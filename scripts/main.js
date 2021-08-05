@@ -5,6 +5,7 @@ import {
 
 import createPlayGround from './components/playGround.js';
 import createFileSelectorContainer from './components/fileSelector.js';
+import createSettingsViewContainer from './components/settingsView.js';
 
 import Game from './game.js';
 import Store from './store.js';
@@ -31,7 +32,7 @@ function initGame() {
 function render() {
   doc(gel('main'), createPlayGround());
   doc(gel('main'), createFileSelectorContainer());
-
+  doc(gel('main'), createSettingsViewContainer());
 }
 
 window.addEventListener('load', () => {

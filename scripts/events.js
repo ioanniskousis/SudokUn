@@ -23,6 +23,7 @@ import {
 
 import { createFileSelectorEvents } from './components/fileSelector.js';
 import { createUndosEvents } from './components/controllers.js';
+import { createSettingsEvents } from './components/settingsView.js';
 
 function mainClick(e, game) {
   if ((game.focusedCellIndex > -1) && (!clickOnGame(e))) {
@@ -127,6 +128,12 @@ function createEvents(game, store, loadPuzzle) {
   gel('alertInvalidCheckBox').onclick = (e) => {
     store.allowMistakes = e.target.checked;
     store.storeValue('allowMistakes', e.target.checked ? '1' : '0');
+    gel('allowMistakesCheck').checked = store.allowMistakes;
+  };
+  gel('allowMistakesCheck').onclick = (e) => {
+    store.allowMistakes = e.target.checked;
+    store.storeValue('allowMistakes', e.target.checked ? '1' : '0');
+    gel('alertInvalidCheckBox').checked = store.allowMistakes;
   };
 
   createModeButtonEvents();
@@ -135,6 +142,7 @@ function createEvents(game, store, loadPuzzle) {
   createCellsClick(game);
   createFileSelectorEvents(store, loadPuzzle);
   createUndosEvents(game);
+  createSettingsEvents(store);
 
   layout();
 }

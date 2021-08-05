@@ -38,6 +38,18 @@ function hideFileSelector() {
   }, 300);
 }
 
+function showSettings() {
+  gel('settingsViewContainer').style.visibility = 'visible';
+  gel('settingsView').style.opacity = 1.0;
+}
+
+function hideSettings() {
+  gel('settingsView').style.opacity = 0.0;
+  setTimeout(() => {
+    gel('settingsViewContainer').style.visibility = 'hidden';
+  }, 300);
+}
+
 export {
   showAlertNoSelection,
   hideAlertNoSelection,
@@ -46,4 +58,6 @@ export {
   hideFileSelector,
   showInvalidSelection,
   hideInvalidSelection,
+  showSettings,
+  hideSettings,
 }

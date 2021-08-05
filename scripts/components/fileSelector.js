@@ -10,11 +10,11 @@ import { createShiftButton, createIndexInput, createPlayButton } from './control
 function createLevelSelector(level) {
   const levelSelector = crel('div');
   levelSelector.id = `levelSelector-${level}`;
-  levelSelector.className = 'levelSelector';
+  levelSelector.className = 'selectorItem';
 
   const levelLabel = crel('div');
   levelLabel.id = `levelLabel-${level}`;
-  levelLabel.className = 'levelLabel';
+  levelLabel.className = 'selectorItemLabel';
   doc(levelSelector, levelLabel);
 
   const shiftLeft = createShiftButton(`levelShiftLeft-${level}`, 'shift-left');
@@ -35,6 +35,7 @@ function createLevelSelector(level) {
 function createFileSelector() {
   const selector = crel('div');
   selector.id = 'fileSelector';
+  selector.className = 'popup';
 
   for (let i = 0; i < 5; i++) {
     doc(selector, createLevelSelector(i));
@@ -45,6 +46,7 @@ function createFileSelector() {
 function createFileSelectorContainer() {
   const container = crel('div');
   container.id = 'fileSelectorContainer';
+  container.className = 'backViewContainer';
 
   doc(container, createFileSelector());
 

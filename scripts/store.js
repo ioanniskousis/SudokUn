@@ -41,6 +41,7 @@ class Store {
 
     this.allowMistakes = (getData('allowMistakes') === '1') || false;
     gel('alertInvalidCheckBox').checked = this.allowMistakes;
+    gel('allowMistakesCheck').checked = this.allowMistakes;
 
 
     gel('debugBox').value = this.candidatesSet;

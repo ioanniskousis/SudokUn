@@ -1,12 +1,30 @@
 import { gel } from './utils/shortHands.js';
 import Bounds from './utils/bounds.js';
 
+function layoutSettingsView() {
+  const bounds = new Bounds();
+  bounds.getRect(gel('main-grid'));
+
+  const settingsView = gel('settingsView');
+  bounds.bound(settingsView);
+  settingsView.style.padding = `${bounds.height * 0.1}px`;
+
+  const settingsSelectors = settingsView.children;
+  for (let i = 0; i < settingsSelectors.length; i++) {
+    const settingSelector = settingsSelectors[i];
+    settingSelector.style.fontSize = `${bounds.height * 0.04}px`;
+
+  }
+
+}
+
 function layoutFileSelector() {
   const bounds = new Bounds();
   bounds.getRect(gel('main-grid'));
 
   const fileSelector = gel('fileSelector');
   bounds.bound(fileSelector);
+  fileSelector.style.padding = `${bounds.height * 0.1}px`;
 
   const levelSelectors = fileSelector.children;
   for (let i = 0; i < levelSelectors.length; i++) {
@@ -386,6 +404,7 @@ function layout() {
 
   layoutPlayGround(wWidth, wHeight, isLandscape);
   layoutFileSelector();
+  layoutSettingsView();
 }
 
 function clickOnGame(e) {
