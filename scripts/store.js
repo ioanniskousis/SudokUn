@@ -41,7 +41,7 @@ class Store {
 
     this.allowMistakes = (getData('allowMistakes') === '1') || false;
     gel('alertInvalidCheckBox').checked = this.allowMistakes;
-    
+
 
     gel('debugBox').value = this.candidatesSet;
   } 
@@ -209,14 +209,6 @@ export class Undo {
     this.candidate = candidate;
     this.oldValue = oldValue;
     this.newValue = newValue;
-  }
-}
-
-export class Candidate {
-  constructor(cellIndex, candidate, hidden) {
-    this.cellIndex = cellIndex;
-    this.candidate = candidate;
-    this.oldValue = hidden;
   }
 }
 

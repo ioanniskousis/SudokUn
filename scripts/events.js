@@ -8,16 +8,21 @@ import {
   clickOnAllowMistakes,
   clickOnSelectors
 } from './layout.js';
-import { createModeButtonEvents } from './components/modeButtonContainer.js';
-import { createNumberButtonsEvents } from './components/numbersSelector.js';
-import { createCandidateButtonsEvents } from './components/candidatesSelector.js';
+
+import {
+  createModeButtonEvents,
+  createNumberButtonsEvents,
+  createCandidateButtonsEvents,
+} from './components/numberSelectors.js';
+
 import {
   showAlertNoSelection,
   hideAlertNoSelection,
   hideInvalidSelection,
 } from './viewController.js';
+
 import { createFileSelectorEvents } from './components/fileSelector.js';
-import { createUndosEvents } from './components/undosController.js';
+import { createUndosEvents } from './components/controllers.js';
 
 function mainClick(e, game) {
   if ((game.focusedCellIndex > -1) && (!clickOnGame(e))) {

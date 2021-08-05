@@ -7,7 +7,7 @@ import {
   setEx,
   isEx,
 } from './utils/shortHands.js';
-import { setupCandidatesInput } from './components/candidatesSelector.js';
+import { setupCandidatesInput } from './components/numberSelectors.js';
 import {
   showAlertNoSelection,
   hideAlertNoSelection,
@@ -213,6 +213,7 @@ class Game {
     }
 
     this.updateCandidate(this.focusedCellIndex, candidateNumber, check);
+    setupCandidatesInput(this.focusedCellIndex);
 
     const newUndo = new Undo('c', this.focusedCellIndex, candidateNumber, check ? '0' : '1', check ? '1' : '0');
     this.store.addUndo(newUndo);
@@ -230,8 +231,6 @@ class Game {
     candidate.style.visibility = check ? visible : 'hidden';
     setCh(candidate, check);
     setEx(candidate, false);
-
-    setupCandidatesInput(cellIndex);
   }
 
   gameString() { 
@@ -320,7 +319,8 @@ class Game {
       const insertModeButton = gel('insertModeButton');
       if (isCh(insertModeButton)) insertModeButton.click();
     } else {
-      this.updateCandidate(undo.cellIndex, undo.candidate, undo.oldValue === '1')
+      this.updateCandidate(undo.cellIndex, undo.candidate, undo.oldValue === '1');
+      setupCandidatesInput(undo.cellIndex);
       this.store.candidatesSet = this.candidatesToString();
 
       const insertModeButton = gel('insertModeButton');
@@ -345,6 +345,7 @@ class Game {
       if (isCh(insertModeButton)) insertModeButton.click();
     } else {
       this.updateCandidate(undo.cellIndex, undo.candidate, undo.newValue === '1')
+      setupCandidatesInput(undo.cellIndex);
       this.store.candidatesSet = this.candidatesToString();
 
       const insertModeButton = gel('insertModeButton');
