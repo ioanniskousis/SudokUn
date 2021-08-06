@@ -38,6 +38,10 @@ class Store {
       'Evil',
       'Beatific',
     ];
+    this.levelCaptions.forEach((caption, i) => {
+      gel(`levelLabel-${i}`).innerHTML = caption;
+    });
+    
 
     this.allowMistakes = (getData('allowMistakes') === '1') || false;
     gel('alertInvalidCheckBox').checked = this.allowMistakes;
@@ -135,69 +139,74 @@ class Store {
     removeData(key);
   }
   
-  async loadLimits() {
-    const headers = new Headers();
-    headers.append('pragma', 'no-cache');
-    headers.append('cache-control', 'no-cache');
+  dataLoaded(data, clearGame) {
+    this.selectedLevel = data.level;
+    this.selectedIndex = data.counter;
+    this.givens = data.givens;
+    this.hardness = data.hadrness;
+    this.levelIndex[this.selectedLevel] = this.selectedIndex;
 
+    this.puzzle = data.puzzle;
+    this.givens = data.givens;
+
+    if (clearGame || (this.game === '')) {
+      this.game = data.puzzle;
+      this.undo = [];
+      this.undosIndex = -1;
+      this.exclude = '';
+      this.candidatesSet = '';
+    }
+
+    this.storeGame();
+  }
+
+  async loadIndexSums() {
+    if (this.indexLoaded) return;
+  
     const options = {
       method: 'GET',
-      headers: headers,
+      cors: 'cors',
+      headers: {
+        'pragma': 'no-cache',
+        'cache-control': 'no-cache, must-revalidate',
+      },
     };
-    const getPuzzleUrl = 'https://www.sudokun.com/getLimits.php';
-
-    await fetch(getPuzzleUrl, options)
+    const url = 'https://www.sudokun.com/getIndexSums.php';
+    await fetch(url, options)
     .then((data) => data.json())
     .then((data) => {
+      this.indexLoaded = true;
       for (let i = 0; i < 5; i++) {
         this.levelLimits[i] = data.levelLimits[i]
-        gel(`levelLabel-${i}`).innerHTML = this.levelCaptions[i];
-        //  + `<span class="small">${this.levelLimits[i]}</span>`;
         gel(`indexInput-${i}`).max = this.levelLimits[i];
       }
     })
-    .catch((error) => alert('loadLimits error: ' + error.message));
+    .catch((error) => alert('loadIndexSums : \n' + error.message));
 
   }
 
   async loadPuzzle(handler, clearGame) {
-    const headers = new Headers();
-    headers.append('pragma', 'no-cache');
-    headers.append('cache-control', 'no-cache');
-
     const options = {
-      method: 'GET',
-      headers: headers,
+      method: "GET",
+      cors: 'cors',
+      headers: {
+        'pragma': 'no-cache',
+        'cache-control': 'no-cache, must-revalidate',
+        "Access-Control-Allow-Origin": "*",
+      },
     }
     
     const baseUrl = 'https://www.sudokun.com/getPuzzle.php';
     const srch = `level=${this.selectedLevel}&counter=${this.selectedIndex}`;
-    const getPuzzleUrl = `${baseUrl}?${srch}`;
+    const url = `${baseUrl}?${srch}`;
 
-    await fetch(getPuzzleUrl, options)
+    await fetch(url, options)
     .then((data) => data.json())
     .then((data) => {
-      this.selectedLevel = data.level;
-      this.selectedIndex = data.counter;
-      this.givens = data.givens;
-      this.hardness = data.hadrness;
-      this.levelIndex[this.selectedLevel] = this.selectedIndex;
-
-      this.puzzle = data.puzzle;
-      this.givens = data.givens;
-
-      if (clearGame || (this.game === '')) {
-        this.game = data.puzzle;
-        this.undo = [];
-        this.undosIndex = -1;
-        this.exclude = '';
-        this.candidatesSet = '';
-      }
-
-      this.storeGame();
+      this.dataLoaded(data, clearGame);
       handler();
     })
-    .catch((error) => alert('loadPuzzle error: ' + error.message));
+    .catch((error) => alert('loadPuzzle : \n' + error.message));
 
 
   }

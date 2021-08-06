@@ -54,7 +54,10 @@ function createFileSelectorContainer() {
 }
 
 export function createFileSelectorEvents(store, loadPuzzle) {
-  gel('fileSelectorButton').onclick = (e) => showFileSelector();
+  gel('fileSelectorButton').onclick = (e) => {
+    store.loadIndexSums();
+    showFileSelector();
+  };
 
   gel('fileSelectorContainer').onclick = (e) => {
     if (!clickOnGrid(e)) {
