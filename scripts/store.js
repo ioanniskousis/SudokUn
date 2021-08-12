@@ -165,13 +165,8 @@ class Store {
   
     const options = {
       method: 'GET',
-      cors: 'cors',
-      headers: {
-        'pragma': 'no-cache',
-        'cache-control': 'no-cache, must-revalidate',
-      },
     };
-    const url = 'https://www.sudokun.com/getIndexSums.php';
+    const url = 'https://sudokun.com/getIndexSums.php';
     await fetch(url, options)
     .then((data) => data.json())
     .then((data) => {
@@ -188,15 +183,9 @@ class Store {
   async loadPuzzle(handler, clearGame) {
     const options = {
       method: "GET",
-      cors: 'cors',
-      headers: {
-        'pragma': 'no-cache',
-        'cache-control': 'no-cache, must-revalidate',
-        "Access-Control-Allow-Origin": "*",
-      },
     }
     
-    const baseUrl = 'https://www.sudokun.com/getPuzzle.php';
+    const baseUrl = 'https://sudokun.com/getPuzzle.php';
     const srch = `level=${this.selectedLevel}&counter=${this.selectedIndex}`;
     const url = `${baseUrl}?${srch}`;
 
@@ -207,7 +196,6 @@ class Store {
       handler();
     })
     .catch((error) => alert('loadPuzzle : \n' + error.message));
-
 
   }
 }

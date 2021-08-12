@@ -106,8 +106,7 @@ function wKeyDown(event, game) {
 
   if (inputNumber > -1) {
     if (game.focusedCellIndex > -1) {
-      var chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-      game.checkCell(parseInt(chars[inputNumber], 10));
+      game.checkCell(inputNumber);
     } else {
       showAlertNoSelection();
     }

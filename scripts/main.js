@@ -25,7 +25,6 @@ function loadPuzzle(clearGame) {
 function initGame() {
   store = new Store();
   game = new Game(store);
-  // store.loadIndexSums();
   loadPuzzle(false);
 }
 
