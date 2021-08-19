@@ -116,7 +116,7 @@ class Game {
     }
   }
 
-  invalidEntry(newValue) {
+  invalidEntry(newValue, exclude) {
     if (newValue === 0) return null;
     if (this.store.allowMistakes) return null;
 
@@ -132,6 +132,9 @@ class Game {
       if (rowCellIndex != this.focusedCellIndex) {
         const rowCellValue = parseInt(gat(rowCell, 'value'), 10);
         if (rowCellValue === newValue) {
+          if (exclude) {
+            return `No need for exclusion. Number ${newValue} is self-excluded from cell R${row + 1}C${i + 1}`;
+          }
           return `Invalid selection for the Row. Number ${newValue} exists in cell at position R${row + 1}C${i + 1}`;
         }
       }
@@ -235,11 +238,11 @@ class Game {
       return false;
     }
 
-    alert('exlude not implemented');
-    return true;
+    // alert('exlude not implemented');
+    // return true;
 
     if (check) {
-      const constrain = this.invalidEntry(parseInt(candidateNumber, 10));
+      const constrain = this.invalidEntry(parseInt(candidateNumber, 10), true);
       if (constrain) {
         showInvalidSelection(constrain);
         return false;

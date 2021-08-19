@@ -285,6 +285,7 @@ input[type=number] {
   cursor: pointer;
 
   display: block;
+  opacity: 0.5;
 }
 
 .custom-checkbox:checked {

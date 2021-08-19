@@ -134,7 +134,7 @@ function setupExcludesInput(cellIndex) {
       button.className = isEx(candidate) ? 'exclude-button' : 'exclude-button halfOpac';
       setCh(button, isEx(candidate));
     } else {
-      button.className = 'candidate-button halfOpac';
+      button.className = 'exclude-button halfOpac';
       setCh(button, false);
     }
   }
@@ -160,46 +160,67 @@ function createCandidateButtonsEvents(game) {
   }
 }
 
+function useNumbersSelector() {
+  setCh(gel('insertModeButton'), false);
+  setCh(gel('excludeButton'), false);
+
+  gel('insertModeButton').style.opacity = 0.5;
+  gel('insertModeButton').className = 'control-button edit-white';
+  gel('excludeButton').style.opacity = 0.5;
+  gel('excludeButton').className = 'control-button xmark-white';
+
+  gel('numbersSelector').className = 'insert-panel';
+  gel('candidatesSelector').className = 'hidden';
+  gel('excludesSelector').className = 'hidden';
+}
+
+function useCandidatesSelector() {
+  setCh(gel('insertModeButton'), true);
+  setCh(gel('excludeButton'), false);
+
+  gel('insertModeButton').style.opacity = 1;
+  gel('insertModeButton').className = 'control-button edit-blue mode-checked';
+  gel('excludeButton').style.opacity = 0.5;
+  gel('excludeButton').className = 'control-button xmark-white';
+
+  gel('numbersSelector').className = 'hidden';
+  gel('candidatesSelector').className = 'insert-panel';
+  gel('excludesSelector').className = 'hidden';
+}
+
+function useExcludesSelector() {
+  setCh(gel('insertModeButton'), false);
+  setCh(gel('excludeButton'), true);
+
+  gel('insertModeButton').style.opacity = 0.5;
+  gel('insertModeButton').className = 'control-button edit-white';
+  gel('excludeButton').style.opacity = 1;
+  gel('excludeButton').className = 'control-button xmark-blue mode-checked';
+
+  gel('numbersSelector').className = 'hidden';
+  gel('candidatesSelector').className = 'hidden';
+  gel('excludesSelector').className = 'insert-panel';
+}
+
 function createModeButtonEvents() {
   const insertModeButton = gel('insertModeButton');
+  const excludeButton = gel('excludeButton');
+
   insertModeButton.onclick = (e) => {
     swapCh(insertModeButton)
     if (isCh(insertModeButton)) {
-      insertModeButton.style.opacity = 1;
-      insertModeButton.className = 'control-button edit-blue mode-checked';
-      setCh(excludeButton, false);
-      excludeButton.style.opacity = 0.5;
-      excludeButton.className = 'control-button xmark-white';
-      gel('numbersSelector').className = 'hidden';
-      gel('excludesSelector').className = 'hidden';
-      gel('candidatesSelector').className = 'insert-panel';
+      useCandidatesSelector();
     } else {
-      insertModeButton.style.opacity = 0.5;
-      insertModeButton.className = 'control-button edit-white';
-      gel('numbersSelector').className = 'insert-panel';
-      gel('candidatesSelector').className = 'hidden';
-      gel('excludesSelector').className = 'hidden';
+      useNumbersSelector();
     }
   };
 
-  const excludeButton = gel('excludeButton');
   excludeButton.onclick = (e) => {
     swapCh(excludeButton)
     if (isCh(excludeButton)) {
-      excludeButton.style.opacity = 1;
-      excludeButton.className = 'control-button xmark-blue mode-checked';
-      setCh(insertModeButton, false);
-      insertModeButton.style.opacity = 0.5;
-      insertModeButton.className = 'control-button edit-white';
-      gel('numbersSelector').className = 'hidden';
-      gel('excludesSelector').className = 'insert-panel';
-      gel('candidatesSelector').className = 'hidden';
+      useExcludesSelector();
     } else {
-      excludeButton.style.opacity = 0.5;
-      excludeButton.className = 'control-button xmark-white';
-      gel('numbersSelector').className = 'insert-panel';
-      gel('candidatesSelector').className = 'hidden';
-      gel('excludesSelector').className = 'hidden';
+      useNumbersSelector();
     }
   };
 }
