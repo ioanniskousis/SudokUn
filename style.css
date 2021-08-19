@@ -173,10 +173,31 @@ input[type=number] {
   transition: top 0.5s ease-in-out, left 0.5s ease-in-out, background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 }
 
+.exclude-button {
+  font-family: 'Times New Roman', Times, serif;
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  background-position: 90% 90%;
+  background-repeat: no-repeat;
+  background-size: 40%;
+  background-image: url('./images/xmark-white.png');
+  transition: top 0.5s ease-in-out, left 0.5s ease-in-out, background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+}
+
+.candidate-button:hover,
+.exclude-button:hover {
+  opacity: 1;
+}
+
 .candidate-button:active {
   background-color: rgba(47, 111, 143, 1);
   color: white;
   background-image: url('./images/edit-white.png');
+}
+
+.exclude-button:active {
+  background-color: rgba(47, 111, 143, 1);
 }
 
 .control-button:hover,
@@ -195,6 +216,10 @@ input[type=number] {
 
 .mode-checked {
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.mode-checked:hover {
+  background-color: rgba(47, 111, 143, 1);
 }
 
 #alertNoSelection {
@@ -430,6 +455,10 @@ input[type=number] {
   background-image: url('./images/settings-white.png');
 }
 
+.help-white {
+  background-image: url('./images/help-white.png');
+}
+
 .undo {
   background-color: rgba(255, 255, 255, 0.5);
   background-image: url('./images/undo-blue.png');
@@ -467,4 +496,20 @@ input[type=number] {
 .restart:active {
   background-color: rgba(47, 111, 143, 0.8);
   background-image: url('./images/restart-white.png');
+}
+
+.xmark-white {
+  background-image: url('./images/xmark-white.png');
+}
+
+.xmark-white:hover {
+  background-image: url('./images/xmark-white.png');
+}
+
+.xmark-blue {
+  background-image: url('./images/xmark-blue.png');
+}
+
+.xmark-blue:hover {
+  background-image: url('./images/xmark-white.png');
 }

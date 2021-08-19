@@ -7,7 +7,7 @@ import {
   setEx,
   isEx,
 } from './utils/shortHands.js';
-import { setupCandidatesInput } from './components/numberSelectors.js';
+import { setupCandidatesInput, setupExcludesInput } from './components/numberSelectors.js';
 import {
   showAlertNoSelection,
   hideAlertNoSelection,
@@ -229,6 +229,36 @@ class Game {
     return true;
   }
 
+  checkExclude(candidateNumber, check) {
+    if (this.focusedCellIndex === -1) {
+      showAlertNoSelection();
+      return false;
+    }
+
+    alert('exlude not implemented');
+    return true;
+
+    if (check) {
+      const constrain = this.invalidEntry(parseInt(candidateNumber, 10));
+      if (constrain) {
+        showInvalidSelection(constrain);
+        return false;
+      }
+    }
+
+    this.updateCandidate(this.focusedCellIndex, candidateNumber, check, false);
+    setupCandidatesInput(this.focusedCellIndex);
+
+    const newUndo = new Undo('c', this.focusedCellIndex, candidateNumber, check ? '0' : '1', check ? '1' : '0');
+    this.store.addUndo(newUndo);
+    this.store.candidatesSet = this.candidatesToString();
+    this.store.storeGame();
+
+    this.showUndoButtons();
+
+    return true;
+  }
+
   updateCandidate(cellIndex, candidateNumber, check, excluded) {
     const candidate = this.cellCandidates[cellIndex][candidateNumber - 1];
     const visible = this.cellIsEmpty(cellIndex) && !excluded ? 'visible' : 'hidden';
@@ -243,7 +273,9 @@ class Game {
       if (this.cellIsEmpty(cellIndex)) {
         const candidate = this.cellCandidates[cellIndex][newValue - 1];
         if (isCh(candidate)) {
-          this.updateCandidate(cellIndex, newValue, false, false)
+          this.updateCandidate(cellIndex, newValue, false, false);
+          const newUndo = new Undo('c', cellIndex, newValue, '1', '0');
+          this.store.addUndo(newUndo);
         }
       }
     })
@@ -314,6 +346,7 @@ class Game {
     );
     this.focusedCellIndex = -1;
     setupCandidatesInput(-1);
+    setupExcludesInput(-1);
   }
 
   focusCell(index) {
@@ -324,6 +357,7 @@ class Game {
       this.candidateContainers[index].className = 'cell-candidates-container focusedCell';
       this.focusedCellIndex = index;
       setupCandidatesInput(index);
+      setupExcludesInput(index);
     }
   }
 

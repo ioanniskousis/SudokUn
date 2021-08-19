@@ -43,6 +43,7 @@ function createSettingsController() {
   panel.className = 'buttons-panel';
 
   doc(panel, createControlButton('settingsButton', 'settings-white'));
+  doc(panel, createControlButton('helpButton', 'help-white'));
 
   return panel;
 }
@@ -66,6 +67,16 @@ function createUndosEvents(game) {
   
 }
 
+function createTipEvents() {
+  gel('advancedButton').onclick = (e) => {
+    alert('Advanced Features - Under Construction');
+  };
+
+  gel('searchButton').onclick = (e) => {
+    alert('Search Feature - Under Construction');
+  };
+}
+
 function createControllers(playGround) {
   doc(playGround, createFileController());
   doc(playGround, createTipsController());
@@ -77,4 +88,5 @@ function createControllers(playGround) {
 export {
   createControllers,
   createUndosEvents,
+  createTipEvents,
 }

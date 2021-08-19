@@ -50,6 +50,18 @@ function hideSettings() {
   }, 300);
 }
 
+function showInstructions() {
+  gel('instructionsViewContainer').style.visibility = 'visible';
+  gel('instructionsView').style.opacity = 1.0;
+}
+
+function hideInstructions() {
+  gel('instructionsView').style.opacity = 0.0;
+  setTimeout(() => {
+    gel('instructionsViewContainer').style.visibility = 'hidden';
+  }, 300);
+}
+
 export {
   showAlertNoSelection,
   hideAlertNoSelection,
@@ -60,4 +72,6 @@ export {
   hideInvalidSelection,
   showSettings,
   hideSettings,
+  showInstructions,
+  hideInstructions,
 }

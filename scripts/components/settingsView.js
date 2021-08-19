@@ -4,13 +4,18 @@ import {
   gel,
   sat,
 } from '../utils/shortHands.js';
-import { showSettings, hideSettings } from '../viewController.js';
+import {
+  showSettings,
+  hideSettings,
+  showInstructions,
+  hideInstructions,
+} from '../viewController.js';
 import { clickOnGrid } from '../layout.js';
 
 function createSettingsView() {
-  const selector = crel('div');
-  selector.id = 'settingsView';
-  selector.className = 'popup';
+  const view = crel('div');
+  view.id = 'settingsView';
+  view.className = 'popup';
 
   const allowMistakes = crel('div');
   allowMistakes.className = 'selectorItem';
@@ -28,9 +33,9 @@ function createSettingsView() {
 
   doc(allowMistakes, allowMistakesCheck);
 
-  doc(selector, allowMistakes);
+  doc(view, allowMistakes);
 
-  return selector;
+  return view;
 }
 
 function createSettingsViewContainer() {
@@ -39,6 +44,25 @@ function createSettingsViewContainer() {
   container.className = 'backViewContainer';
 
   doc(container, createSettingsView());
+
+  return container;
+}
+
+function createInstructionsView() {
+  const view = crel('div');
+  view.id = 'instructionsView';
+  view.className = 'popup';
+
+
+  return view;
+}
+
+function createInstructionsViewContainer() {
+  const container = crel('div');
+  container.id = 'instructionsViewContainer';
+  container.className = 'backViewContainer';
+
+  doc(container, createInstructionsView());
 
   return container;
 }
@@ -52,6 +76,19 @@ export function createSettingsEvents(store) {
     }
   };
 
+  gel('helpButton').onclick = (e) => {
+    showInstructions();
+  }
+
+  gel('instructionsViewContainer').onclick = (e) => {
+    if (!clickOnGrid(e)) {
+      hideInstructions();
+    }
+  };
+
 }
 
-export default createSettingsViewContainer;
+export {
+  createSettingsViewContainer,
+  createInstructionsViewContainer,
+};

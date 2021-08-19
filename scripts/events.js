@@ -22,7 +22,7 @@ import {
 } from './viewController.js';
 
 import { createFileSelectorEvents } from './components/fileSelector.js';
-import { createUndosEvents } from './components/controllers.js';
+import { createUndosEvents, createTipEvents } from './components/controllers.js';
 import { createSettingsEvents } from './components/settingsView.js';
 
 function mainClick(e, game) {
@@ -113,7 +113,6 @@ function wKeyDown(event, game) {
     return;
   }
 
-
 }
 
 function createEvents(game, store, loadPuzzle) {
@@ -142,6 +141,7 @@ function createEvents(game, store, loadPuzzle) {
   createFileSelectorEvents(store, loadPuzzle);
   createUndosEvents(game);
   createSettingsEvents(store);
+  createTipEvents();
 
   layout();
 }
