@@ -18,7 +18,7 @@ import createEvents from './events.js';
 import { showPuzzInfo } from './viewController.js';
 
 function handleLoadResponse() {
-  game.drawPuzzle();
+  game.initPuzzle();
   showPuzzInfo(store);
 }
 

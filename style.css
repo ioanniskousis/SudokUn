@@ -108,14 +108,13 @@ input[type=number] {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* border: 1px solid #aaa; */
   border-radius: 50%;
-  visibility: hidden;
+  /* visibility: hidden; */
+  color: black;
 }
 
 .insert-panel {
   position: absolute;
-  /* background-color: rgba(255, 255, 255, 0.1); */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -123,12 +122,10 @@ input[type=number] {
 
 .buttons-panel {
   position: absolute;
-  /* background-color: rgba(255, 255, 255, 0.1); */
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  /* flex-wrap: wrap; */
 }
 
 .numbers-panel {
@@ -513,4 +510,8 @@ input[type=number] {
 
 .xmark-blue:hover {
   background-image: url('./images/xmark-white.png');
+}
+
+.red {
+  color: red;
 }

@@ -8,10 +8,11 @@ import {
 
 function createCandidate(cellIndex, candidateIndex) {
   const candidate = crel('div');
-  candidate.className = 'cell-candidate';
+  candidate.className = 'cell-candidate hidden';
   candidate.id = `candidate-${cellIndex}-${candidateIndex + 1}`;
   candidate.innerHTML = candidateIndex + 1;
   sat(candidate, 'cellIndex', cellIndex);
+  sat(candidate, 'candidateNumber', candidateIndex + 1);
   setCh(candidate, false);
   setEx(candidate, false);
 

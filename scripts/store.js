@@ -25,8 +25,11 @@ class Store {
 
     this.selectedIndex = this.levelIndex[this.selectedLevel];
 
+    const undosString = getData('undo');
+    // alert(undosString);
+
     this.undosIndex = parseInt(getData('undosIndex'), 10) || -1;
-    this.parseUndos(getData('undo') || '')
+    this.parseUndos(undosString || '')
 
     this.exclude = getData('exclude') || '';
     this.candidatesSet = getData('candidatesSet') || '';
