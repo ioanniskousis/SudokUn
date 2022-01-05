@@ -27,9 +27,7 @@ function createCandidateButton(number) {
   const button = crel('button');
   button.className = 'candidate-button';
   button.id = `candidate-button-${number}`;
-  button.style.border = 'none';
   button.innerHTML = number;
-  button.style.padding = '0';
   sat(button, 'value', number);
 
   return button;
@@ -59,10 +57,10 @@ function createModeButtonContainer() {
 
 function createExcludeButtonContainer() {
   const panel = crel('div');
-  panel.id = 'excludeButtonContainer';
+  panel.id = 'excludeModeButtonContainer';
   panel.className = 'insert-panel';
 
-  doc(panel, createControlButton('excludeButton', 'xmark-white'));
+  doc(panel, createControlButton('excludeModeButton', 'xmark-white'));
 
   return panel;
 }
@@ -162,12 +160,12 @@ function createCandidateButtonsEvents(game) {
 
 function useNumbersSelector() {
   setCh(gel('insertModeButton'), false);
-  setCh(gel('excludeButton'), false);
+  setCh(gel('excludeModeButton'), false);
 
   gel('insertModeButton').style.opacity = 0.5;
   gel('insertModeButton').className = 'control-button edit-white';
-  gel('excludeButton').style.opacity = 0.5;
-  gel('excludeButton').className = 'control-button xmark-white';
+  gel('excludeModeButton').style.opacity = 0.5;
+  gel('excludeModeButton').className = 'control-button xmark-white';
 
   gel('numbersSelector').className = 'insert-panel';
   gel('candidatesSelector').className = 'hidden';
@@ -176,12 +174,12 @@ function useNumbersSelector() {
 
 function useCandidatesSelector() {
   setCh(gel('insertModeButton'), true);
-  setCh(gel('excludeButton'), false);
+  setCh(gel('excludeModeButton'), false);
 
   gel('insertModeButton').style.opacity = 1;
   gel('insertModeButton').className = 'control-button edit-blue mode-checked';
-  gel('excludeButton').style.opacity = 0.5;
-  gel('excludeButton').className = 'control-button xmark-white';
+  gel('excludeModeButton').style.opacity = 0.5;
+  gel('excludeModeButton').className = 'control-button xmark-white';
 
   gel('numbersSelector').className = 'hidden';
   gel('candidatesSelector').className = 'insert-panel';
@@ -190,12 +188,12 @@ function useCandidatesSelector() {
 
 function useExcludesSelector() {
   setCh(gel('insertModeButton'), false);
-  setCh(gel('excludeButton'), true);
+  setCh(gel('excludeModeButton'), true);
 
   gel('insertModeButton').style.opacity = 0.5;
   gel('insertModeButton').className = 'control-button edit-white';
-  gel('excludeButton').style.opacity = 1;
-  gel('excludeButton').className = 'control-button xmark-blue mode-checked';
+  gel('excludeModeButton').style.opacity = 1;
+  gel('excludeModeButton').className = 'control-button xmark-blue mode-checked';
 
   gel('numbersSelector').className = 'hidden';
   gel('candidatesSelector').className = 'hidden';
@@ -204,7 +202,7 @@ function useExcludesSelector() {
 
 function createModeButtonEvents() {
   const insertModeButton = gel('insertModeButton');
-  const excludeButton = gel('excludeButton');
+  const excludeModeButton = gel('excludeModeButton');
 
   insertModeButton.onclick = (e) => {
     swapCh(insertModeButton)
@@ -215,9 +213,9 @@ function createModeButtonEvents() {
     }
   };
 
-  excludeButton.onclick = (e) => {
-    swapCh(excludeButton)
-    if (isCh(excludeButton)) {
+  excludeModeButton.onclick = (e) => {
+    swapCh(excludeModeButton)
+    if (isCh(excludeModeButton)) {
       useExcludesSelector();
     } else {
       useNumbersSelector();

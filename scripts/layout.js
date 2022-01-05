@@ -317,19 +317,19 @@ function layoutInsertModeContainer(cellSize, isLandscape) {
 }
 
 function layoutExcludeButtonContainer(gridSize, cellSize, isLandscape) {
-  const excludeButtonContainer = gel('excludeButtonContainer');
-  const excludeButton = gel('excludeButton');
-  excludeButton.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
-  excludeButton.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
+  const excludeModeButtonContainer = gel('excludeModeButtonContainer');
+  const excludeModeButton = gel('excludeModeButton');
+  excludeModeButton.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
+  excludeModeButton.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
 
   const bounds = new Bounds();
 
   if (isLandscape) {
     bounds.setRect (gridSize, 0, cellSize, cellSize);
-    bounds.bound(excludeButtonContainer);
+    bounds.bound(excludeModeButtonContainer);
   } else {
     bounds.setRect (gridSize - cellSize, cellSize, cellSize, cellSize);
-    bounds.bound(excludeButtonContainer);
+    bounds.bound(excludeModeButtonContainer);
   }
 }
 

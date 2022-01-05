@@ -79,5 +79,4 @@ function createGrid() {
 
 export {
   createGrid,
-  
 };
