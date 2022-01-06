@@ -185,7 +185,7 @@ class Game {
     const prevValue = gat(gel(`cell-${this.focusedCellIndex}`), 'value');
     this.updateCell(this.focusedCellIndex, newValue);
 
-    this.wipeNeighbourCandidates(newValue);
+    this.wipeNeighbourCandidates(this.cells[this.focusedCellIndex], newValue, true);
   
     const newUndo = new Undo('n', this.focusedCellIndex, 0, prevValue, newValue);
     this.store.addUndo(newUndo);
@@ -199,11 +199,11 @@ class Game {
     const cell = gel(`cell-${cellIndex}`);
     sat(cell, 'value', newValue);
     cell.innerHTML = newValue || '';
-    // if (newValue) {
-    //   this.hideCellCandidates(cellIndex);
-    // } else {
-    //   this.showCellCandidates(cellIndex);
-    // }
+    if (newValue) {
+      this.hideCellCandidates(cellIndex);
+    } else {
+      this.showCellCandidates(cellIndex);
+    }
   }
 
   checkCandidate(candidateNumber, check) {
@@ -266,7 +266,7 @@ class Game {
   updateCandidate(cellIndex, candidateNumber, check, excluded) {
     const candidate = this.cellCandidates[cellIndex][candidateNumber - 1];
 
-    const visibilityClass = this.cellIsEmpty(cellIndex) && check ? '' : ' hidden';
+    const visibilityClass = (this.cellIsEmpty(cellIndex) && check) ? '' : ' hidden';
     // alert(visibilityClass);
     const excludedClass = excluded ? ' red' : '';
 
@@ -276,28 +276,90 @@ class Game {
     setEx(candidate, excluded);
   }
 
-  wipeAreaCandidates(areaCells, newValue) {
+  wipeAreaCandidates(areaCells, newValue, storeState) {
     areaCells.forEach((cell, i) => {
       const cellIndex = parseInt(gat(cell, 'index'), 10);
-      if (this.cellIsEmpty(cellIndex)) {
+      // if (this.cellIsEmpty(cellIndex)) {
         const candidate = this.cellCandidates[cellIndex][newValue - 1];
         if (isCh(candidate)) {
           const excluded = isEx(candidate);
           this.updateCandidate(cellIndex, newValue, false, excluded);
-          const newUndo = new Undo('c', cellIndex, newValue, '1', '0');
-          this.store.addUndo(newUndo);
+          if (storeState) {
+            const newUndo = new Undo('c', cellIndex, newValue, '1', '0');
+            this.store.addUndo(newUndo);
+          }
         }
-      }
+      // }
     })
   }
 
-  wipeNeighbourCandidates(newValue) {
+  wipeNeighbourCandidates(cell, newValue, storeState) {
     if (parseInt(newValue, 10) === 0) return;
-    const focusedCell = this.cells[this.focusedCellIndex];
+    // const focusedCell = this.cells[this.focusedCellIndex];
 
-    this.wipeAreaCandidates(this.rows[parseInt(gat(focusedCell, 'row'))], newValue);
-    this.wipeAreaCandidates(this.columns[parseInt(gat(focusedCell, 'column'))], newValue);
-    this.wipeAreaCandidates(this.blocks[parseInt(gat(focusedCell, 'block'))], newValue);
+    this.wipeAreaCandidates(this.rows[parseInt(gat(cell, 'row'))], newValue, storeState);
+    this.wipeAreaCandidates(this.columns[parseInt(gat(cell, 'column'))], newValue, storeState);
+    this.wipeAreaCandidates(this.blocks[parseInt(gat(cell, 'block'))], newValue, storeState);
+  }
+
+  isCellCandidateValid(candidate) {
+    const candidateNumber = parseInt(gat(candidate, 'candidateNumber'), 10);
+    const cellIndex = parseInt(gat(candidate, 'cellIndex'), 10);
+
+    const cell = this.cells[cellIndex];
+    const row = parseInt(gat(cell, 'row'), 10);
+    const column = parseInt(gat(cell, 'column'), 10);
+    const block = parseInt(gat(cell, 'block'), 10);
+
+    const rowCells = this.rows[row];
+    for (let i = 0; i < rowCells.length; i++) {
+      const rowCell = rowCells[i];
+      const cellValue = parseInt(gat(rowCell, 'value'), 10)
+      if (cellValue === candidateNumber) {
+        return false
+      }
+    }
+
+    const columnCells = this.columns[column];
+    for (let i = 0; i < columnCells.length; i++) {
+      const columnCell = columnCells[i];
+      const cellValue = parseInt(gat(columnCell, 'value'), 10)
+      if (cellValue === candidateNumber) {
+        return false
+      }
+    }
+
+    const blockCells = this.blocks[block];
+    for (let i = 0; i < blockCells.length; i++) {
+      const blockCell = blockCells[i];
+      const cellValue = parseInt(gat(blockCell, 'value'), 10)
+      if (cellValue === candidateNumber) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  showAllValideCandidates() {
+    for (let cellIndex = 0; cellIndex < 81; cellIndex++) {
+      const cell = this.cells[cellIndex];
+      const cellValue = parseInt(gat(cell, 'value'), 10)
+      if (cellValue === 0) {
+        for (let candidateIndex = 0; candidateIndex < 9; candidateIndex++) {
+          const candidate = this.cellCandidates[cellIndex][candidateIndex];
+          const check = this.isCellCandidateValid(candidate);
+          const visibilityClass = check ? '' : ' hidden';
+          candidate.className = 'cell-candidate ' + visibilityClass;
+          candidate.innerHTML = (candidateIndex + 1).toString();
+          if (!check) {
+            // alert(`cellIndex = ${cellIndex} : candidateIndex = ${candidateIndex}`);
+          }
+          setCh(candidate, check);
+          setEx(candidate, false);
+        }
+      }
+    }
   }
 
   gameString() { 
@@ -343,7 +405,7 @@ class Game {
   showCellCandidates(cellIndex) {
     for (let i = 1; i < 10; i++) {
       const candidate = gel(`candidate-${cellIndex}-${i}`);
-      candidate.className = 'cell-candidate' + isCh(candidate) ? '' : ' hidden';
+      candidate.className = 'cell-candidate' + (isCh(candidate) ? '' : ' hidden');
     }
   }
 
@@ -389,8 +451,10 @@ class Game {
       const insertModeButton = gel('insertModeButton');
       if (isCh(insertModeButton)) insertModeButton.click();
 
-      const excludeButton = gel('excludeButton');
-      if (isCh(excludeButton)) excludeButton.click();
+      const excludeModeButton = gel('excludeModeButton');
+      if (isCh(excludeModeButton)) excludeModeButton.click();
+
+      this.wipeNeighbourCandidates(this.cells[undo.cellIndex], undo.oldValue, false);
     } else if (undo.type === 'c')  {
       this.updateCandidate(undo.cellIndex, undo.candidate, undo.oldValue === '1', false);
       setupCandidatesInput(undo.cellIndex);
@@ -403,8 +467,8 @@ class Game {
       setupExcludesInput(undo.cellIndex);
       this.store.candidatesSet = this.candidatesToString();
 
-      const excludeButton = gel('excludeButton');
-      if (!isEx(excludeButton)) excludeButton.click();
+      const excludeModeButton = gel('excludeModeButton');
+      if (!isEx(excludeModeButton)) excludeModeButton.click();
 
     }
 
@@ -425,9 +489,10 @@ class Game {
       const insertModeButton = gel('insertModeButton');
       if (isCh(insertModeButton)) insertModeButton.click();
 
-      const excludeButton = gel('excludeButton');
-      if (isCh(excludeButton)) excludeButton.click();
+      const excludeModeButton = gel('excludeModeButton');
+      if (isCh(excludeModeButton)) excludeModeButton.click();
 
+      this.wipeNeighbourCandidates(this.cells[undo.cellIndex], undo.newValue, false);
     } else if (undo.type === 'c') {
       this.updateCandidate(undo.cellIndex, undo.candidate, undo.newValue === '1', false)
       setupCandidatesInput(undo.cellIndex);
@@ -440,8 +505,8 @@ class Game {
       setupExcludesInput(undo.cellIndex);
       this.store.candidatesSet = this.candidatesToString();
 
-      const excludeButton = gel('excludeButton');
-      if (!isCh(excludeButton)) excludeButton.click();
+      const excludeModeButton = gel('excludeModeButton');
+      if (!isCh(excludeModeButton)) excludeModeButton.click();
 
     }
 

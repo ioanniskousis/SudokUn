@@ -19,6 +19,7 @@ import {
   showAlertNoSelection,
   hideAlertNoSelection,
   hideInvalidSelection,
+  hideSettings,
 } from './viewController.js';
 
 import { createFileSelectorEvents } from './components/fileSelector.js';
@@ -132,6 +133,10 @@ function createEvents(game, store, loadPuzzle) {
     store.allowMistakes = e.target.checked;
     store.storeValue('allowMistakes', e.target.checked ? '1' : '0');
     gel('alertInvalidCheckBox').checked = store.allowMistakes;
+  };
+  gel('showAllValideCandidates').onclick = (e) => {
+    game.showAllValideCandidates();
+    hideSettings();
   };
 
   createModeButtonEvents();

@@ -33,7 +33,14 @@ function createSettingsView() {
 
   doc(allowMistakes, allowMistakesCheck);
 
+  const showAllValidCandidates = crel('input');
+  sat(showAllValidCandidates, 'type', 'button');
+  showAllValidCandidates.className = 'selectorItem settingsCommand';
+  showAllValidCandidates.id = 'showAllValideCandidates';
+  showAllValidCandidates.value = 'Show All Valid Candidates';
+
   doc(view, allowMistakes);
+  doc(view, showAllValidCandidates);
 
   return view;
 }

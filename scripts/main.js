@@ -17,6 +17,8 @@ import Store from './store.js';
 import createEvents from './events.js';
 import { showPuzzInfo } from './viewController.js';
 
+import PlayGroundClass from './components/playGroundClass.js';
+
 function handleLoadResponse() {
   game.initPuzzle();
   showPuzzInfo(store);
@@ -33,7 +35,12 @@ function initGame() {
 }
 
 function render() {
+  const playGround = new PlayGroundClass();
+  console.log(playGround)
+
   doc(gel('main'), createPlayGround());
+  // doc(gel('main'), playGround.element);
+
   doc(gel('main'), createFileSelectorContainer());
   doc(gel('main'), createSettingsViewContainer());
   doc(gel('main'), createInstructionsViewContainer());

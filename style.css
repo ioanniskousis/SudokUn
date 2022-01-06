@@ -152,6 +152,8 @@ input[type=number] {
 
 .number-button {
   font-family: 'Times New Roman', Times, serif;
+  border: none;
+  padding: 0;
   background-color: rgba(255, 255, 255, 0.8);
   color: #379;
   border-radius: 50%;
@@ -160,6 +162,8 @@ input[type=number] {
 
 .candidate-button {
   font-family: 'Times New Roman', Times, serif;
+  border: none;
+  padding: 0;
   background-color: Gold;
   color: #379;
   border-radius: 50%;
@@ -338,7 +342,9 @@ input[type=number] {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
+  color: #379;
+  border: none;
+  border-radius: 2px;
 }
 
 .selectorItem input[type='checkbox'] {
@@ -349,11 +355,18 @@ input[type=number] {
 .selectorItemLabel {
   flex: 1;
   margin-right: 5%;
-  color: #379;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+
+.selectorItem:hover {
+  background-color: #ddd;
+}
+
+.selectorItem:active {
+  background-color: #eee;
 }
 
 .levelCounts {
