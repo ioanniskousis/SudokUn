@@ -26,15 +26,22 @@ import { createFileSelectorEvents } from './components/fileSelector.js';
 import { createUndosEvents, createTipEvents } from './components/controllers.js';
 import { createSettingsEvents } from './components/settingsView.js';
 
+const KEY_LEFT = 37, KEY_UP = 38, KEY_RIGHT = 39, KEY_DOWN = 40;
+const KEY_BACK = 8, KEY_TAB = 9, KEY_ESC = 27, KEY_DELETE = 46, KEY_ZERO = 48, KEY_NINE = 57;
+const LAST_ROW_FIRST_CELL = 72;
+const FIRST_ROW_LAST_CELL = 8;
+const ONE_COLUMN = 1, ROW_SIZE = 9, NO_CELL = -1, NO_NUMBER = -1;
+const XNUM_KEYBOARD_START = 96, XNUM_KEYBOARD_END = 105;
+
 function mainClick(e, game) {
-  if ((game.focusedCellIndex > -1) && (!clickOnGame(e))) {
-    game.focusCell(-1);
+  if ((game.focusedCellIndex > NO_CELL) && (!clickOnGame(e))) {
+    game.focusCell(NO_CELL);
   }
 }
 
 function createCellsClick(game) {
-  for (let i = 0; i < 81; i++) {
-    const cell = gel(`cell-${i}`);
+  for (let i = 0; i <= MAX_INDEX; i++) {
+    const cell = game.cells[i];
     cell.onclick = (e) => game.cellClick(e);
   }
 }
@@ -47,49 +54,49 @@ function wKeyDown(event, game) {
   hideInvalidSelection();
 
   const keyCode = event.keyCode;
-  if (keyCode === 27) {
-    game.focusCell(-1);
+  if (keyCode === KEY_ESC) {
+    game.focusCell(NO_CELL);
     return;
   }
-  if (keyCode == 9) {
+  if (keyCode == KEY_TAB) {
     return;
   }
-  if ((keyCode >= 37) && (keyCode <= 40) && (game.focusedCellIndex > -1)) {
+  if ((keyCode >= KEY_LEFT) && (keyCode <= KEY_DOWN) && (game.focusedCellIndex > -1)) {
     event.preventDefault();
     let selectedCellIndex = game.focusedCellIndex;
-    if (keyCode == 37) {
+    if (keyCode == KEY_LEFT) {
       if (selectedCellIndex > 0){
-        selectedCellIndex -= 1;
-        let cell = gel(`cell-${selectedCellIndex}`);
+        selectedCellIndex -= ONE_COLUMN;
+        let cell = game.cells[selectedCellIndex];
         while ((selectedCellIndex > 0) && (game.isGiven(cell))) {
-          selectedCellIndex -= 1;
+          selectedCellIndex -= ONE_COLUMN;
+          cell = game.cells[selectedCellIndex];
+        }
+      }
+    } else if (keyCode == KEY_UP) {
+      if (selectedCellIndex > FIRST_ROW_LAST_CELL) {
+        selectedCellIndex -= ROW_SIZE;
+        let cell = game.cells[selectedCellIndex];
+        while ((selectedCellIndex > FIRST_ROW_LAST_CELL) && (game.isGiven(cell))) {
+          selectedCellIndex -= ROW_SIZE;
           cell = gel(`cell-${selectedCellIndex}`);
         }
       }
-    } else if (keyCode == 38) {
-      if (selectedCellIndex > 8) {
-        selectedCellIndex -= 9;
+    } else if (keyCode == KEY_RIGHT) {
+      if (selectedCellIndex < MAX_INDEX) {
+        selectedCellIndex += ONE_COLUMN;
         let cell = gel(`cell-${selectedCellIndex}`);
-        while ((selectedCellIndex > 8) && (game.isGiven(cell))) {
-          selectedCellIndex -= 9;
+        while ((selectedCellIndex < MAX_INDEX) && (game.isGiven(cell))) {
+          selectedCellIndex += ONE_COLUMN;
           cell = gel(`cell-${selectedCellIndex}`);
         }
       }
-    } else if (keyCode == 39) {
-      if (selectedCellIndex < 80) {
-        selectedCellIndex += 1;
+    } else if (keyCode == KEY_DOWN) {
+      if (selectedCellIndex < LAST_ROW_FIRST_CELL) {
+        selectedCellIndex += ROW_SIZE;
         let cell = gel(`cell-${selectedCellIndex}`);
-        while ((selectedCellIndex < 80) && (game.isGiven(cell))) {
-          selectedCellIndex += 1;
-          cell = gel(`cell-${selectedCellIndex}`);
-        }
-      }
-    } else if (keyCode == 40) {
-      if (selectedCellIndex < 72) {
-        selectedCellIndex += 9;
-        let cell = gel(`cell-${selectedCellIndex}`);
-        while ((selectedCellIndex < 72) && (game.isGiven(cell))) {
-          selectedCellIndex += 9;
+        while ((selectedCellIndex < LAST_ROW_FIRST_CELL) && (game.isGiven(cell))) {
+          selectedCellIndex += ROW_SIZE;
           cell = gel(`cell-${selectedCellIndex}`);
         }
       }
@@ -99,14 +106,14 @@ function wKeyDown(event, game) {
     return ;
   }
 
-  if ((keyCode === 8) || (keyCode === 46)) game.checkCell(0);
+  if ((keyCode === KEY_BACK) || (keyCode === KEY_DELETE)) game.checkCell(0);
 
-  let inputNumber = -1;
-  if ((keyCode > 47) && (keyCode < 58)) inputNumber = keyCode - 48;
-  if ((keyCode > 95) && (keyCode < 106)) inputNumber = keyCode - 96;
+  let inputNumber = NO_NUMBER;
+  if ((keyCode >= KEY_ZERO) && (keyCode <= KEY_NINE)) inputNumber = keyCode - KEY_ZERO;
+  if ((keyCode >= XNUM_KEYBOARD_START) && (keyCode <= XNUM_KEYBOARD_END)) inputNumber = keyCode - XNUM_KEYBOARD_START;
 
-  if (inputNumber > -1) {
-    if (game.focusedCellIndex > -1) {
+  if (inputNumber > NO_NUMBER) {
+    if (game.focusedCellIndex > NO_CELL) {
       game.checkCell(inputNumber);
     } else {
       showAlertNoSelection();
