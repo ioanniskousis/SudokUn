@@ -3,7 +3,7 @@ import {
   sat,
 } from '../utils/shortHands.js';
 
-function createControlButton(buttonId, imageClass) {
+function createCommandButton(buttonId, imageClass) {
   const button = crel('button');
   button.className = `control-button ${imageClass}`;
   button.id = buttonId;
@@ -49,7 +49,7 @@ function createPlayButton(level) {
 }
 
 export {
-  createControlButton,
+  createCommandButton,
   createFileInfo,
   createShiftButton,
   createIndexInput,

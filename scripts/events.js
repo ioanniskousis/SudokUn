@@ -19,13 +19,18 @@ import {
   showAlertNoSelection,
   hideAlertNoSelection,
   hideInvalidSelection,
+  showSettings,
   hideSettings,
+  showInstructions,
+  hideInstructions,
 } from './viewController.js';
+import { clickOnGrid } from './layout.js';
 
 import { createFileSelectorEvents } from './components/fileSelector.js';
-import { createUndosEvents, createTipEvents } from './components/controllers.js';
-import { createSettingsEvents } from './components/settingsView.js';
+import { createUndosEvents, createTipsPanelEvents } from './components/commandPanels.js';
+// import { hideCanvas } from './viewController.js';
 
+const MAX_INDEX = 80
 const KEY_LEFT = 37, KEY_UP = 38, KEY_RIGHT = 39, KEY_DOWN = 40;
 const KEY_BACK = 8, KEY_TAB = 9, KEY_ESC = 27, KEY_DELETE = 46, KEY_ZERO = 48, KEY_NINE = 57;
 const LAST_ROW_FIRST_CELL = 72;
@@ -123,10 +128,21 @@ function wKeyDown(event, game) {
 
 }
 
+function createSettingsEvents(store) {
+  gel('settingsButton').onclick = (e) => showSettings();
+
+
+
+  gel('helpButton').onclick = (e) => {
+    showInstructions();
+  }
+
+}
+
 function createEvents(game, store, loadPuzzle) {
   window.addEventListener('resize', () => layout());
   window.addEventListener('keydown', (e) => wKeyDown(e, game));
-  gel('main').onclick = (e) => mainClick(e, game);
+  
   gel('alertNoSelection').onclick = (e) => hideAlertNoSelection();
   gel('alertInvalid').onclick = (e) => {
     if (!clickOnAllowMistakes(e)) hideInvalidSelection();
@@ -153,9 +169,12 @@ function createEvents(game, store, loadPuzzle) {
   createFileSelectorEvents(store, loadPuzzle);
   createUndosEvents(game);
   createSettingsEvents(store);
-  createTipEvents();
+  createTipsPanelEvents(game);
 
   layout();
 }
 
-export default createEvents;
+export {
+  createEvents,
+  mainClick,
+}

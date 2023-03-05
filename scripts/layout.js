@@ -30,6 +30,18 @@ function layoutInstructionsView() {
 
 }
 
+function layoutCanvas() {
+  const bounds = new Bounds();
+  bounds.getRect(gel('play-ground'));
+
+  const canvasView = gel('canvasView');
+  bounds.bound(canvasView);
+  canvasView.style.padding = `${bounds.height * 0.1}px`;
+
+
+
+}
+
 function layoutFileSelector() {
   const bounds = new Bounds();
   bounds.getRect(gel('main-grid'));
@@ -226,7 +238,7 @@ function layoutAlerts(gridSize, cellSize, isLandscape) {
   bounds.bound(alertInvalid);
 }
 
-function layoutFileController(gridSize, cellSize, isLandscape) {
+function layoutFilesPanel(gridSize, cellSize, isLandscape) {
   const fileController = gel('fileController');
   const fileControllerButtons = fileController.children;
 
@@ -275,7 +287,7 @@ function layoutTipsController(gridSize, cellSize, isLandscape) {
   }
 }
 
-function layoutSettingsController(gridSize, cellSize, isLandscape) {
+function layoutSettingsPanel(gridSize, cellSize, isLandscape) {
   const settingsController = gel('settingsController');
   const settingsControllerButtons = settingsController.children;
 
@@ -395,14 +407,15 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   layoutAlerts(gridSize, cellSize, isLandscape);
   layoutNumbersSelector(gridSize, cellSize,isLandscape);
   layoutCandidatesSelector(gridSize, cellSize, isLandscape);
-  layoutFileController(gridSize, cellSize, isLandscape);
+  layoutFilesPanel(gridSize, cellSize, isLandscape);
   layoutTipsController(gridSize, cellSize, isLandscape);
-  layoutSettingsController(gridSize, cellSize, isLandscape);
+  layoutSettingsPanel(gridSize, cellSize, isLandscape);
   layoutInsertModeContainer(cellSize, isLandscape);
   layoutExcludeButtonContainer(gridSize, cellSize, isLandscape);
   layoutUndosController(gridSize, cellSize, isLandscape);
   layoutRestartController(gridSize, cellSize, isLandscape);
-  layoutInstructionsView(gridSize, cellSize, isLandscape);
+  layoutInstructionsView();
+  layoutCanvas();
 
   layoutDebugBox(gridSize, cellSize, isLandscape);
 }
@@ -470,6 +483,13 @@ function clickOnGrid(e) {
   return bounds.contains(e.pageX, e.pageY);
 }
 
+function clickOnPlayground(e) {
+  const bounds = new Bounds();
+  bounds.getRect(gel('play-ground'));
+
+  return bounds.contains(e.pageX, e.pageY);
+}
+
 function clickOnSelectors(e) {
   const bounds = new Bounds();
   bounds.getRect(gel('numbersSelector'));
@@ -489,5 +509,6 @@ export {
   clickOnGame,
   clickOnSelectors,
   clickOnGrid,
+  clickOnPlayground,
   clickOnAllowMistakes,
 }

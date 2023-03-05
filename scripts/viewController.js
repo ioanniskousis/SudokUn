@@ -62,6 +62,18 @@ function hideInstructions() {
   }, 300);
 }
 
+function showCanvas() {
+  gel('canvasContainer').style.visibility = 'visible';
+  gel('canvasView').style.opacity = 1.0;
+}
+
+function hideCanvas() {
+  gel('canvasView').style.opacity = 0.0;
+  setTimeout(() => {
+    gel('canvasContainer').style.visibility = 'hidden';
+  }, 300);
+}
+
 export {
   showAlertNoSelection,
   hideAlertNoSelection,
@@ -74,4 +86,6 @@ export {
   hideSettings,
   showInstructions,
   hideInstructions,
+  showCanvas,
+  hideCanvas,
 }

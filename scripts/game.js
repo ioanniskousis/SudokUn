@@ -15,6 +15,7 @@ import {
   hideInvalidSelection,
 } from './viewController.js';
 import { Undo } from './store.js';
+import { searchAdvancedTip } from './advancedTools/advanced.js';
 
 class Game {
   constructor(store) {
@@ -521,6 +522,10 @@ class Game {
     this.resetCandidates();
     this.store.restart();
     this.initPuzzle();
+  }
+
+  searchTip() {
+    searchAdvancedTip()
   }
 }
 

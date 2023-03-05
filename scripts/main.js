@@ -8,13 +8,13 @@ import createFileSelectorContainer from './components/fileSelector.js';
 import {
   createSettingsViewContainer,
   createInstructionsViewContainer,
-
-} from './components/settingsView.js';
+  createCanvasContainer,
+} from './components/modalContainers.js';
 
 import Game from './game.js';
 import Store from './store.js';
 
-import createEvents from './events.js';
+import { createEvents, mainClick } from './events.js';
 import { showPuzzInfo } from './viewController.js';
 
 import PlayGroundClass from './components/playGroundClass.js';
@@ -36,14 +36,16 @@ function initGame() {
 
 function render() {
   const playGround = new PlayGroundClass();
-  console.log(playGround)
+  // console.log(playGround)
 
   doc(gel('main'), createPlayGround());
+  gel('main').onclick = (e) => mainClick(e, game);
   // doc(gel('main'), playGround.element);
 
   doc(gel('main'), createFileSelectorContainer());
   doc(gel('main'), createSettingsViewContainer());
   doc(gel('main'), createInstructionsViewContainer());
+  doc(gel('main'), createCanvasContainer());
 }
 
 window.addEventListener('load', () => {

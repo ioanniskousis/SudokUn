@@ -9,7 +9,7 @@ import {
 import { createNumberSelectors } from './numberSelectors.js';
 import { createAlertNoSelection, createAlertInvalid } from './alerts.js';
 
-import { createControllers } from './controllers.js';
+import { createCommandPanels } from './commandPanels.js';
 
 function createPlayGround() {
   const playGround = crel('div');
@@ -17,7 +17,7 @@ function createPlayGround() {
 
   doc(playGround, createGrid());
   createNumberSelectors(playGround);
-  createControllers(playGround);
+  createCommandPanels(playGround);
 
   doc(playGround, createAlertNoSelection());
   doc(playGround, createAlertInvalid());

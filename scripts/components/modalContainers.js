@@ -4,13 +4,8 @@ import {
   gel,
   sat,
 } from '../utils/shortHands.js';
-import {
-  showSettings,
-  hideSettings,
-  showInstructions,
-  hideInstructions,
-} from '../viewController.js';
-import { clickOnGrid } from '../layout.js';
+import { hideSettings, hideInstructions, hideCanvas } from '../viewController.js';
+import { clickOnGrid, clickOnPlayground } from '../layout.js';
 
 function createSettingsView() {
   const view = crel('div');
@@ -49,6 +44,12 @@ function createSettingsViewContainer() {
   const container = crel('div');
   container.id = 'settingsViewContainer';
   container.className = 'backViewContainer';
+  
+  container.onclick = (e) => {
+    if (!clickOnGrid(e)) {
+      hideSettings();
+    }
+  };
 
   doc(container, createSettingsView());
 
@@ -68,34 +69,45 @@ function createInstructionsViewContainer() {
   const container = crel('div');
   container.id = 'instructionsViewContainer';
   container.className = 'backViewContainer';
+  container.onclick = (e) => {
+    if (!clickOnGrid(e)) {
+      hideInstructions();
+    }
+  };
 
   doc(container, createInstructionsView());
 
   return container;
 }
 
-export function createSettingsEvents(store) {
-  gel('settingsButton').onclick = (e) => showSettings();
-
-  gel('settingsViewContainer').onclick = (e) => {
-    if (!clickOnGrid(e)) {
-      hideSettings();
+function createCanvasContainer() {
+  const container = crel('div');
+  container.id = 'canvasContainer';
+  container.className = 'backViewContainer';
+  container.style.backgroundColor = 'rgba(250, 200, 200, 0.4)';
+  container.onclick = (e) => {
+    if (!clickOnPlayground(e)) {
+      hideCanvas();
     }
   };
 
-  gel('helpButton').onclick = (e) => {
-    showInstructions();
-  }
+  doc(container, createCanvasView());
 
-  gel('instructionsViewContainer').onclick = (e) => {
-    if (!clickOnGrid(e)) {
-      hideInstructions();
-    }
-  };
+  return container;
+}
 
+function createCanvasView() {
+  const view = crel('div');
+  view.id = 'canvasView';
+  view.className = 'popup';
+  view.style.backgroundColor = 'rgba(200, 250, 200, 0.4)';
+
+
+  return view;
 }
 
 export {
   createSettingsViewContainer,
   createInstructionsViewContainer,
+  createCanvasContainer,
 };

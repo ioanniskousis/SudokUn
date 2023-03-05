@@ -9,7 +9,7 @@ import {
   setCh,
   isEx,
 } from '../utils/shortHands.js';
-import { createControlButton } from './controlElements.js';
+import { createCommandButton } from './controlElements.js';
 
 function createNumberButton(number) {
   const button = crel('button');
@@ -50,7 +50,7 @@ function createModeButtonContainer() {
   panel.id = 'insertModeContainer';
   panel.className = 'insert-panel';
 
-  doc(panel, createControlButton('insertModeButton', 'edit-white'));
+  doc(panel, createCommandButton('insertModeButton', 'edit-white'));
 
   return panel;
 }
@@ -60,7 +60,7 @@ function createExcludeButtonContainer() {
   panel.id = 'excludeModeButtonContainer';
   panel.className = 'insert-panel';
 
-  doc(panel, createControlButton('excludeModeButton', 'xmark-white'));
+  doc(panel, createCommandButton('excludeModeButton', 'xmark-white'));
 
   return panel;
 }
