@@ -9,19 +9,20 @@ import {
   createSettingsViewContainer,
   createInstructionsViewContainer,
   createCanvasContainer,
+  createTipCloud,
 } from './components/modalContainers.js';
 
 import Game from './game.js';
 import Store from './store.js';
 
 import { createEvents, mainClick } from './events.js';
-import { showPuzzInfo } from './viewController.js';
+import { showPuzzleInfo } from './viewController.js';
 
 import PlayGroundClass from './components/playGroundClass.js';
 
 function handleLoadResponse() {
   game.initPuzzle();
-  showPuzzInfo(store);
+  showPuzzleInfo(store);
 }
 
 function loadPuzzle(clearGame) {
@@ -46,6 +47,8 @@ function render() {
   doc(gel('main'), createSettingsViewContainer());
   doc(gel('main'), createInstructionsViewContainer());
   doc(gel('main'), createCanvasContainer());
+  doc(gel('main'), createTipCloud());
+  
 }
 
 window.addEventListener('load', () => {

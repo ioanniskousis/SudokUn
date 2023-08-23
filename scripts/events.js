@@ -6,6 +6,7 @@ import {
   layout,
   clickOnGame,
   clickOnAllowMistakes,
+  clickOnGrid,
   clickOnSelectors
 } from './layout.js';
 
@@ -24,7 +25,6 @@ import {
   showInstructions,
   hideInstructions,
 } from './viewController.js';
-import { clickOnGrid } from './layout.js';
 
 import { createFileSelectorEvents } from './components/fileSelector.js';
 import { createUndosEvents, createTipsPanelEvents } from './components/commandPanels.js';
@@ -47,7 +47,7 @@ function mainClick(e, game) {
 function createCellsClick(game) {
   for (let i = 0; i <= MAX_INDEX; i++) {
     const cell = game.cells[i];
-    cell.onclick = (e) => game.cellClick(e);
+    cell.onclick = (e) => game.cellClick(cell);
   }
 }
 

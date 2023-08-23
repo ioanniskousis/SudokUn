@@ -84,11 +84,11 @@ function createCanvasContainer() {
   const container = crel('div');
   container.id = 'canvasContainer';
   container.className = 'backViewContainer';
-  container.style.backgroundColor = 'rgba(250, 200, 200, 0.4)';
+  // container.style.backgroundColor = 'rgba(51, 119, 153, 0.1)';
   container.onclick = (e) => {
-    if (!clickOnPlayground(e)) {
+    // if (!clickOnPlayground(e)) {
       hideCanvas();
-    }
+    // }
   };
 
   doc(container, createCanvasView());
@@ -97,17 +97,32 @@ function createCanvasContainer() {
 }
 
 function createCanvasView() {
-  const view = crel('div');
+  const view = crel('canvas');
   view.id = 'canvasView';
-  view.className = 'popup';
-  view.style.backgroundColor = 'rgba(200, 250, 200, 0.4)';
+  // view.className = 'popup';
+  // view.style.backgroundColor = 'transparent'
+  // view.style.backgroundColor = 'rgba(200, 250, 200, 0.4)';
 
 
   return view;
+}
+
+function createTipCloud() {
+  const container = crel('div');
+  container.id = 'tipCloud';
+  // container.style.backgroundColor = 'rgba(51, 119, 153, 0.1)';
+  container.onclick = (e) => {
+    hideCanvas();
+  };
+
+  // doc(container, createCanvasView());
+
+  return container;
 }
 
 export {
   createSettingsViewContainer,
   createInstructionsViewContainer,
   createCanvasContainer,
+  createTipCloud,
 };

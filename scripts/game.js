@@ -7,15 +7,38 @@ import {
   setEx,
   isEx,
 } from './utils/shortHands.js';
+
 import { setupCandidatesInput, setupExcludesInput } from './components/numberSelectors.js';
 import {
   showAlertNoSelection,
   hideAlertNoSelection,
   showInvalidSelection,
   hideInvalidSelection,
+  showNoToolFound,
+  showCanvas,
 } from './viewController.js';
 import { Undo } from './store.js';
-import { searchAdvancedTip } from './advancedTools/advanced.js';
+import { clearDrawDivision, locateTipCloud } from './advancedTools/advanced.js'
+import {
+  searchNakedSingle,
+  nakedSingleFound,
+} from './advancedTools/nakedSingle.js';
+import {
+  searchHiddenSingle,
+  hiddenSingleFound,
+} from './advancedTools/hiddenSingle.js';
+import {
+  searchBlockInteraction,
+  blockInteractionFound
+} from './advancedTools/blockInteraction.js';
+import {
+  searchSubset,
+  subsetFound,
+} from './advancedTools/subset.js'
+import {
+  searchXyChain,
+  xyChainFound,
+} from './advancedTools/xychain.js'
 
 class Game {
   constructor(store) {
@@ -268,7 +291,6 @@ class Game {
     const candidate = this.cellCandidates[cellIndex][candidateNumber - 1];
 
     const visibilityClass = (this.cellIsEmpty(cellIndex) && check) ? '' : ' hidden';
-    // alert(visibilityClass);
     const excludedClass = excluded ? ' red' : '';
 
     candidate.className = 'cell-candidate ' + visibilityClass + excludedClass;
@@ -435,8 +457,8 @@ class Game {
     }
   }
 
-  cellClick(e) {
-    const cell = e.target;
+  cellClick(cell) {
+    // const cell = e.target;
     if (gat(cell, 'given') === '1') return;
 
     this.focusCell(parseInt(gat(cell, 'index'), 10));
@@ -524,9 +546,162 @@ class Game {
     this.initPuzzle();
   }
 
-  searchTip() {
-    searchAdvancedTip()
+  prepareTipForCell(cell, controller, tool) {
+    showCanvas();
+    this.cellClick(cell);
+    locateTipCloud(cell);
+    controller(tool);
+
   }
+  prepareTipForBlock(block, controller, tool) {
+    showCanvas();
+    // this.cellClick(cell);
+    const cell = gel('cell-0')
+    locateTipCloud(cell);
+    controller(tool);
+
+  }
+  prepareTipForSubset(subset, controller) {
+    showCanvas();
+    // this.cellClick(gel("cell-57"));
+    if (subset.unit = 'row') {
+      const row = (parseInt(gat(subset.subsetCells[0], "row"), 10) * 9) + 1;
+      locateTipCloud(gel("cell-" + row.toString()), 5, 4);
+    } else {
+      locateTipCloud(gel("cell-35"));
+
+    }
+    controller(subset);
+  }
+  prepareTipForXyChain(controller, xyChain) {
+    showCanvas();
+    // this.cellClick(cell);
+    const cell = gel('cell-27')
+    locateTipCloud(cell, 6, 4);
+    controller(xyChain);
+
+  }
+  searchAdvancedTip(e) {
+    clearDrawDivision();
+    this.calcTemporaryOptions();
+    // searchXyChain,
+    // xyChainFound,
+
+    const nakedSingle = searchNakedSingle();
+    if (nakedSingle) {
+      const cell = nakedSingle.firstCell;
+      this.prepareTipForCell(cell, nakedSingleFound, nakedSingle)
+    } else {
+      const hiddenSingle = searchHiddenSingle();
+      if (hiddenSingle) {
+        const cell = hiddenSingle.firstCell;
+        this.prepareTipForCell(cell, hiddenSingleFound, hiddenSingle)
+      } else {
+        const subset = searchSubset();
+        if (subset) {
+          this.prepareTipForSubset(subset, subsetFound)
+        } else {
+          const blockInteraction = searchBlockInteraction();
+          if (blockInteraction) {
+            const block = blockInteraction.block;
+            this.prepareTipForBlock(block, blockInteractionFound, blockInteraction)
+          } else {
+            const xyChain = searchXyChain();
+            if (xyChain) {
+              this.prepareTipForXyChain(xyChainFound, xyChain)
+            } else {
+              showNoToolFound();
+            }
+          }
+        }
+      }
+    }
+
+  }
+  calcTemporaryOptions() { 
+    for (let cellIndex = 0; cellIndex < 81; cellIndex++) {
+      const cell = gel("cell-" + cellIndex.toString());
+      const cellIsFilled = gat(cell, 'value') != '0';
+      
+      let candidatesCount = 0;
+      for (let option = 1; option < 10; option++) {
+        const candidate = gel("candidate-" + cellIndex.toString() + "-" + option.toString());
+        const checked = isCh(candidate);
+        const excluded = isEx(candidate);
+        const excludedClass = excluded ? ' red' : '';
+        if (cellIsFilled) {
+          sat(candidate, "checked", "0");
+          candidate.className = 'cell-candidate hidden ' + excludedClass;
+        } else {
+          var canCheckIt = this.allowOptionInNeighborhood(cell, option.toString() );
+          const visibilityClass = canCheckIt === '1' ? '' : ' hidden';
+          sat(candidate, "checked", canCheckIt);
+          candidate.className = 'cell-candidate' + visibilityClass + excludedClass;
+          candidate.innerHTML = excluded ? '-' : option.toString();
+          if (!excluded) {
+            candidatesCount = candidatesCount + parseInt(canCheckIt);
+            sat(candidate, "checked", canCheckIt);
+            if (!checked) sat(candidate, 'tempMark', canCheckIt ? "1" : null)
+          }
+        }
+      }
+
+      sat(cell, "candidatesCount", candidatesCount.toString() );
+    }
+  }
+  calcOptions() { 
+    for (let cellIndex = 0; cellIndex < 81; cellIndex++) {
+      const cell = gel("cell-" + cellIndex.toString());
+      const cellIsFilled = gat(cell, 'value') != '0';
+      
+      let candidatesCount = 0;
+      for (let option = 1; option < 10; option++) {
+        const candidate = gel("candidate-" + cellIndex.toString() + "-" + option.toString());
+        if (cellIsFilled) {
+          sat(candidate, "checked", "0");
+        } else {
+          var checked = this.allowOptionInNeighborhood(cell, option.toString() );
+          sat(candidate, "checked", checked);
+          if (!isEx(candidate)) {
+            candidatesCount = candidatesCount + parseInt(checked);
+          }
+        }
+      }
+
+      sat(cell, "candidatesCount", candidatesCount.toString() );
+    }
+  }
+  allowOptionInNeighborhood(destCell, option) { 
+    var block  = gat(destCell, "block");
+    var row    = gat(destCell, "row");
+    var column = gat(destCell, "column");
+    var destCellIndex = gat(destCell, "index");
+
+    for (let i = 0; i < 81; i++) {
+      var cell = gel("cell-" + i.toString());
+      if (gat(cell, 'index') != destCellIndex) {
+
+        if (gat(cell, "block") == block) {
+          if (gat(cell, 'value') === option) {
+            return "0";
+          }
+        }
+        if (gat(cell, "row") == row) {
+          if (gat(cell, 'value') === option) {
+            return "0";
+          }
+        }
+        if (gat(cell, "column") == column) {
+          if (gat(cell, 'value') === option) {
+            return "0";
+          }
+        }
+
+      }
+    }
+    return "1";
+  }
+
 }
 
 export default Game;

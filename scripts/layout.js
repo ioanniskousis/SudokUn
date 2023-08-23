@@ -1,5 +1,6 @@
 import { gel } from './utils/shortHands.js';
 import Bounds from './utils/bounds.js';
+import { hideCanvas } from './viewController.js'
 
 function layoutSettingsView() {
   const bounds = new Bounds();
@@ -31,14 +32,17 @@ function layoutInstructionsView() {
 }
 
 function layoutCanvas() {
+  const canvasContainerBounds = new Bounds(0, 0, window.innerWidth, window.innerHeight);
+  canvasContainerBounds.bound(gel('canvasContainer'))
+  canvasContainerBounds.bound(gel('canvasView'));
+  
   const bounds = new Bounds();
-  bounds.getRect(gel('play-ground'));
-
-  const canvasView = gel('canvasView');
-  bounds.bound(canvasView);
-  canvasView.style.padding = `${bounds.height * 0.1}px`;
-
-
+  bounds.getRect(gel('advancedButton'));
+  bounds.width /= 3;
+  bounds.height /= 3;
+  const tipCloud = gel('tipCloud');
+  bounds.bound(tipCloud);
+  tipCloud.style.opacity = 0.0;
 
 }
 
@@ -415,7 +419,8 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   layoutUndosController(gridSize, cellSize, isLandscape);
   layoutRestartController(gridSize, cellSize, isLandscape);
   layoutInstructionsView();
-  layoutCanvas();
+  // layoutCanvas();
+  hideCanvas();
 
   layoutDebugBox(gridSize, cellSize, isLandscape);
 }
@@ -464,10 +469,11 @@ function layout() {
 
 function clickOnGame(e) {
   const bounds = new Bounds();
-  bounds.getRect(gel('main-grid'));
-  const cellSize = (bounds.width - 6.0) / 9.0;
-  bounds.top -= cellSize;
-  bounds.height += cellSize;
+  bounds.getRect(gel('play-ground'));
+  // const cellSize = (bounds.width - 6.0) / 9.0;
+  // bounds.top -= cellSize;
+  // bounds.height += cellSize;
+  // bounds.width += cellSize;
 
   const onGame = bounds.contains(e.pageX, e.pageY);
   bounds.getRect(gel('undosController'));
@@ -511,4 +517,5 @@ export {
   clickOnGrid,
   clickOnPlayground,
   clickOnAllowMistakes,
+  layoutCanvas,
 }

@@ -79,9 +79,9 @@ function createUndosEvents(game) {
 }
 
 function createTipsPanelEvents(game) {
+
   gel('advancedButton').onclick = (e) => {
-    // alert('Advanced Features - Under Construction');
-    game.searchTip()
+    game.searchAdvancedTip(e)
   };
 
   gel('searchButton').onclick = (e) => {

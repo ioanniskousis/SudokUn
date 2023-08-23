@@ -1,6 +1,8 @@
 import {
   gel,
 } from './utils/shortHands.js';
+import { layoutCanvas } from './layout.js'
+import { removeTemporaryCandidates } from './advancedTools/advanced.js'
 
 function showAlertNoSelection() {
   gel('alertNoSelection').style.visibility = 'visible';
@@ -12,14 +14,21 @@ function hideAlertNoSelection() {
 
 function showInvalidSelection(message) {
   gel('alertInvalidMessage').innerHTML = message;
-  gel('alertInvalid').style.visibility = 'visible';
+  gel('alertInvalid').style.display = 'block';
+  gel('alertInvalidCheckContainer').style.visibility = 'visible';
+}
+
+function showNoToolFound() {
+  gel('alertInvalidMessage').innerHTML = 'No tool found';
+  gel('alertInvalid').style.display = 'block';
+  gel('alertInvalidCheckContainer').style.visibility = 'hidden';
 }
 
 function hideInvalidSelection() {
-  gel('alertInvalid').style.visibility = 'hidden';
+  gel('alertInvalid').style.display = 'none';
 }
 
-function showPuzzInfo(store) {
+function showPuzzleInfo(store) {
   const pLevel = store.levelCaptions[store.selectedLevel];
   const pIndex = store.selectedIndex;
   gel('puzzleLevelLabel').innerHTML = pLevel;
@@ -72,12 +81,16 @@ function hideCanvas() {
   setTimeout(() => {
     gel('canvasContainer').style.visibility = 'hidden';
   }, 300);
+
+  layoutCanvas();
+  removeTemporaryCandidates();
 }
+
 
 export {
   showAlertNoSelection,
   hideAlertNoSelection,
-  showPuzzInfo,
+  showPuzzleInfo,
   showFileSelector,
   hideFileSelector,
   showInvalidSelection,
@@ -88,4 +101,5 @@ export {
   hideInstructions,
   showCanvas,
   hideCanvas,
+  showNoToolFound,
 }

@@ -8,12 +8,14 @@ function createAlertNoSelection() {
   const panel = crel('div');
   panel.id = 'alertNoSelection';
   panel.innerHTML = 'Select a Cell';
+  panel.style.zIndex = "12"
   return panel;
 }
 
 function createAlertInvalid() {
   const panel = crel('div');
   panel.id = 'alertInvalid';
+  panel.style.zIndex = "12"
 
   const messageLabel = crel('label');
   messageLabel.id = 'alertInvalidMessage';

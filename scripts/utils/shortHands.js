@@ -63,6 +63,14 @@ function setEx(element, excluded) {
   sat(element, 'excluded', excluded ? '1' : '0');
 }
 
+function optionValue(option) {
+  return gat(option, "candidatenumber");
+}
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 export {
   gel,
   gelc,
@@ -78,4 +86,6 @@ export {
   swapEx,
   isEx,
   setEx,
+  optionValue,
+  delay,
 };

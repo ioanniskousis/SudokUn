@@ -10,6 +10,7 @@ import {
   isEx,
 } from '../utils/shortHands.js';
 import { createCommandButton } from './controlElements.js';
+import { hideCanvas } from '../viewController.js'
 
 function createNumberButton(number) {
   const button = crel('button');
@@ -48,6 +49,7 @@ function createExcludeButton(number) {
 function createModeButtonContainer() {
   const panel = crel('div');
   panel.id = 'insertModeContainer';
+  panel.style.zIndex = "12"
   panel.className = 'insert-panel';
 
   doc(panel, createCommandButton('insertModeButton', 'edit-white'));
@@ -58,6 +60,7 @@ function createModeButtonContainer() {
 function createExcludeButtonContainer() {
   const panel = crel('div');
   panel.id = 'excludeModeButtonContainer';
+  panel.style.zIndex = "12"
   panel.className = 'insert-panel';
 
   doc(panel, createCommandButton('excludeModeButton', 'xmark-white'));
@@ -69,6 +72,7 @@ function createNumbersSelector() {
   const panel = crel('div');
   panel.id = 'numbersSelector';
   panel.className = 'insert-panel';
+  panel.style.zIndex = "11"
 
   for (let i = 0; i < 10; i++) {
     doc(panel, createNumberButton(i));
@@ -81,6 +85,7 @@ function createCandidatesSelector() {
   const panel = crel('div');
   panel.id = 'candidatesSelector';
   panel.className = 'insert-panel hidden';
+  panel.style.zIndex = "11"
 
   for (let i = 1; i < 10; i++) {
     doc(panel, createCandidateButton(i));
@@ -93,6 +98,7 @@ function createExcludesSelector() {
   const panel = crel('div');
   panel.id = 'excludesSelector';
   panel.className = 'insert-panel hidden';
+  panel.style.zIndex = "11"
 
   for (let i = 1; i < 10; i++) {
     doc(panel, createExcludeButton(i));
@@ -106,6 +112,7 @@ function createNumberButtonsEvents(game) {
     const button = gel(`number-button-${i}`);
     button.onclick = (e) => {
       game.checkCell(parseInt(gat(button, 'value')));
+      hideCanvas();
     }
   }
 }
