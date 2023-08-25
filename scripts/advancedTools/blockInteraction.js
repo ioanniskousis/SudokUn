@@ -85,25 +85,9 @@ function explaneBlockInteraction(blockInteraction) {
   paragraph.innerHTML = thismeans;
   tipCloud.appendChild(paragraph); 
 }
-// function blockInteractionClicked(element) {
-//   clearDrawDivision();
 
-//   let blockInteraction = findBlockInteraction();
-//   if (blockInteraction == null) {
-//       reportNotFoundTools( "'.$no_binteraction[$ses_lang].'", element);
-//   } else {
-//     explaneBlockInteraction(blockInteraction);
-//     drawBlockInteraction(blockInteraction);
-//   }
-// }
 function drawBlockInteraction(blockInteraction) {
   let ctx = setUpCanvas()
-
-    // let drawDivision = gel("drawDivision");
-    // let drect = drawDivision.getBoundingClientRect();
-    // let ctx = drawDivision.getContext("2d");
-    // ctx.translate(0, 0);
-    // ctx.lineWidth   = "1.5";
 
   shadeBlock(ctx, blockInteraction.block);
   if (parseInt(blockInteraction.interactionRow) > -1) {
@@ -129,12 +113,12 @@ function drawBlockInteraction(blockInteraction) {
 
     for (let c = 0; c < blockInteraction.candidates.length; c++) {
       let option = blockInteraction.candidates[c];
-      markElement(ctx, option, "red", "snow");
+      markElement(ctx, option, "red", "rgba(255, 255, 255, 0.5)");
     }
 
     for (let c = 0; c < blockInteraction.excludes.length; c++) {
       let option = blockInteraction.excludes[c];
-      markElement(ctx, option, "black", "yellow");
+      markElement(ctx, option, "black", "rgba(255, 255, 0, 0.5)");
 
     }
 }

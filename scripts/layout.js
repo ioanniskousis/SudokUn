@@ -370,6 +370,25 @@ function layoutUndosController(gridSize, cellSize, isLandscape) {
   }
 }
 
+function layoutGameStatus(gridSize, cellSize, isLandscape) {
+  const gameStatus = gel('gameStatus');
+  const remainters = gel('remainters');
+  remainters.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
+  remainters.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
+  remainters.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+  remainters.style.fontSize = `${cellSize * 0.18}px`;
+
+  const bounds = new Bounds();
+
+  if (isLandscape) {
+    bounds.setRect (cellSize * 5, cellSize + gridSize, cellSize, cellSize);
+    bounds.bound(gameStatus);
+  } else {
+    bounds.setRect (cellSize * 4, cellSize + cellSize + gridSize, cellSize, cellSize);
+    bounds.bound(gameStatus);
+  }
+}
+
 function layoutRestartController(gridSize, cellSize, isLandscape) {
   const restartController = gel('restartController');
   const restartControllerButtons = restartController.children;
@@ -419,6 +438,7 @@ function layoutPanels(parentWidth, parentHeight, isLandscape) {
   layoutUndosController(gridSize, cellSize, isLandscape);
   layoutRestartController(gridSize, cellSize, isLandscape);
   layoutInstructionsView();
+  layoutGameStatus(gridSize, cellSize, isLandscape);
   // layoutCanvas();
   hideCanvas();
 

@@ -20,25 +20,27 @@ import {
   cellLabel,
   joinElements,
 } from './advanced.js';
-import { gel, gat, sat, isCh, optionValue, crel, doc, delay } from '../utils/shortHands.js';
+import { gel, gat, sat, isCh, optionValue, delay, cempt } from '../utils/shortHands.js';
 
 function searchXyChain() {
   for (let i = 0; i < 81; i++) {
     const cell = gel("cell-" + i.toString());
-    const cellOptions = getCellOptions(cell);
-    if (cellOptions.length == 2) {
-      var neighborsWithExcludableOption = getNeighborsWithExcludableOption(cell, optionValue(cellOptions[0]));
-      if (neighborsWithExcludableOption.length > 0) {
-        var xyChain = examineXYChain(cellOptions[0], neighborsWithExcludableOption, [cell], [{baseOption:cellOptions[0], linkOption:cellOptions[1]}]);
-        if (xyChain) {
-          return xyChain;
+    if (cempt(cell)) {
+      const cellOptions = getCellOptions(cell);
+      if (cellOptions.length == 2) {
+        var neighborsWithExcludableOption = getNeighborsWithExcludableOption(cell, optionValue(cellOptions[0]));
+        if (neighborsWithExcludableOption.length > 0) {
+          var xyChain = examineXYChain(cellOptions[0], neighborsWithExcludableOption, [cell], [{baseOption:cellOptions[0], linkOption:cellOptions[1]}]);
+          if (xyChain) {
+            return xyChain;
+          }
         }
-      }
-      neighborsWithExcludableOption = getNeighborsWithExcludableOption(cell, optionValue(cellOptions[1]));
-      if (neighborsWithExcludableOption.length > 0) {
-        var xyChain = examineXYChain(cellOptions[1], neighborsWithExcludableOption, [cell], [{baseOption:cellOptions[1], linkOption:cellOptions[0]}]);
-        if (xyChain) {
-          return xyChain;
+        neighborsWithExcludableOption = getNeighborsWithExcludableOption(cell, optionValue(cellOptions[1]));
+        if (neighborsWithExcludableOption.length > 0) {
+          var xyChain = examineXYChain(cellOptions[1], neighborsWithExcludableOption, [cell], [{baseOption:cellOptions[1], linkOption:cellOptions[0]}]);
+          if (xyChain) {
+            return xyChain;
+          }
         }
       }
     }
@@ -87,7 +89,7 @@ function examineXYChain(chainBaseOption, baseExcludableNeighbors, chainCells, ch
 function getNeighborsToJoinXYChain(chainCells, chainCellsOptions) {
   const lastCell   = chainCells[chainCells.length - 1];
   const linkOption = chainCellsOptions[chainCellsOptions.length - 1].linkOption;
-  const neighborhood = getNeighborhood(lastCell);
+  const neighborhood = getNeighborhood(lastCell, true);
   const neighbors    = [];
   for (let i = 0; i < neighborhood.length; i++) {
     if (!chainCells.includes(neighborhood[i])) {

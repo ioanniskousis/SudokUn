@@ -6,6 +6,7 @@ import {
   isCh,
   setEx,
   isEx,
+  cempt,
 } from './utils/shortHands.js';
 
 import { setupCandidatesInput, setupExcludesInput } from './components/numberSelectors.js';
@@ -39,6 +40,10 @@ import {
   searchXyChain,
   xyChainFound,
 } from './advancedTools/xychain.js'
+import {
+  searchBlockToBlockInteraction,
+  blockToBlockInteractionFound,
+} from './advancedTools/blockToBlockInteraction.js'
 
 class Game {
   constructor(store) {
@@ -128,6 +133,7 @@ class Game {
     gel('undoButton').style.visibility = this.store.undosIndex > -1 ? 'visible' : 'hidden';
     gel('redoButton').style.visibility = this.store.undosIndex < this.store.undo.length - 1 ? 'visible' : 'hidden';
     gel('restartButton').style.visibility = this.store.undo.length > 0 ? 'visible' : 'hidden';
+    this.showReminders()
   }
 
   resetCandidates() {
@@ -228,6 +234,16 @@ class Game {
     } else {
       this.showCellCandidates(cellIndex);
     }
+  }
+
+  showReminders() {
+    let filledCells = 0;
+    for (let i = 0; i < 81; i++) {
+      if (!cempt(gel('cell-' + i.toString()))) {
+        filledCells += 1;
+      }
+    }
+    gel('remainters').innerHTML = filledCells.toString() + '<br/>' + (81 - filledCells).toString();
   }
 
   checkCandidate(candidateNumber, check) {
@@ -371,15 +387,16 @@ class Game {
       if (cellValue === 0) {
         for (let candidateIndex = 0; candidateIndex < 9; candidateIndex++) {
           const candidate = this.cellCandidates[cellIndex][candidateIndex];
+          const isX = isEx(candidate);
           const check = this.isCellCandidateValid(candidate);
           const visibilityClass = check ? '' : ' hidden';
-          candidate.className = 'cell-candidate ' + visibilityClass;
-          candidate.innerHTML = (candidateIndex + 1).toString();
+          candidate.className = 'cell-candidate ' + visibilityClass + (isX ? ' red' : '');
+          candidate.innerHTML = isX ? '-' : (candidateIndex + 1).toString();
           if (!check) {
             // alert(`cellIndex = ${cellIndex} : candidateIndex = ${candidateIndex}`);
           }
           setCh(candidate, check);
-          setEx(candidate, false);
+          // setEx(candidate, false);
         }
       }
     }
@@ -546,39 +563,47 @@ class Game {
     this.initPuzzle();
   }
 
-  prepareTipForCell(cell, controller, tool) {
+  prepareTipForCell(cell, drawController, tool) {
     showCanvas();
     this.cellClick(cell);
     locateTipCloud(cell);
-    controller(tool);
+    drawController(tool);
 
   }
-  prepareTipForBlock(block, controller, tool) {
+  prepareTipForBlock(block, drawController, tool) {
     showCanvas();
     // this.cellClick(cell);
     const cell = gel('cell-0')
     locateTipCloud(cell);
-    controller(tool);
+    drawController(tool);
 
   }
-  prepareTipForSubset(subset, controller) {
+  prepareTipForSubset(subset, drawController) {
     showCanvas();
     // this.cellClick(gel("cell-57"));
     if (subset.unit = 'row') {
       const row = (parseInt(gat(subset.subsetCells[0], "row"), 10) * 9) + 1;
-      locateTipCloud(gel("cell-" + row.toString()), 5, 4);
+      locateTipCloud(gel("cell-" + row.toString()));
     } else {
       locateTipCloud(gel("cell-35"));
 
     }
-    controller(subset);
+    drawController(subset);
   }
-  prepareTipForXyChain(controller, xyChain) {
+  prepareTipForXyChain(drawController, xyChain) {
     showCanvas();
     // this.cellClick(cell);
-    const cell = gel('cell-27')
-    locateTipCloud(cell, 6, 4);
-    controller(xyChain);
+    const cell = gel('cell-50')
+    locateTipCloud(cell);
+    drawController(xyChain);
+
+  }
+  prepareTipForBlockToBlockInteraction(drawController, blockToBlockInteractionFound) {
+    showCanvas();
+    // this.cellClick(cell);
+    const cell = gel('cell-50')
+    locateTipCloud(cell);
+    drawController(blockToBlockInteractionFound);
 
   }
   searchAdvancedTip(e) {
@@ -610,7 +635,12 @@ class Game {
             if (xyChain) {
               this.prepareTipForXyChain(xyChainFound, xyChain)
             } else {
-              showNoToolFound();
+              const blockToBlockInteraction = searchBlockToBlockInteraction();
+              if (blockToBlockInteraction) {
+                this.prepareTipForBlockToBlockInteraction(blockToBlockInteractionFound, blockToBlockInteraction)
+              } else {
+                showNoToolFound();
+              }
             }
           }
         }

@@ -30,6 +30,7 @@ function searchHiddenSingle() {
 
 function searchHiddenSingleInCell(cell) {
   const cellIndex = gat(cell, 'index');
+
   const rowCells = getRowCells(gat(cell, 'row'));
   const columnCells = getColumnCells(gat(cell, 'column'));
   const blockCells = getBlockCells(gat(cell, 'block'));
@@ -89,7 +90,7 @@ function drawHiddenSingle(hiddenSingle) {
   markBlockings(ctx, hiddenSingle)
 
   ctx.lineWidth   = "0.5";
-  joinParagraphWithElement(ctx, gel("thiscell"), hiddenSingle.firstCell, "#004c66", 1);
+  joinParagraphWithElement(ctx, gel("thiscell"), hiddenSingle.option, "#004c66", 1);
 
 
 }

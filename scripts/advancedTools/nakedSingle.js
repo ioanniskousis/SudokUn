@@ -13,7 +13,7 @@ import {
   markElement,
   updateCandidateTemporary,
 } from './advanced.js';
-import { gel, gat, sat, isCh, optionValue, crel, doc, delay } from '../utils/shortHands.js';
+import { gel, gat, sat, isCh, optionValue, crel, doc, delay, isEx } from '../utils/shortHands.js';
 
 function searchNakedSingle() {
   const cells = emptyCells();
@@ -25,16 +25,18 @@ function searchNakedSingle() {
   return null;
 }
 function searchNakedSingleInCell(cell) {
+  const cellIndex = gat(cell, 'index');
   const neighbors = getNeighborhood(cell)
   let neighborsWithNumber = new Array(9);
   for (let i = 0; i < 9; i++) {
-    neighborsWithNumber[i] = cellsArrayNumberHolderCell(neighbors, (i + 1).toString())
+    const candidate = gel('candidate-' + cellIndex + '-' + (i + 1).toString());
+    neighborsWithNumber[i] = isEx(candidate) ? candidate : cellsArrayNumberHolderCell(neighbors, (i + 1).toString())
   }
   const empties = neighborsWithNumber.filter((c) => c === null)
   if (empties.length === 1 ) {
     for (let i = 0; i < 9; i++) {
       if (neighborsWithNumber[i] === null) {
-        const candidate = gel('candidate-' + gat(cell, 'index') + '-' + (i + 1).toString());
+        const candidate = gel('candidate-' + cellIndex + '-' + (i + 1).toString());
         return {firstCell:cell, option:candidate, otherNumbers: neighborsWithNumber};
       }
     }
@@ -75,8 +77,9 @@ function explaneNakedSingle(nakedSingle) {
   paragraph = document.createElement("p");
   sat(paragraph, "class", "xlp");
   sat(paragraph, "id", "otherNumbers");
-  const otherNumbers = nakedSingle.otherNumbers.filter((n) => n != null).map((candidate) => candidate === null ? '' : gat(candidate, 'value')).join(' ')
-  paragraph.innerHTML = 'All other numbers [' + otherNumbers + '] exist in neighboring cells';
+  const otherNumbers = nakedSingle.otherNumbers.filter((n) => n != null && n.id.match('cell')).map((cell) => gat(cell, 'value')).join(' ')
+  const excludedNumbers = nakedSingle.otherNumbers.filter((n) => n != null && gat(n, 'id').match('candidate')).map((candidate) => gat(candidate, 'candidateNumber')).join(' ')
+  paragraph.innerHTML = 'All other numbers [' + otherNumbers + '] exist in neighboring cells' + (excludedNumbers.length > 0 ? ' or [' + excludedNumbers + '] are excluded' : '');
   tipCloud.appendChild(paragraph);
 }
 function drawNakedSingle(nakedSingle) {
@@ -87,12 +90,13 @@ function drawNakedSingle(nakedSingle) {
   // setCh(nakedSingle.option, "1")
   updateCandidateTemporary(gat(nakedSingle.firstCell, 'index'), gat(nakedSingle.option, 'candidatenumber'), true)
   
-  joinParagraphWithElement(ctx, gel("thiscell"), nakedSingle.firstCell, "#0022fc", 1);
-  for (let i = 0; i < nakedSingle.otherNumbers.length; i++) {
-    if (nakedSingle.otherNumbers[i] != null) {
+  joinParagraphWithElement(ctx, gel("thiscell"), nakedSingle.option, "#0022fc", 1);
+  const otherNumbers = nakedSingle.otherNumbers.filter((n) => n != null)
+  for (let i = 0; i < otherNumbers.length; i++) {
+    markElement(ctx, otherNumbers[i], "#fc0022", null)
+    // if (nakedSingle.otherNumbers[i] != null) {
       // joinParagraphWithElement(ctx, gel("otherNumbers"), nakedSingle.otherNumbers[i], "#004c22", 0.5);
-      markElement(ctx, nakedSingle.otherNumbers[i], "#fc0022", null)
-    }
+    // }
   }
 }
 

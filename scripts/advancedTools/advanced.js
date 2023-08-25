@@ -1,4 +1,4 @@
-import { gel, gat, sat, isCh, setCh } from '../utils/shortHands.js';
+import { gel, gat, sat, isCh, setCh, cempt, optionValue } from '../utils/shortHands.js';
 import Bounds from '../utils/bounds.js';
 
 function reportNotFoundTools(caption, element) { 
@@ -102,7 +102,7 @@ function getCellOptions(cell) {
   return cellOptions;
 }
 
-function getNeighborhood(cell) {
+function getNeighborhood(cell, onlyEmpty = false) {
   let row    = gat(cell, "row");
   let column = gat(cell, "column");
   let block  = gat(cell, "block");
@@ -111,11 +111,13 @@ function getNeighborhood(cell) {
   for (let i = 0; i < 81; i++) {
     if (i != cellIndex) {
       let icell      = gel("cell-" + i.toString());
-      let cellRow    = gat(icell, "row");
-      let cellColumn = gat(icell, "column");
-      let cellBlock  = gat(icell, "block");
-      if ((cellRow == row) || (cellColumn == column) || (cellBlock == block)) {
-        neighborhood.push(icell);
+      if ((onlyEmpty && cempt(icell)) || (!onlyEmpty)) {
+        let cellRow    = gat(icell, "row");
+        let cellColumn = gat(icell, "column");
+        let cellBlock  = gat(icell, "block");
+        if ((cellRow == row) || (cellColumn == column) || (cellBlock == block)) {
+          neighborhood.push(icell);
+        }
       }
     }
   }
@@ -179,9 +181,9 @@ function cellsAreNeighbors(cell1, cell2) {
 }
 
 function optionsContainOption(options, option) {
-  let optionValue = gat(option, "value");
+  let optionValue = gat(option, "candidatenumber");
   for (let i = 0; i < options.length; i++) {
-    if (gat(options[i], "value") == optionValue) {
+    if (gat(options[i], "candidatenumber") == optionValue) {
       return true;
     }
   }
@@ -200,9 +202,9 @@ function getSOption(cell, option) {
   return gel("candidate-" + gat(cell, "index") + "-" + option.toString());
 }
 
-function optionValue(option) {
-  return gat(option, "value");
-}
+// function optionValue(option) {
+//   return gat(option, "value");
+// }
 
 function optionAppearancesCount(cells, opt) {
   let cnt = 0;
@@ -227,7 +229,7 @@ function optionAppearancesInUnit(cells, opt) {
 }
 
 function getNeighborsWithExcludableOption(cell, option) {
-  let neighborhood = getNeighborhood(cell);
+  let neighborhood = getNeighborhood(cell, true);
   let neighbors    = [];
   for (let i = 0; i < neighborhood.length; i++) {
     let candidate = getSOption(neighborhood[i], option);
@@ -274,10 +276,6 @@ function arrayInitWithArray(items) {
     newArray.push(items[i]);
   }
   return newArray;
-}
-
-function isExclude(option) { 
-  return (gat(option, "excluded") == "1");
 }
 
 function candidateRow(candidate) { 
@@ -487,23 +485,24 @@ function locateTipCloud(cell, width = 4, height = 3) {
   let blockColumn = column % 3;
 
   let topLeftCell = null;
-  if (column <  5) {
-    if (row < 5 ) {
-      let index = ((row + (3 - blockRow))* 9) + column + (3 - blockColumn);
-      topLeftCell = gel(`cell-${index}`);
-    } else {
-      let index = ((row - blockRow - height)* 9) + column + (3 - blockColumn);
-      topLeftCell = gel(`cell-${index}`);
-    }
-  } else {
-    if (row < 5 ) {
-      let index = ((row + (3 - blockRow))* 9) + column - 4 - blockColumn;
-      topLeftCell = gel(`cell-${index}`);
-    } else {
-      let index = ((row - blockRow - height)* 9) + column - 4 - blockColumn;
-      topLeftCell = gel(`cell-${index}`);
-    }
-  }
+  topLeftCell = gel(`cell-0`);
+  // if (column <  5) {
+  //   if (row < 5 ) {
+  //     let index = ((row + (3 - blockRow))* 9) + column + (3 - blockColumn);
+  //     topLeftCell = gel(`cell-${index}`);
+  //   } else {
+  //     let index = ((row - blockRow - height)* 9) + column + (3 - blockColumn);
+  //     topLeftCell = gel(`cell-${index}`);
+  //   }
+  // } else {
+  //   if (row < 5 ) {
+  //     let index = ((row + (3 - blockRow))* 9) + column - 4 - blockColumn;
+  //     topLeftCell = gel(`cell-${index}`);
+  //   } else {
+  //     let index = ((row - blockRow - height)* 9) + column - 4 - blockColumn;
+  //     topLeftCell = gel(`cell-${index}`);
+  //   }
+  // }
 
   let topLeftCellBounds = new Bounds();
   topLeftCellBounds.getRect(topLeftCell);
@@ -567,7 +566,7 @@ function isNumberInArea(area, number) {
 function cellHasExcludedCandidate(cell, option) {
   let cellIndex = gat(cell, "index");
   let excludedCandidate = gel("candidate-" + cellIndex + "-" + option);
-  return gat(excludedCandidate, "exclude") == "1"
+  return gat(excludedCandidate, "excluded") == "1"
 }
 
 function cellAcceptsCandidate(cell, option) {
@@ -622,7 +621,25 @@ function cellLabel(cell) {
   var col = (parseInt(gat(cell, "column"), 10) + 1).toString();
   return "R" + row + "C" + col;
 }
+function rowLabel(row) {
+  var row = (row + 1).toString();
+  return "R" + row;
+}
+function columnLabel(column) {
+  var col = (column + 1).toString();
+  return "C" + col;
+}
+function blockLabel(block) {
+  var block = (block + 1).toString();
+  return "BL" +block;
+}
+
 export {
+  candidateRow,
+  candidateColumn,
+  rowLabel,
+  columnLabel,
+  blockLabel,
   cellLabel,
   shadeRow,
   shadeColumn,

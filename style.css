@@ -315,6 +315,18 @@ input[type=number] {
   align-items: center;
   border-radius: 50%;
   text-align: center;
+  line-height: 1.8;
+}
+
+.equator {
+  position: absolute;
+  width: 80%;
+  height: 1px;
+  left: 10%;
+  top: calc(50% - 1px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0;
+  /* background-color: rgba(255, 255, 255, 0.1); */
 }
 
 .backViewContainer {
@@ -591,6 +603,7 @@ canvas {
 
 #otherNumbers {
   width: 80% !important;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .framed-span {

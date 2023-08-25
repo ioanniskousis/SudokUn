@@ -69,6 +69,20 @@ function createFilesPanel() {
   return panel;
 }
 
+function createGameStatus() {
+  const panel = crel('div');
+  panel.id = 'gameStatus';
+  panel.className = 'buttons-panel red';
+
+  doc(panel, createFileInfo('remainters'));
+
+  const equator = crel('div');
+  equator.className = 'equator';
+  doc(panel, equator);
+
+  return panel;
+}
+
 function createUndosEvents(game) {
   gel('undoButton').onclick = (e) => game.undo();
   gel('redoButton').onclick = (e) => game.redo();
@@ -95,6 +109,7 @@ function createCommandPanels(playGround) {
   doc(playGround, createUndosPanel());
   doc(playGround, createRestartPanel());
   doc(playGround, createSettingsPanel());
+  doc(playGround, createGameStatus());
 }
 
 export {

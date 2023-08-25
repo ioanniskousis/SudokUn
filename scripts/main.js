@@ -37,11 +37,9 @@ function initGame() {
 
 function render() {
   const playGround = new PlayGroundClass();
-  // console.log(playGround)
 
   doc(gel('main'), createPlayGround());
   gel('main').onclick = (e) => mainClick(e, game);
-  // doc(gel('main'), playGround.element);
 
   doc(gel('main'), createFileSelectorContainer());
   doc(gel('main'), createSettingsViewContainer());

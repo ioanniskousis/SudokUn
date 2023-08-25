@@ -71,7 +71,12 @@ function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
 }
 
+function cempt(cell) {
+  return gat(cell, 'value') === '0'
+}
+
 export {
+  cempt,
   gel,
   gelc,
   crel,
