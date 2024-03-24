@@ -644,7 +644,7 @@ class Game {
     this.showExcludes();
 
     this.cellClick(this.firstExcludeCell(subset));
-    if (subset.unit = 'row') {
+    if (subset.unit == 'row') {
       const row = (parseInt(gat(subset.subsetCells[0], "row"), 10) * 9) + 1;
       locateTipCloud(gel("cell-" + row.toString()));
     } else {
