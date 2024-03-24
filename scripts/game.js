@@ -17,6 +17,7 @@ import {
   hideInvalidSelection,
   showNoToolFound,
   showCanvas,
+  hideCanvas,
 } from './viewController.js';
 import { Undo } from './store.js';
 import { clearDrawDivision, locateTipCloud } from './advancedTools/advanced.js'
@@ -44,6 +45,10 @@ import {
   searchBlockToBlockInteraction,
   blockToBlockInteractionFound,
 } from './advancedTools/blockToBlockInteraction.js'
+import {
+  searchColouring,
+  colouringFound,
+} from './advancedTools/colouring.js'
 
 class Game {
   constructor(store) {
@@ -136,6 +141,50 @@ class Game {
     this.showReminders()
   }
 
+  showSearch() {
+    setCh(gel('searchButton'), true)
+    gel('searchPanel').style.visibility = 'visible';
+  }
+  hideSearch() {
+    setCh(gel('searchButton'), false)
+    gel('searchPanel').style.visibility = 'hidden';
+
+    this.unShowSearchNumbers();
+  }
+  unShowSearchNumbers() {
+    for (let i = 0; i < 81; i++) {
+      const cell = gel('cell-' + i.toString());
+      const cellIndex = gat(cell, 'index');
+      cell.style.border = 'none';
+      for (let option = 1; option < 10; option++) {
+        const candidate = gel('candidate-' + cellIndex + '-' + option.toString());
+        candidate.style.border = 'none';
+        candidate.style.backgroundColor = 'transparent';
+        candidate.style.color = 'black';
+      }
+    }
+  }
+  searchNumber(number) {
+    this.unShowSearchNumbers();
+
+    for (let i = 0; i < 81; i++) {
+      const cell = gel('cell-' + i.toString());
+      const cellIndex = gat(cell, 'index');
+      if (gat(cell, 'value') === number.toString()) {
+        cell.style.border = '1px solid rgba(34,139,34, 1)';
+        cell.style.borderRadius = '50%';
+      } else {
+        const candidate = gel('candidate-' + cellIndex + '-' + number.toString());
+        if (isCh(candidate) && !isEx(candidate)) {
+          candidate.style.border = '1px solid rgba(34,139,34, 1)';
+          candidate.style.borderRadius = '50%';
+          candidate.style.backgroundColor = 'rgba(34,139,34, 1)';
+          candidate.style.color = 'white';
+        }
+      }
+    }
+  }
+
   resetCandidates() {
     for (let i = 0; i < 81; i++) {
       for (let c = 0; c < 9; c++) {
@@ -148,7 +197,7 @@ class Game {
   }
 
   invalidEntry(newValue, exclude) {
-    if (newValue === 0) return null;
+    if (newValue === '0') return null;
     if (this.store.allowMistakes) return null;
 
     const cell = this.cells[this.focusedCellIndex];
@@ -159,9 +208,9 @@ class Game {
     const rowCells = this.rows[row];
     for (let i = 0; i < rowCells.length; i++) {
       const rowCell = rowCells[i];
-      const rowCellIndex = parseInt(gat(rowCell, 'index'), 10);
-      if (rowCellIndex != this.focusedCellIndex) {
-        const rowCellValue = parseInt(gat(rowCell, 'value'), 10);
+      const rowCellIndex = gat(rowCell, 'index');
+      if (rowCellIndex != this.focusedCellIndex.toString()) {
+        const rowCellValue = gat(rowCell, 'value');
         if (rowCellValue === newValue) {
           if (exclude) {
             return `No need for exclusion. Number ${newValue} is self-excluded from cell R${row + 1}C${i + 1}`;
@@ -174,9 +223,9 @@ class Game {
     const columnCells = this.columns[column];
     for (let i = 0; i < columnCells.length; i++) {
       const columnCell = columnCells[i];
-      const columnCellIndex = parseInt(gat(columnCell, 'index'), 10);
-      if (columnCellIndex != this.focusedCellIndex) {
-        const columnCellValue = parseInt(gat(columnCell, 'value'), 10);
+      const columnCellIndex = gat(columnCell, 'index');
+      if (columnCellIndex != this.focusedCellIndex.toString()) {
+        const columnCellValue = gat(columnCell, 'value');
         if (columnCellValue === newValue) {
           return `Invalid selection for the Column. Number ${newValue} exists in cell at position R${i + 1}C${column + 1}`;
         }
@@ -228,8 +277,9 @@ class Game {
   updateCell(cellIndex, newValue) {
     const cell = gel(`cell-${cellIndex}`);
     sat(cell, 'value', newValue);
-    cell.innerHTML = newValue || '';
-    if (newValue) {
+    const _newValue = newValue === '0' ? '' : newValue
+    cell.innerHTML = _newValue || '';
+    if (_newValue != '') {
       this.hideCellCandidates(cellIndex);
     } else {
       this.showCellCandidates(cellIndex);
@@ -310,7 +360,7 @@ class Game {
     const excludedClass = excluded ? ' red' : '';
 
     candidate.className = 'cell-candidate ' + visibilityClass + excludedClass;
-    candidate.innerHTML = excluded ? '-' : candidateNumber;
+    candidate.innerHTML = excluded ? '&#8960;' : candidateNumber;
     setCh(candidate, check);
     setEx(candidate, excluded);
   }
@@ -333,7 +383,7 @@ class Game {
   }
 
   wipeNeighbourCandidates(cell, newValue, storeState) {
-    if (parseInt(newValue, 10) === 0) return;
+    if (newValue === '0') return;
     // const focusedCell = this.cells[this.focusedCellIndex];
 
     this.wipeAreaCandidates(this.rows[parseInt(gat(cell, 'row'))], newValue, storeState);
@@ -391,7 +441,7 @@ class Game {
           const check = this.isCellCandidateValid(candidate);
           const visibilityClass = check ? '' : ' hidden';
           candidate.className = 'cell-candidate ' + visibilityClass + (isX ? ' red' : '');
-          candidate.innerHTML = isX ? '-' : (candidateIndex + 1).toString();
+          candidate.innerHTML = isX ? '&#8960;' : (candidateIndex + 1).toString();
           if (!check) {
             // alert(`cellIndex = ${cellIndex} : candidateIndex = ${candidateIndex}`);
           }
@@ -563,24 +613,37 @@ class Game {
     this.initPuzzle();
   }
 
+  firstExcludeCell(tool) {
+    const firstExclude = tool.excludes[0];
+    return gel('cell-' + gat(firstExclude, 'cellIndex'))
+  }
+
   prepareTipForCell(cell, drawController, tool) {
     showCanvas();
+    const insertModeButton = gel('insertModeButton');
+    const excludeModeButton = gel('excludeModeButton');
+    if (isCh(excludeModeButton)) gel('excludeModeButton').click();
+    if (isCh(insertModeButton)) gel('insertModeButton').click();
     this.cellClick(cell);
     locateTipCloud(cell);
     drawController(tool);
 
   }
-  prepareTipForBlock(block, drawController, tool) {
+  prepareTipForBlockInteraction(block, drawController, tool) {
     showCanvas();
-    // this.cellClick(cell);
-    const cell = gel('cell-0')
+    this.showExcludes();
+
+    this.cellClick(this.firstExcludeCell(tool));
+    const MIDDLE_CELL = 4;
+    const cell = this.blocks[block][MIDDLE_CELL];
     locateTipCloud(cell);
     drawController(tool);
-
   }
   prepareTipForSubset(subset, drawController) {
     showCanvas();
-    // this.cellClick(gel("cell-57"));
+    this.showExcludes();
+
+    this.cellClick(this.firstExcludeCell(subset));
     if (subset.unit = 'row') {
       const row = (parseInt(gat(subset.subsetCells[0], "row"), 10) * 9) + 1;
       locateTipCloud(gel("cell-" + row.toString()));
@@ -590,27 +653,47 @@ class Game {
     }
     drawController(subset);
   }
-  prepareTipForXyChain(drawController, xyChain) {
+  prepareTipForXyChain(drawController, tool) {
     showCanvas();
-    // this.cellClick(cell);
+    this.showExcludes();
+
+    this.cellClick(this.firstExcludeCell(tool));
+
     const cell = gel('cell-50')
     locateTipCloud(cell);
-    drawController(xyChain);
+    drawController(tool);
 
   }
-  prepareTipForBlockToBlockInteraction(drawController, blockToBlockInteractionFound) {
+  prepareTipForBlockToBlockInteraction(drawController, tool) {
     showCanvas();
-    // this.cellClick(cell);
+    this.showExcludes();
+  
+    this.cellClick(this.firstExcludeCell(tool));
+
     const cell = gel('cell-50')
     locateTipCloud(cell);
-    drawController(blockToBlockInteractionFound);
+    drawController(tool);
 
+  }
+  prepareTipForColouring(drawController, tool) {
+    showCanvas();
+    this.showExcludes();
+
+    this.cellClick(this.firstExcludeCell(tool));
+
+    const cell = gel('cell-' + gat(tool.leftOptionsOn[0], 'cellIndex'))
+    locateTipCloud(cell);
+    drawController(tool);
+
+  }
+
+  showExcludes() {
+    const excludeModeButton = gel('excludeModeButton');
+    if (!isCh(excludeModeButton)) excludeModeButton.click();
   }
   searchAdvancedTip(e) {
     clearDrawDivision();
     this.calcTemporaryOptions();
-    // searchXyChain,
-    // xyChainFound,
 
     const nakedSingle = searchNakedSingle();
     if (nakedSingle) {
@@ -629,7 +712,7 @@ class Game {
           const blockInteraction = searchBlockInteraction();
           if (blockInteraction) {
             const block = blockInteraction.block;
-            this.prepareTipForBlock(block, blockInteractionFound, blockInteraction)
+            this.prepareTipForBlockInteraction(block, blockInteractionFound, blockInteraction)
           } else {
             const xyChain = searchXyChain();
             if (xyChain) {
@@ -639,7 +722,12 @@ class Game {
               if (blockToBlockInteraction) {
                 this.prepareTipForBlockToBlockInteraction(blockToBlockInteractionFound, blockToBlockInteraction)
               } else {
-                showNoToolFound();
+                const colouring = searchColouring();
+                if (colouring) {
+                  this.prepareTipForColouring(colouringFound, colouring)
+                } else {
+                  showNoToolFound();
+                }
               }
             }
           }
@@ -667,7 +755,7 @@ class Game {
           const visibilityClass = canCheckIt === '1' ? '' : ' hidden';
           sat(candidate, "checked", canCheckIt);
           candidate.className = 'cell-candidate' + visibilityClass + excludedClass;
-          candidate.innerHTML = excluded ? '-' : option.toString();
+          candidate.innerHTML = excluded ? '&#8960;' : option.toString();
           if (!excluded) {
             candidatesCount = candidatesCount + parseInt(canCheckIt);
             sat(candidate, "checked", canCheckIt);

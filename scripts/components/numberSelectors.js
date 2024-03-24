@@ -46,6 +46,18 @@ function createExcludeButton(number) {
   return button;
 }
 
+function createSearchNumberButton(number) {
+  const button = crel('button');
+  button.className = 'search-button';
+  button.id = `search-button-${number}`;
+  button.style.border = 'none';
+  button.innerHTML = number.toString();
+  button.style.padding = '0';
+  sat(button, 'value', number);
+
+  return button;
+}
+
 function createModeButtonContainer() {
   const panel = crel('div');
   panel.id = 'insertModeContainer';
@@ -111,7 +123,7 @@ function createNumberButtonsEvents(game) {
   for (let i = 0; i < 10; i++) {
     const button = gel(`number-button-${i}`);
     button.onclick = (e) => {
-      game.checkCell(parseInt(gat(button, 'value')));
+      game.checkCell(gat(button, 'value'));
       hideCanvas();
     }
   }
@@ -245,4 +257,5 @@ export {
   setupExcludesInput,
   createCandidateButtonsEvents,
   createModeButtonEvents,
+  createSearchNumberButton,
 };

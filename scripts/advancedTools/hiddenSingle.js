@@ -145,7 +145,7 @@ function explaneHiddenSingle(hiddenSingle) {
 
   paragraph = document.createElement("p");
   sat(paragraph, "class", "xlp");
-  paragraph.innerHTML = "in " + area + " only <span class=\"explP\" id=\"thiscell\">this cell</span> can take number " + optionValue(hiddenSingle.option);
+  paragraph.innerHTML = "in <span class='explP'>" + area + "</span> only <span class=\"explP\" id=\"thiscell\">this cell</span> can take number " + optionValue(hiddenSingle.option);
   tipCloud.appendChild(paragraph);  
   
   var thismeans = "this means:<br/>";

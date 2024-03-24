@@ -95,19 +95,19 @@ function layoutCellCandidates(cellIndex, cellSize) {
         candidateSize - 4
       );
       bounds.bound(candidate);
-      candidate.style.fontSize = `${parseInt(candidateSize * 0.6)}px`
+      candidate.style.fontSize = `${Math.floor(candidateSize * 0.6)}px`
     }
   }
 }
 
 function layoutBlockCells(blockIndex, blockSize) {
-  const cellSize = parseInt((blockSize - 2.0) / 3.0, 10);
+  const cellSize = Math.floor((blockSize - 2.0) / 3.0);
   const locations = [0.0, cellSize + 1.0, (cellSize + 1.0) * 2.0];
-  const blockRow = parseInt(blockIndex / 3, 10);
+  const blockRow = Math.floor(blockIndex / 3);
   const blockCol = blockIndex % 3;
   for (let i = 0; i < 3; i++) {
     for (let k = 0; k < 3; k++) {
-      const cellIndex = parseInt((((blockRow * 3) + i) * 9) + ((blockCol * 3) + k), 10);
+      const cellIndex = Math.floor((((blockRow * 3) + i) * 9) + ((blockCol * 3) + k));
       const cell = gel(`cell-${cellIndex}`);
       const candidatesContainer = gel(`cell-candidates-container-${cellIndex}`);
       const bounds = new Bounds (
@@ -118,7 +118,7 @@ function layoutBlockCells(blockIndex, blockSize) {
       );
       bounds.bound(cell);
       bounds.bound(candidatesContainer);
-      cell.style.fontSize = `${parseInt(cellSize * 0.6)}px`
+      cell.style.fontSize = `${Math.floor(cellSize * 0.6)}px`
 
       layoutCellCandidates(cellIndex, cellSize);
     }
@@ -173,10 +173,10 @@ function layoutNumbersSelector(gridSize, cellSize, isLandscape) {
   const numberButtons = numbersSelector.children;
   for (let i = 0; i < numberButtons.length; i++) {
     const button = numberButtons[i];
-    button.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
-    button.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
-    button.style.margin = `${parseInt(cellSize * 0.05, 10)}px`;
-    button.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
+    button.style.width = `${Math.floor(cellSize * 0.6)}px`;
+    button.style.height = `${Math.floor(cellSize * 0.6)}px`;
+    button.style.margin = `${Math.floor(cellSize * 0.05)}px`;
+    button.style.fontSize = `${Math.floor(cellSize * 0.4)}px`;
   }
 
   const bounds = new Bounds();
@@ -196,16 +196,16 @@ function layoutCandidatesSelector(gridSize, cellSize, isLandscape) {
   const excludeButtons = excludesSelector.children;
   for (let i = 0; i < candidateButtons.length; i++) {
     const candidateButton = candidateButtons[i];
-    candidateButton.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
-    candidateButton.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
-    candidateButton.style.margin = `${parseInt(cellSize * 0.05, 10)}px`;
-    candidateButton.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
+    candidateButton.style.width = `${Math.floor(cellSize * 0.6)}px`;
+    candidateButton.style.height = `${Math.floor(cellSize * 0.6)}px`;
+    candidateButton.style.margin = `${Math.floor(cellSize * 0.05)}px`;
+    candidateButton.style.fontSize = `${Math.floor(cellSize * 0.4)}px`;
 
     const excludeButton = excludeButtons[i];
-    excludeButton.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
-    excludeButton.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
-    excludeButton.style.margin = `${parseInt(cellSize * 0.05, 10)}px`;
-    excludeButton.style.fontSize = `${parseInt(cellSize * 0.4, 10)}px`;
+    excludeButton.style.width = `${Math.floor(cellSize * 0.6)}px`;
+    excludeButton.style.height = `${Math.floor(cellSize * 0.6)}px`;
+    excludeButton.style.margin = `${Math.floor(cellSize * 0.05)}px`;
+    excludeButton.style.fontSize = `${Math.floor(cellSize * 0.4)}px`;
   }
 
   const bounds = new Bounds();
@@ -219,7 +219,7 @@ function layoutCandidatesSelector(gridSize, cellSize, isLandscape) {
 }
 
 function layoutAlerts(gridSize, cellSize, isLandscape) {
-  const sz = parseInt(cellSize * 0.2, 10);
+  const sz = Math.floor(cellSize * 0.2);
 
   const alertNoSelection = gel('alertNoSelection');
   alertNoSelection.style.fontSize = `${sz * 2}px`;
@@ -248,21 +248,21 @@ function layoutFilesPanel(gridSize, cellSize, isLandscape) {
 
   for (let i = 0; i < fileControllerButtons.length; i++) {
     const element = fileControllerButtons[i];
-    element.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
-    element.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
-    element.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
-    element.style.fontSize = `${parseInt(cellSize * 0.2, 10)}px`;
+    element.style.width = `${Math.floor(cellSize * 0.8)}px`;
+    element.style.height = `${Math.floor(cellSize * 0.8)}px`;
+    element.style.margin = `${Math.floor(cellSize * 0.1)}px`;
+    element.style.fontSize = `${Math.floor(cellSize * 0.2)}px`;
   }
 
   const bounds = new Bounds();
 
   if (isLandscape) {
     fileController.style.flexDirection = 'column';
-    bounds.setRect (0, cellSize, cellSize, parseInt((gridSize - 6.0) * 4.0 / 9.0, 10));
+    bounds.setRect (0, cellSize, cellSize, Math.floor((gridSize - 6.0) * 4.0 / 9.0));
     bounds.bound(fileController);
   } else {
     fileController.style.flexDirection = 'row';
-    bounds.setRect(0, 0, parseInt((gridSize - 6.0) * 4.0 / 9.0, 10), cellSize);
+    bounds.setRect(0, 0, Math.floor((gridSize - 6.0) * 4.0 / 9.0), cellSize);
     bounds.bound(fileController);
   }
 }
@@ -273,21 +273,50 @@ function layoutTipsController(gridSize, cellSize, isLandscape) {
 
   for (let i = 0; i < tipsControllerButtons.length; i++) {
     const button = tipsControllerButtons[i];
-    button.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
-    button.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
-    button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+    button.style.width = `${Math.floor(cellSize * 0.8)}px`;
+    button.style.height = `${Math.floor(cellSize * 0.8)}px`;
+    button.style.margin = `${Math.floor(cellSize * 0.1)}px`;
   }
 
   const bounds = new Bounds();
 
   if (isLandscape) {
     tipsController.style.flexDirection = 'column';
-    bounds.setRect (cellSize + gridSize, cellSize, cellSize, parseInt((gridSize - 6.0) / 3.0, 10));
+    bounds.setRect (cellSize + gridSize, cellSize, cellSize, Math.floor((gridSize - 6.0) / 3.0));
     bounds.bound(tipsController);
   } else {
     tipsController.style.flexDirection = 'row';
-    bounds.setRect(parseInt(((gridSize + 3.0) * 5.0 / 9.0), 10), 0, parseInt((gridSize - 6.0) * 2.0 / 9.0, 10), cellSize);
+    bounds.setRect(Math.floor(((gridSize + 3.0) * 5.0 / 9.0)), 0, Math.floor((gridSize - 6.0) * 2.0 / 9.0), cellSize);
     bounds.bound(tipsController);
+  }
+}
+
+function layoutSearchPanel(gridSize, cellSize, isLandscape) {
+  const searchPanel = gel('searchPanel');
+  const searchPanelButtons = searchPanel.children;
+
+  for (let i = 0; i < searchPanelButtons.length; i++) {
+    const button = searchPanelButtons[i];
+
+    button.style.width = `${Math.floor(cellSize * 0.6)}px`;
+    button.style.height = `${Math.floor(cellSize * 0.6)}px`;
+    button.style.margin = `${Math.floor(cellSize * 0.05)}px`;
+    button.style.fontSize = `${Math.floor(cellSize * 0.3)}px`;
+    const padding = Math.floor(cellSize * 0.1);
+    button.style.padding = `${padding}px ${padding}px 0 0`;
+  }
+
+  const bounds = new Bounds();
+
+  if (isLandscape) {
+    searchPanel.style.flexDirection = 'column';
+    bounds.setRect (cellSize + gridSize + 1, cellSize, cellSize, gridSize);
+    bounds.bound(searchPanel);
+  } else {
+    searchPanel.style.flexDirection = 'row';
+    // bounds.setRect(cellSize + cellSize, 0, gridSize, cellSize);
+    bounds.setRect (0, cellSize - 1, gridSize, cellSize);
+    bounds.bound(searchPanel);
   }
 }
 
@@ -297,9 +326,9 @@ function layoutSettingsPanel(gridSize, cellSize, isLandscape) {
 
   for (let i = 0; i < settingsControllerButtons.length; i++) {
     const button = settingsControllerButtons[i];
-    button.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
-    button.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
-    button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+    button.style.width = `${Math.floor(cellSize * 0.8)}px`;
+    button.style.height = `${Math.floor(cellSize * 0.8)}px`;
+    button.style.margin = `${Math.floor(cellSize * 0.1)}px`;
   }
 
   const bounds = new Bounds();
@@ -310,7 +339,7 @@ function layoutSettingsPanel(gridSize, cellSize, isLandscape) {
     bounds.bound(settingsController);
   } else {
     settingsController.style.flexDirection = 'row';
-    bounds.setRect(parseInt(((gridSize + 3.0) * 7.0 / 9.0), 10), 0, cellSize * 2.0, cellSize);
+    bounds.setRect(Math.floor(((gridSize + 3.0) * 7.0 / 9.0)), 0, cellSize * 2.0, cellSize);
     bounds.bound(settingsController);
   }
 }
@@ -318,8 +347,8 @@ function layoutSettingsPanel(gridSize, cellSize, isLandscape) {
 function layoutInsertModeContainer(cellSize, isLandscape) {
   const insertModeContainer = gel('insertModeContainer');
   const insertModeButton = gel('insertModeButton');
-  insertModeButton.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
-  insertModeButton.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
+  insertModeButton.style.width = `${Math.floor(cellSize * 0.6)}px`;
+  insertModeButton.style.height = `${Math.floor(cellSize * 0.6)}px`;
 
   const bounds = new Bounds();
 
@@ -335,8 +364,8 @@ function layoutInsertModeContainer(cellSize, isLandscape) {
 function layoutExcludeButtonContainer(gridSize, cellSize, isLandscape) {
   const excludeModeButtonContainer = gel('excludeModeButtonContainer');
   const excludeModeButton = gel('excludeModeButton');
-  excludeModeButton.style.width = `${parseInt(cellSize * 0.6, 10)}px`;
-  excludeModeButton.style.height = `${parseInt(cellSize * 0.6, 10)}px`;
+  excludeModeButton.style.width = `${Math.floor(cellSize * 0.6)}px`;
+  excludeModeButton.style.height = `${Math.floor(cellSize * 0.6)}px`;
 
   const bounds = new Bounds();
 
@@ -354,9 +383,9 @@ function layoutUndosController(gridSize, cellSize, isLandscape) {
   const undosControllerButtons = undosController.children;
   for (let i = 0; i < undosControllerButtons.length; i++) {
     const button = undosControllerButtons[i];
-    button.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
-    button.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
-    button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+    button.style.width = `${Math.floor(cellSize * 0.8)}px`;
+    button.style.height = `${Math.floor(cellSize * 0.8)}px`;
+    button.style.margin = `${Math.floor(cellSize * 0.1)}px`;
   }
 
   const bounds = new Bounds();
@@ -373,9 +402,9 @@ function layoutUndosController(gridSize, cellSize, isLandscape) {
 function layoutGameStatus(gridSize, cellSize, isLandscape) {
   const gameStatus = gel('gameStatus');
   const remainters = gel('remainters');
-  remainters.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
-  remainters.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
-  remainters.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+  remainters.style.width = `${Math.floor(cellSize * 0.8)}px`;
+  remainters.style.height = `${Math.floor(cellSize * 0.8)}px`;
+  remainters.style.margin = `${Math.floor(cellSize * 0.1)}px`;
   remainters.style.fontSize = `${cellSize * 0.18}px`;
 
   const bounds = new Bounds();
@@ -394,9 +423,9 @@ function layoutRestartController(gridSize, cellSize, isLandscape) {
   const restartControllerButtons = restartController.children;
   for (let i = 0; i < restartControllerButtons.length; i++) {
     const button = restartControllerButtons[i];
-    button.style.width = `${parseInt(cellSize * 0.8, 10)}px`;
-    button.style.height = `${parseInt(cellSize * 0.8, 10)}px`;
-    button.style.margin = `${parseInt(cellSize * 0.1, 10)}px`;
+    button.style.width = `${Math.floor(cellSize * 0.8)}px`;
+    button.style.height = `${Math.floor(cellSize * 0.8)}px`;
+    button.style.margin = `${Math.floor(cellSize * 0.1)}px`;
   }
 
   const bounds = new Bounds();
@@ -415,23 +444,24 @@ function layoutDebugBox(gridSize, cellSize, isLandscape) {
   if (isLandscape) {
     bounds.setRect (cellSize * 3, cellSize + gridSize, cellSize * 6, cellSize);
     bounds.bound(gel('debugBox'));
-    gel('debugBox').style.fontSize = `${parseInt(cellSize * 0.2, 10)}px`;
+    gel('debugBox').style.fontSize = `${Math.floor(cellSize * 0.2)}px`;
   } else {
     bounds.setRect (cellSize * 2, cellSize + cellSize  + gridSize, cellSize * 6, cellSize);
     bounds.bound(gel('debugBox'));
-    gel('debugBox').style.fontSize = `${parseInt(cellSize * 0.2, 10)}px`;
+    gel('debugBox').style.fontSize = `${Math.floor(cellSize * 0.2)}px`;
   }
 }
 
 function layoutPanels(parentWidth, parentHeight, isLandscape) {
-  const gridSize = isLandscape ? parseInt(parentWidth * 9 / 11) : parentWidth;
-  const cellSize = isLandscape ? parseInt(parentWidth / 11, 10) : parseInt(parentHeight / 13, 10);
+  const gridSize = isLandscape ? Math.floor(parentWidth * 9 / 11) : parentWidth;
+  const cellSize = isLandscape ? Math.floor(parentWidth / 11) : Math.floor(parentHeight / 13);
 
   layoutAlerts(gridSize, cellSize, isLandscape);
   layoutNumbersSelector(gridSize, cellSize,isLandscape);
   layoutCandidatesSelector(gridSize, cellSize, isLandscape);
   layoutFilesPanel(gridSize, cellSize, isLandscape);
   layoutTipsController(gridSize, cellSize, isLandscape);
+  layoutSearchPanel(gridSize, cellSize, isLandscape);
   layoutSettingsPanel(gridSize, cellSize, isLandscape);
   layoutInsertModeContainer(cellSize, isLandscape);
   layoutExcludeButtonContainer(gridSize, cellSize, isLandscape);
@@ -523,9 +553,26 @@ function clickOnSelectors(e) {
   return bounds.contains(e.pageX, e.pageY);
 }
 
+function clickOnSearchPanel(e) {
+  const bounds = new Bounds();
+  bounds.getRect(gel('searchPanel'));
+
+  const buttonbounds = new Bounds();
+  buttonbounds.getRect(gel('searchButton'));
+
+  return bounds.contains(e.pageX, e.pageY) || buttonbounds.contains(e.pageX, e.pageY);
+}
+
 function clickOnAllowMistakes(e) {
   const bounds = new Bounds();
   bounds.getRect(gel('alertInvalidCheckContainer'));
+
+  return bounds.contains(e.pageX, e.pageY);
+}
+
+function clickOnAdvancedButton(e) {
+  const bounds = new Bounds();
+  bounds.getRect(gel('advancedButton'));
 
   return bounds.contains(e.pageX, e.pageY);
 }
@@ -537,5 +584,7 @@ export {
   clickOnGrid,
   clickOnPlayground,
   clickOnAllowMistakes,
+  clickOnSearchPanel,
+  clickOnAdvancedButton,
   layoutCanvas,
 }

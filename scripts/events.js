@@ -1,5 +1,5 @@
 import {
-  gel,
+  gel, isCh,
 } from './utils/shortHands.js';
 
 import {
@@ -7,7 +7,9 @@ import {
   clickOnGame,
   clickOnAllowMistakes,
   clickOnGrid,
-  clickOnSelectors
+  clickOnSelectors,
+  clickOnSearchPanel,
+  clickOnAdvancedButton,
 } from './layout.js';
 
 import {
@@ -42,6 +44,16 @@ function mainClick(e, game) {
   if ((game.focusedCellIndex > NO_CELL) && (!clickOnGame(e))) {
     game.focusCell(NO_CELL);
   }
+  if (isCh(gel('searchButton'))) {
+    if (!clickOnSearchPanel(e)) {
+      game.hideSearch()
+    }
+  }
+  // if (clickOnAdvancedButton(e)) {
+  //   setTimeout(() => {
+  //     game.searchAdvancedTip(e);
+  //   }, 500);
+  // }
 }
 
 function createCellsClick(game) {

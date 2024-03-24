@@ -4,6 +4,10 @@ import {
   doc,
 } from '../utils/shortHands.js';
 import { createCommandButton, createFileInfo } from './controlElements.js';
+import {
+  createSearchNumberButton,
+} from './numberSelectors.js'
+
 // import {
 //   showAlertNoSelection,
 //   hideAlertNoSelection,
@@ -42,6 +46,18 @@ function createTipsPanel() {
 
   doc(panel, createCommandButton('advancedButton', 'bulb-white'));
   doc(panel, createCommandButton('searchButton', 'search-white'));
+
+  return panel;
+}
+
+function createSearchPanel() {
+  const panel = crel('div');
+  panel.id = 'searchPanel';
+  panel.className = 'insert-panel';
+
+  for (let number = 1; number < 10; number++) {
+    doc(panel, createSearchNumberButton(number));
+  }
 
   return panel;
 }
@@ -99,13 +115,20 @@ function createTipsPanelEvents(game) {
   };
 
   gel('searchButton').onclick = (e) => {
-    alert('Search Feature - Under Construction');
+    game.showSearch();
   };
+
+  for (let i = 1; i < 10; i++) {
+    gel(`search-button-${i}`).onclick = (e) => {
+      game.searchNumber(i)
+    }
+  }
 }
 
 function createCommandPanels(playGround) {
   doc(playGround, createFilesPanel());
   doc(playGround, createTipsPanel());
+  doc(playGround, createSearchPanel());
   doc(playGround, createUndosPanel());
   doc(playGround, createRestartPanel());
   doc(playGround, createSettingsPanel());

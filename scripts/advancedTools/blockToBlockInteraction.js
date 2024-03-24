@@ -431,7 +431,7 @@ function drawBlockToBlockInteraction(b2bInteraction) {
   }
   
   for (let c = 0; c < b2bInteraction.excludes.length; c++) {
-    markElement(ctx, b2bInteraction.excludes[c], "black", "yellow");
+    markElement(ctx, b2bInteraction.excludes[c], "black", "rgba(250, 250, 20, 0.5)");
   }
 
 

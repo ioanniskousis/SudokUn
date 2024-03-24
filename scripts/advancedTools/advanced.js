@@ -217,12 +217,12 @@ function optionAppearancesCount(cells, opt) {
   return cnt;
 }
 
-function optionAppearancesInUnit(cells, opt) {
+function optionAppearancesInUnit(cells, option) {
   let appearances = [];
   for (let i = 0; i < cells.length; i++) {
-    let option = getSOption(cells[i], opt);
-    if (optionIsExcludable(option)) {
-       appearances.push(option);
+    let candidate = getSOption(cells[i], option);
+    if (optionIsExcludable(candidate)) {
+       appearances.push(candidate);
     }
   }
   return appearances;
@@ -485,24 +485,24 @@ function locateTipCloud(cell, width = 4, height = 3) {
   let blockColumn = column % 3;
 
   let topLeftCell = null;
-  topLeftCell = gel(`cell-0`);
-  // if (column <  5) {
-  //   if (row < 5 ) {
-  //     let index = ((row + (3 - blockRow))* 9) + column + (3 - blockColumn);
-  //     topLeftCell = gel(`cell-${index}`);
-  //   } else {
-  //     let index = ((row - blockRow - height)* 9) + column + (3 - blockColumn);
-  //     topLeftCell = gel(`cell-${index}`);
-  //   }
-  // } else {
-  //   if (row < 5 ) {
-  //     let index = ((row + (3 - blockRow))* 9) + column - 4 - blockColumn;
-  //     topLeftCell = gel(`cell-${index}`);
-  //   } else {
-  //     let index = ((row - blockRow - height)* 9) + column - 4 - blockColumn;
-  //     topLeftCell = gel(`cell-${index}`);
-  //   }
-  // }
+  // topLeftCell = gel(`cell-0`);
+  if (column <  5) {
+    if (row < 5 ) {
+      let index = ((row + (3 - blockRow))* 9) + column + (3 - blockColumn);
+      topLeftCell = gel(`cell-${index}`);
+    } else {
+      let index = ((row - blockRow - height)* 9) + column + (3 - blockColumn);
+      topLeftCell = gel(`cell-${index}`);
+    }
+  } else {
+    if (row < 5 ) {
+      let index = ((row + (3 - blockRow))* 9) + Math.max(0, column - 4 - blockColumn);
+      topLeftCell = gel(`cell-${index}`);
+    } else {
+      let index = ((row - blockRow - height)* 9) + Math.max(0, column - 4 - blockColumn);
+      topLeftCell = gel(`cell-${index}`);
+    }
+  }
 
   let topLeftCellBounds = new Bounds();
   topLeftCellBounds.getRect(topLeftCell);
@@ -635,6 +635,7 @@ function blockLabel(block) {
 }
 
 export {
+  markSqElement,
   candidateRow,
   candidateColumn,
   rowLabel,
@@ -669,4 +670,7 @@ export {
   optionsContainOption,
   arrayInitWithArray,
   getSOption,
+  getGrid,
+  optionAppearancesInUnit,
+  getNeighborhoodExcludableOptions,
 }

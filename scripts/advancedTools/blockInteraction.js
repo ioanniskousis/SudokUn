@@ -118,7 +118,7 @@ function drawBlockInteraction(blockInteraction) {
 
     for (let c = 0; c < blockInteraction.excludes.length; c++) {
       let option = blockInteraction.excludes[c];
-      markElement(ctx, option, "black", "rgba(255, 255, 0, 0.5)");
+      markElement(ctx, option, "black", "rgba(250, 250, 20, 0.5)");
 
     }
 }
