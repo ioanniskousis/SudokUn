@@ -159,7 +159,7 @@ function findSubsetOfSizeInUnion(unionCells, sz, row, unit) {
   let possibleCells =[];
   for (let ui = 0; ui < 9; ui++) {
     let cell = unionCells[ui];
-    // THIS IS THE POINT TO CHANGE
+    // TODO: THIS IS THE POINT TO CHANGE
     let candidatesCount = parseInt(gat(cell, "candidatesCount"));
     if (candidatesCount > 1) {
       if (candidatesCount < sz + 1) {
