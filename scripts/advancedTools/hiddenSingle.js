@@ -136,7 +136,7 @@ function explaneHiddenSingle(hiddenSingle) {
                           gat(hiddenSingle.firstCell, "column") :
                           gat(hiddenSingle.firstCell, "block")
                       );
-  const area = hiddenSingle.group + " " + areaIndex;
+  const area = hiddenSingle.group + " " + (parseInt(areaIndex) + 1).toString();
 
   var paragraph = document.createElement("p");
   sat(paragraph, "class", "xlh");
